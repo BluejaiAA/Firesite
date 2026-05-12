@@ -945,7 +945,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
             {photosArr.map((p,i)=>(
               <div key={p.id} className="photo-thumb">
                 <img src={p.src} alt={p.caption}/>
-                <button className="photo-del" onClick={()=>updPhotos(photosArr.filter(x=>x.id!==p.id))}>✕</button>
+                <button className="photo-del" onClick={()=>updPhotos(photosArr.filter(x=>x.id!==p.id))}>&#10005;</button>
               </div>
             ))}
           </div>
@@ -1045,14 +1045,14 @@ function Landing({dispatch}) {
           <div className="tn-gem" style={{background:"#fff",padding:0,overflow:"hidden"}}><img src={_IMG0} style={{width:"100%",height:"100%",objectFit:"contain",display:"block",padding:"1px"}}/></div>
           <span style={{fontFamily:"'Nunito',sans-serif",fontSize:18,fontWeight:800,color:"#1C1C1C",letterSpacing:"-.3px"}}>Fire<em style={{color:"#C0392B",fontStyle:"normal"}}>site</em></span><span style={{fontSize:10,color:"#9CA3AF",marginLeft:4,fontFamily:"'Nunito',sans-serif",fontWeight:600}}>by Bluejai</span>
         </div>
-        <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started -></button>
+        <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started</button>
       </nav>
       <div className="hero">
         <div className="hero-ey">Trusted by UK fire risk assessors</div>
         <h1 className="hero-h1">The FRA platform<br/><em>trusted by industry professionals.</em></h1>
         <p className="hero-p">Every hour you spend typing up notes after a site visit is an hour you're not billing. Firesite captures everything on site — questions, photos, actions — and generates your complete branded report before you leave the building.</p>
         <div className="hero-btns">
-          <button className="btn btn-teal" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Set up your platform -></button>
+          <button className="btn btn-teal" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Set up your platform</button>
           <button className="btn btn-ghost" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Skip to demo</button>
         </div>
       </div>
@@ -1697,7 +1697,7 @@ function Assessment({state, dispatch}) {
               onRememberPerson={rememberPerson}
             />
             <div className="q-footer">
-              <button className="q-prev" onClick={goPrevQ} disabled={secIdx===0&&qIdx===0}>←</button>
+              <button className="q-prev" onClick={goPrevQ} disabled={secIdx===0&&qIdx===0}>&#8592;</button>
               <button className="q-next" style={{background:isAnswered(curQ,answers[curQ.ref]||{})?ac:pr}}
                 onClick={goNextQ}>
                 {qIdx<vqs.length-1
@@ -1775,12 +1775,12 @@ function Assessment({state, dispatch}) {
           <div className="modal" onClick={e=>e.stopPropagation()}>
             <div className="modal-h">
               <span className="modal-t">{allMissed.length>0?"Incomplete Questions":"Complete Assessment"}</span>
-              <button className="modal-x" onClick={()=>dispatch({type:"GO",screen:"assessment"})}>✕</button>
+              <button className="modal-x" onClick={()=>dispatch({type:"GO",screen:"assessment"})}>&#10005;</button>
             </div>
             <div className="modal-b">
               {allMissed.length>0 ? (
                 <div style={{display:"flex",gap:9,padding:"11px 13px",background:"#FEF2F2",border:"1px solid #FECACA",borderRadius:8,marginBottom:12}}>
-                  <span style={{fontSize:15,flexShrink:0}}>⚠</span>
+                  <span style={{fontSize:15,flexShrink:0}}>&#9888;</span>
                   <div>
                     <div style={{fontWeight:600,fontSize:12,color:"#991B1B",marginBottom:3}}>{allMissed.length} required question{allMissed.length>1?"s":""} unanswered</div>
                     <div style={{fontSize:11,color:"#B91C1C",lineHeight:1.6}}>These may affect the defensibility of your report under the RRO 2005.</div>
