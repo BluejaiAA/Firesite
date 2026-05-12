@@ -1045,14 +1045,14 @@ function Landing({dispatch}) {
           <div className="tn-gem" style={{background:"#fff",padding:0,overflow:"hidden"}}><img src={_IMG0} style={{width:"100%",height:"100%",objectFit:"contain",display:"block",padding:"1px"}}/></div>
           <span style={{fontFamily:"'Nunito',sans-serif",fontSize:18,fontWeight:800,color:"#1C1C1C",letterSpacing:"-.3px"}}>Fire<em style={{color:"#C0392B",fontStyle:"normal"}}>site</em></span><span style={{fontSize:10,color:"#9CA3AF",marginLeft:4,fontFamily:"'Nunito',sans-serif",fontWeight:600}}>by Bluejai</span>
         </div>
-        <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
+        <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started -></button>
       </nav>
       <div className="hero">
         <div className="hero-ey">Trusted by UK fire risk assessors</div>
         <h1 className="hero-h1">The FRA platform<br/><em>trusted by industry professionals.</em></h1>
         <p className="hero-p">Every hour you spend typing up notes after a site visit is an hour you're not billing. Firesite captures everything on site — questions, photos, actions — and generates your complete branded report before you leave the building.</p>
         <div className="hero-btns">
-          <button className="btn btn-teal" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Set up your platform →</button>
+          <button className="btn btn-teal" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Set up your platform -></button>
           <button className="btn btn-ghost" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Skip to demo</button>
         </div>
       </div>
@@ -1259,8 +1259,8 @@ function Setup({state, dispatch}) {
               {STEPS.map((_,i)=><div key={i} style={{height:4,width:i===step?12:4,borderRadius:2,background:i<=step?ac:"#EAECF0",transition:"all .25s"}}/>)}
             </div>
             {step<STEPS.length-1
-              ?<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step+1})}>Continue →</button>
-              :<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"FINISH_SETUP"})}>Launch →</button>}
+              ?<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step+1})}>Continue -></button>
+              :<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"FINISH_SETUP"})}>Launch -></button>}
           </div>
         </div>
       </div>
@@ -1320,7 +1320,7 @@ function ClientSetup({state, dispatch}) {
             </div>
             <div className="fcf">
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Cancel</button>
-              <button className="btn btn-teal" onClick={()=>dispatch({type:"GO",screen:"assessment"})}>Start Assessment →</button>
+              <button className="btn btn-teal" onClick={()=>dispatch({type:"GO",screen:"assessment"})}>Start Assessment -></button>
             </div>
           </div>
         </div>
@@ -1382,7 +1382,7 @@ function Dashboard({state, dispatch}) {
             <div style={{marginBottom:14}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:7}}>
                 <span style={{fontSize:11,fontWeight:600,color:"#2D2D2D"}}>📊 {activeDraft.premisesName||"Current draft"}</span>
-                <span style={{fontSize:10,color:ac,fontWeight:600,cursor:"pointer"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue →</span>
+                <span style={{fontSize:10,color:ac,fontWeight:600,cursor:"pointer"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue -></span>
               </div>
               <div className="heatmap">
                 {sectionStatus.map(({s,reqDone,anyDone},i)=>(
@@ -1462,7 +1462,7 @@ function Dashboard({state, dispatch}) {
                     )}
                     <div style={{display:"flex",gap:7}}>
                       <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:a.status==="complete"?"complete":"assessment"})}>
-                        {a.status==="complete"?"📄 Report":"Continue →"}
+                        {a.status==="complete"?"📄 Report":"Continue ->"}
                       </button>
                       {a.status==="complete"&&<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>Edit</button>}
                     </div>
@@ -1489,7 +1489,7 @@ function Dashboard({state, dispatch}) {
                     onMouseEnter={e=>{e.currentTarget.style.background=t.accent;e.currentTarget.style.color="#fff";}}
                     onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=t.accent;}}
                     onClick={e=>{e.stopPropagation();t.key==="fra"&&dispatch({type:"NEW_ASSESSMENT"});}}>
-                    {t.key==="fra"?"Start New →":"Coming Soon"}
+                    {t.key==="fra"?"Start New ->":"Coming Soon"}
                   </button>
                 </div>
               </div>
@@ -1674,7 +1674,7 @@ function Assessment({state, dispatch}) {
               {secAns(curSec)>0&&<span className="ss-pill" style={{background:"#ECFDF5",color:"#059669",borderColor:"#6EE7B744"}}>{secAns(curSec)} done</span>}
             </div>
             <button className="ss-begin" style={{background:pr}} onClick={startSection}>
-              {secAns(curSec)>0?"Continue section →":"Begin section →"}
+              {secAns(curSec)>0?"Continue section ->":"Begin section ->"}
             </button>
             {secIdx>0&&<button style={{background:"none",border:"none",fontSize:11,color:"#9CA3AF",cursor:"pointer",marginTop:12}} onClick={()=>{dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>← Previous section</button>}
           </div>
@@ -1701,8 +1701,8 @@ function Assessment({state, dispatch}) {
               <button className="q-next" style={{background:isAnswered(curQ,answers[curQ.ref]||{})?ac:pr}}
                 onClick={goNextQ}>
                 {qIdx<vqs.length-1
-                  ? isAnswered(curQ,answers[curQ.ref]||{}) ? "Next →" : "Skip →"
-                  : "Finish section →"}
+                  ? isAnswered(curQ,answers[curQ.ref]||{}) ? "Next ->" : "Skip ->"
+                  : "Finish section ->"}
               </button>
               {!isAnswered(curQ,answers[curQ.ref]||{})&&(
                 <button className="q-skip" onClick={goNextQ} title="Skip this question">Skip</button>
@@ -1727,7 +1727,7 @@ function Assessment({state, dispatch}) {
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
             <button className="se-next" onClick={goNextSec}>
-              {secIdx<FRA_SECTIONS.length-1?`${FRA_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
+              {secIdx<FRA_SECTIONS.length-1?`${FRA_SECTIONS[secIdx+1].title} ->`:"Complete Assessment ->"}
             </button>
             <button className="se-review" onClick={()=>dispatch({type:"SET_MODE",mode:"review"})}>
               Review this section
@@ -1799,7 +1799,7 @@ function Assessment({state, dispatch}) {
                 const nextRev = a.answers?.["OR.4"]?.ans;
                 dispatch({type:"COMPLETE",ts:fmtDate(new Date().toISOString()),riskRating:riskAns,nextReview:nextRev});
               }}>
-                {allMissed.length>0?"Generate anyway →":"Generate Report →"}
+                {allMissed.length>0?"Generate anyway ->":"Generate Report ->"}
               </button>
             </div>
           </div>
