@@ -13,6 +13,18 @@
 <meta name="description" content="Professional fire risk assessment platform for assessors on site."/>
 <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png"/>
 <link rel="manifest" id="pwa-manifest"/>
+<script>
+(function(){
+var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
+var mb=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
+document.getElementById("pwa-manifest").href=URL.createObjectURL(mb);
+if("serviceWorker"in navigator){
+var sw='var CACHE="fs-v2";self.addEventListener("install",function(e){e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(["/"]);}).then(function(){return self.skipWaiting();}));});self.addEventListener("activate",function(e){e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE;}).map(function(k){return caches.delete(k);}));}).then(function(){return self.clients.claim();}));});self.addEventListener("fetch",function(e){if(e.request.method!=="GET")return;e.respondWith(fetch(e.request).then(function(r){if(r.ok){var c=r.clone();caches.open(CACHE).then(function(ch){ch.put(e.request,c);});}return r;}).catch(function(){return caches.match(e.request);}));});';
+var b=new Blob([sw],{type:"application/javascript"});
+navigator.serviceWorker.register(URL.createObjectURL(b),{scope:"/"})
+.then(function(){console.log("[Firesite] PWA ready");}).catch(function(e){console.warn("[Firesite] SW:",e);});}
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -2448,17 +2460,6 @@ function generatePDF(a, org) {
   <div class="pg-ftr"><span class="pg-fl">© ${new Date().getFullYear()} ${org.name||"Assessor"} · Confidential</span><span style="font-size:7pt;font-weight:700;color:${pr};">Firesite™</span><span class="pg-fl">Page 7 of 7</span></div>
 </div>
 
-<script>
-const _mf={name:"Firesite",short_name:"Firesite",description:"Professional fire risk assessment platform.",start_url:"/",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",categories:["business","productivity"],icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}],shortcuts:[{name:"New Assessment",url:"/",description:"Start a new fire risk assessment"}]};
-const _mb=new Blob([JSON.stringify(_mf)],{type:"application/manifest+json"});
-document.getElementById("pwa-manifest").href=URL.createObjectURL(_mb);
-if("serviceWorker"in navigator){
-const _sw=`+"`"+`const CACHE="firesite-v2";self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(["/"])));self.skipWaiting();});self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});self.addEventListener("fetch",e=>{if(e.request.method!=="GET"||!e.request.url.startsWith("http"))return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const c=r.clone();caches.open(CACHE).then(ch=>ch.put(e.request,c));}return r;}).catch(()=>caches.match(e.request).then(c=>c||new Response("Offline",{status:503}))));});`+"`"+`;
-const _swb=new Blob([_sw],{type:"application/javascript"});
-navigator.serviceWorker.register(URL.createObjectURL(_swb),{scope:"/"})
-.then(()=>console.log("[Firesite] PWA ready"))
-.catch(e=>console.warn("[Firesite] SW:",e));}
-</script>
 </body>
 </html>`;
 
@@ -2480,20 +2481,16 @@ navigator.serviceWorker.register(URL.createObjectURL(_swb),{scope:"/"})
   };
 }
 
-// ─── SHARE REPORT ────────────────────────────────────────────────
-function shareReport(a, org) {
-  const flagged  = Object.values(a.answers||{}).filter(v=>v?.flagged).length;
-  const answered = Object.values(a.answers||{}).filter(v=>v&&(v.ans||(v.sel&&v.sel.length))).length;
-  const title    = `Fire Risk Assessment — ${a.premisesName||"Unnamed Premises"}`;
-  const text     = `${title}\nRef: ${a.ref}\nDate: ${a.assessmentDate||"—"}\nRisk rating: ${a.riskRating||"Not yet rated"}\n${answered} questions answered · ${flagged} action ${flagged===1?"item":"items"}\n\nGenerated by Firesite (firesite-weld.vercel.app)`;
-  if (navigator.share) {
-    navigator.share({ title, text, url: window.location.href })
-      .catch(e => { if (e.name !== 'AbortError') console.warn('Share:', e); });
-  } else {
-    navigator.clipboard?.writeText(text + '\n' + window.location.href)
-      .then(() => alert('Summary copied to clipboard — paste into an email and attach the PDF.'))
-      .catch(() => prompt('Copy this summary:', text));
-  }
+function shareReport(a,org){
+var fl=Object.values(a.answers||{}).filter(function(v){return v&&v.flagged;}).length;
+var ans=Object.values(a.answers||{}).filter(function(v){return v&&(v.ans||(v.sel&&v.sel.length));}).length;
+var title="Fire Risk Assessment — "+(a.premisesName||"Unnamed Premises");
+var text=title+"\nRef: "+a.ref+"\nDate: "+(a.assessmentDate||"—")+"\nRisk: "+(a.riskRating||"Not yet rated")+"\n"+ans+" answered · "+fl+" action item"+(fl===1?"":"s")+"\n\nGenerated by Firesite";
+if(navigator.share){
+navigator.share({title:title,text:text,url:window.location.href}).catch(function(e){if(e.name!=="AbortError")console.warn(e);});
+}else if(navigator.clipboard){
+navigator.clipboard.writeText(text+"\n"+window.location.href).then(function(){alert("Summary copied to clipboard. Paste into an email and attach the PDF.");}).catch(function(){prompt("Copy this:",text);});
+}else{prompt("Copy this:",text);}
 }
 
 function CompleteScreen({state, dispatch}) {
@@ -2769,7 +2766,7 @@ function CompleteScreen({state, dispatch}) {
               ⬇ PDF
             </button>
             <button className="btn btn-ghost btn-sm" style={{flexShrink:0}}
-              onClick={()=>shareReport(a,org)} title="Share assessment summary">
+              onClick={()=>shareReport(a,org)} title="Share assessment">
               ↑ Share
             </button>
           </div>
@@ -3061,7 +3058,7 @@ function CompleteScreen({state, dispatch}) {
             </button>
             <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:13,fontWeight:600,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
               onClick={()=>shareReport(a,org)}>
-              <span style={{fontSize:18,lineHeight:1}}>↑</span> Share Report
+              ↑ Share Report
             </button>
           </div>
 
