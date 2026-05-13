@@ -11,11 +11,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="description" content="Professional fire risk assessment platform for assessors on site."/>
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png"/>
+<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png"/>
 <link rel="manifest" id="pwa-manifest"/>
 <script>
 (function(){
-var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
+var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
 var mb=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
 document.getElementById("pwa-manifest").href=URL.createObjectURL(mb);
 if("serviceWorker"in navigator){
@@ -465,7 +465,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .tnav{height:50px;flex-shrink:0;display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;}
 .tnav.dk{background:#0D1117;border-bottom:1px solid rgba(255,255,255,.06);}
 .tnav.lt{background:#fff;border-bottom:1px solid #EAECF0;box-shadow:0 1px 3px rgba(0,0,0,.04);}
-.tn-gem{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.tn-gem{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
 .tn-brand{font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;}
 .tn-brand em{font-style:normal;}
 .tn-back{display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;padding:5px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:none;color:rgba(255,255,255,.45);transition:all .1s;white-space:nowrap;}
@@ -1261,7 +1261,7 @@ function Landing({dispatch}) {
     <div className="land">
       <nav className="land-nav">
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div className="tn-gem" style={{background:"#fff",padding:2,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"#fff"}}/></div>
+          <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
           <span style={{fontFamily:"'Nunito',sans-serif",fontSize:17,fontWeight:700,color:"#0D1117"}}>Fire<em style={{color:"#C0392B",fontStyle:"normal"}}>site</em></span>
         </div>
         <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
@@ -1406,7 +1406,7 @@ function Setup({state, dispatch}) {
   return (
     <div className="setup-wrap">
       <div style={{background:pr,padding:"0 16px",height:46,display:"flex",alignItems:"center",gap:9,borderBottom:"1px solid rgba(255,255,255,.06)"}}>
-        <div className="tn-gem" style={{background:"#fff",padding:2,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"#fff"}}/></div>
+        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
         <span style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em> — Setup</span>
         <div style={{marginLeft:"auto",display:"flex",gap:4}}>
           {STEPS.map((_,i)=><div key={i} style={{height:4,width:i===step?14:4,borderRadius:2,background:i<=step?ac:"rgba(255,255,255,.12)",transition:"all .25s"}}/>)}
@@ -1530,7 +1530,7 @@ function Dashboard({state, dispatch}) {
   return (
     <div className="dash">
       <div className="tnav dk" style={{background:pr}}>
-        <div className="tn-gem" style={{background:"#fff",padding:2,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_bird_32x32.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"#fff"}}/></div>
+        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
         <div className="tn-mid">
           <span style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em></span>
           {org.name&&<span style={{fontSize:9,color:"rgba(255,255,255,.28)",marginLeft:4}}>· {org.name}</span>}
