@@ -468,8 +468,17 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 /* ─ SECTION PROGRESS DOTS ─ */
 .sec-dots-bar{background:#0D1117;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .sec-dot-row{display:flex;gap:4px;flex:1;}
-.sec-dot-item{height:4px;border-radius:2px;transition:all .3s cubic-bezier(.4,0,.2,1);}
+.sec-dot-item{height:5px;border-radius:3px;transition:all .35s cubic-bezier(.4,0,.2,1);}
+.sec-dot-item:hover{transform:scaleY(1.5);}
 .sec-label-row{font-size:9px;color:rgba(255,255,255,.3);white-space:nowrap;flex-shrink:0;}
+
+/* ─ MOBILE SECTION NAV ─ */
+.mobile-sec-nav{display:none;background:#0D1117;padding:6px 16px;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06);}
+.msn-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);font-size:18px;width:32px;height:32px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;}
+.msn-btn:hover:not(:disabled){color:#fff;border-color:rgba(255,255,255,.3);}
+.msn-btn:disabled{opacity:.2;cursor:default;}
+.msn-label{flex:1;text-align:center;font-size:13px;font-weight:600;color:#fff;}
+@media(max-width:600px){.mobile-sec-nav{display:flex;}.stabs{display:none;}}
 
 /* ─ SECTION TABS (scrollable, compact) ─ */
 .stabs{background:#fff;border-bottom:1px solid #EAECF0;display:flex;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;}
@@ -485,18 +494,19 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .card-area{flex:1;overflow:hidden;position:relative;}
 
 /* ─ SECTION START CARD ─ */
-.sec-start{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+.sec-start{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .ss-icon{font-size:52px;margin-bottom:18px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
 .ss-num{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
 .ss-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:#0D1117;margin-bottom:10px;line-height:1.1;}
 .ss-desc{font-size:13px;color:#6B7280;line-height:1.65;max-width:280px;margin-bottom:24px;}
 .ss-meta{display:flex;gap:12px;margin-bottom:28px;}
 .ss-pill{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;background:#FDF3EE;color:#C0392B;border:1px solid #C0392B22;}
-.ss-begin{width:100%;max-width:280px;padding:14px;background:#0D1117;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .12s;font-family:'Nunito',sans-serif;}
-.ss-begin:hover{background:#1F2937;}
+.ss-begin{width:100%;max-width:280px;padding:15px;background:#0D1117;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.3px;}
+.ss-begin:hover{background:#1F2937;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.ss-begin:active{transform:none;box-shadow:none;}
 
 /* ─ QUESTION CARD ─ */
-.q-card{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 100px;}
+.q-card{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 120px;scroll-behavior:smooth;}
 .q-card::-webkit-scrollbar{display:none;}
 
 .qc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
@@ -508,16 +518,18 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .qc-dot.todo{background:#E5E7EB;}
 .qc-dot.miss{background:#DC2626;}
 
-.qc-question{font-family:'Nunito',sans-serif;font-size:20px;font-weight:600;color:#0D1117;line-height:1.3;margin-bottom:8px;}
+.qc-question{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#0D1117;line-height:1.25;margin-bottom:12px;}
 .qc-req{color:#DC2626;font-size:13px;}
 
 .qc-guide-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#C0392B;background:#FDF3EE;border:1px solid #C0392B1A;border-radius:20px;padding:3px 10px;cursor:pointer;margin-bottom:16px;}
-.qc-guide{padding:10px 12px;background:#FDF3EE;border:1px solid #C0392B14;border-radius:8px;font-size:12px;color:#0F766E;line-height:1.65;margin-bottom:14px;}
+.qc-guide{padding:10px 12px;background:#FDF3EE;border:1px solid #C0392B14;border-radius:8px;font-size:12px;color:#0F766E;line-height:1.65;margin-bottom:14px;animation:fu .2s ease both;}
 
 /* BIG ANSWER BUTTONS */
 .big-ans{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
-.big-btn{width:100%;padding:16px 18px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:2px solid #EAECF0;background:#F9FAFB;color:#6B7280;transition:all .15s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;}
-.big-btn:active{transform:scale(.98);}
+.big-btn{width:100%;padding:17px 18px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;border:2px solid #EAECF0;background:#F9FAFB;color:#6B7280;transition:all .15s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
+.big-btn:active{transform:scale(.97);}
+.big-btn.y,.big-btn.n,.big-btn.na{animation:btnPop .25s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes btnPop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
 .big-btn.y{background:#ECFDF5;border-color:#34D399;color:#065F46;}
 .big-btn.n{background:#FEF2F2;border-color:#F87171;color:#991B1B;}
 .big-btn.na{background:#F9FAFB;border-color:#D1D5DB;color:#6B7280;}
@@ -594,16 +606,19 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .q-next.dark{background:#0D1117;}
 .q-next.dark:hover{background:#1F2937;}
 .q-skip{padding:11px 12px;border-radius:9px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid #EAECF0;background:#fff;color:#9CA3AF;flex-shrink:0;}
+.q-next-skip{flex:1;padding:13px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #EAECF0;background:#fff;color:#9CA3AF;transition:all .12s;font-family:'Nunito',sans-serif;}
+.q-next-skip:hover{color:#374151;border-color:#9CA3AF;}
 
 /* SECTION END CARD */
-.sec-end{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center;}
-.se-icon{font-size:48px;margin-bottom:14px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
+.sec-end{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.se-icon{font-size:52px;margin-bottom:16px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 4px 12px rgba(5,150,105,.25));}
 .se-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:700;color:#0D1117;margin-bottom:6px;}
 .se-sub{font-size:12px;color:#6B7280;margin-bottom:20px;line-height:1.6;}
 .se-stats{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
 .se-stat{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:600;}
-.se-next{width:100%;max-width:280px;padding:14px;background:#C0392B;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .12s;font-family:'Nunito',sans-serif;}
-.se-next:hover{background:#A93226;}
+.se-next{width:100%;max-width:280px;padding:15px;background:#C0392B;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.3px;}
+.se-next:hover{background:#A93226;transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,57,43,.3);}
+.se-next:active{transform:none;box-shadow:none;}
 .se-review{background:none;border:none;font-size:11px;color:#9CA3AF;cursor:pointer;margin-top:12px;text-decoration:underline;}
 
 /* REVIEW MODE */
@@ -766,12 +781,13 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .fade{animation:fu .15s ease both;}
 @keyframes fu{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
 .slide-in{animation:si .2s ease both;}
-@keyframes si{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes si{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
 .slide-out{animation:so .15s ease both;}
 @keyframes so{from{opacity:1;transform:none}to{opacity:0;transform:translateX(-24px)}}
 .pop{animation:po .35s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes po{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes secFlashAnim{0%{opacity:0}20%{opacity:.25}80%{opacity:.18}100%{opacity:0}}
 
 @media(max-width:540px){
   .g2{grid-template-columns:1fr;}
@@ -1006,6 +1022,10 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
     } else {
       upd({ans:newAns});
     }
+    // Auto-advance after 350ms — only if no note/flag panel open
+    if (newAns && !note && !flagged) {
+      setTimeout(() => onNext(), 350);
+    }
   };
 
   const isAns  = isAnswered(q, state);
@@ -1030,15 +1050,18 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
       {flash && <div className="photo-flash" style={{opacity:.8}}/>}
 
       <div className="q-card slide-in" key={q.ref}>
-        {/* Header: ref + progress dots */}
+        {/* Header: ref + progress dots + counter */}
         <div className="qc-header">
           <span className="qc-ref">{q.ref}</span>
-          <div className="qc-dots">
-            {Array.from({length:Math.min(totalVisible,9)}).map((_,i)=>{
-              const cls = i<qIdx?"done":i===qIdx?"now":"todo";
-              return <div key={i} className={`qc-dot ${cls}`}/>;
-            })}
-            {totalVisible>9 && <span style={{fontSize:9,color:"#9CA3AF",marginLeft:2}}>+{totalVisible-9}</span>}
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <span style={{fontSize:10,color:"#9CA3AF",fontWeight:500}}>{qIdx+1}<span style={{opacity:.5}}>/{totalVisible}</span></span>
+            <div className="qc-dots">
+              {Array.from({length:Math.min(totalVisible,9)}).map((_,i)=>{
+                const cls = i<qIdx?"done":i===qIdx?"now":"todo";
+                return <div key={i} className={`qc-dot ${cls}`}/>;
+              })}
+              {totalVisible>9 && <span style={{fontSize:9,color:"#9CA3AF",marginLeft:2}}>+{totalVisible-9}</span>}
+            </div>
           </div>
         </div>
 
@@ -1087,6 +1110,14 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         )}
         {q.t==="text" && (
           <input className="qc-inp" placeholder="Enter details…" value={ans||""}
+            onChange={e=>upd({ans:e.target.value||null})}/>
+        )}
+        {(q.t==="address"||q.t==="occupancy") && (
+          <textarea className="obs-box" style={{minHeight:90,marginBottom:14}} placeholder={q.t==="address"?"Full address including postcode…":"e.g. Office / Retail / Residential — mixed use if applicable…"} value={ans||""}
+            onChange={e=>upd({ans:e.target.value||null})}/>
+        )}
+        {q.t==="floorarea" && (
+          <textarea className="obs-box" style={{minHeight:70,marginBottom:14}} placeholder="e.g. 3 floors, approx 1,200 m² GIA — ground, first and second floors" value={ans||""}
             onChange={e=>upd({ans:e.target.value||null})}/>
         )}
         {q.t==="multi" && (
@@ -1674,12 +1705,15 @@ function Assessment({state, dispatch}) {
   const rememberPerson = name => dispatch({type:"REMEMBER_PERSON", name});
 
   // Navigation within card flow
+  const [secFlash, setSecFlash] = useState(false);
+
   const goNextQ = () => {
     if (qIdx < vqs.length-1) {
       dispatch({type:"Q_IDX", i:qIdx+1});
     } else {
-      // End of section
-      dispatch({type:"SET_MODE", mode:"end"});
+      // End of section — green flash celebration
+      setSecFlash(true);
+      setTimeout(() => { setSecFlash(false); dispatch({type:"SET_MODE", mode:"end"}); }, 700);
     }
   };
 
@@ -1715,6 +1749,8 @@ function Assessment({state, dispatch}) {
 
   return (
     <div className="assess-wrap">
+      {/* Section complete flash */}
+      {secFlash && <div style={{position:"fixed",inset:0,background:"#059669",opacity:.18,zIndex:999,pointerEvents:"none",animation:"secFlashAnim .7s ease both"}}/>}
 
       {/* Sticky top nav only — no intro banner sticking */}
       <div className="assess-head">
@@ -1731,10 +1767,27 @@ function Assessment({state, dispatch}) {
               : null}
           </div>
           {!state.isOnline && <span className="tn-offline">Offline</span>}
+          {flagged>0&&mode==="card"&&(
+            <span style={{fontSize:9,fontWeight:700,background:"#C0392B",color:"#fff",padding:"3px 8px",borderRadius:10}}>⚑{flagged}</span>
+          )}
           {allMissed.length>0&&mode==="card"&&(
             <button style={{fontSize:9,fontWeight:600,background:"#DC262614",border:"1px solid #DC262633",color:"#DC2626",padding:"3px 8px",borderRadius:10,cursor:"pointer"}}
               onClick={()=>dispatch({type:"SHOW_MISSED"})}>⚠{allMissed.length}</button>
           )}
+          {(() => {
+            // Calculate current answer streak
+            const streak = (() => {
+              let s = 0;
+              for (let i = vqs.length-1; i>=0; i--) {
+                if (isAnswered(vqs[i], answers[vqs[i].ref]||{})) s++;
+                else break;
+              }
+              return s;
+            })();
+            return streak>=5 ? (
+              <span style={{fontSize:9,fontWeight:700,background:"#F59E0B22",border:"1px solid #F59E0B44",color:"#D97706",padding:"3px 8px",borderRadius:10}}>🔥{streak}</span>
+            ) : null;
+          })()}
         </div>
 
         {/* Section dot progress bar */}
@@ -1760,12 +1813,22 @@ function Assessment({state, dispatch}) {
             })}
           </div>
           <div className="sec-label-row">
-            <span style={{color:ac,fontWeight:700}}>{pct}%</span>
+            <span style={{color:ac,fontWeight:700,fontSize:10}}>{pct}%</span>
             <span style={{marginLeft:4}}>{secIdx+1}/{FRA_SECTIONS.length}</span>
           </div>
         </div>
 
-        {/* Section tabs — scroll horizontally, compact */}
+        {/* Mobile section nav — visible on small screens */}
+        <div className="mobile-sec-nav">
+          <button className="msn-btn" onClick={()=>{if(secIdx>0){dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"start"});}}} disabled={secIdx===0}>‹</button>
+          <div className="msn-label">
+            <span style={{color:ac,fontWeight:700}}>{curSec.short}</span>
+            <span style={{color:"rgba(255,255,255,.3)",fontSize:9,marginLeft:6}}>{secIdx+1} / {FRA_SECTIONS.length}</span>
+          </div>
+          <button className="msn-btn" onClick={()=>{if(secIdx<FRA_SECTIONS.length-1){dispatch({type:"SEC",i:secIdx+1});dispatch({type:"SET_MODE",mode:"start"});}}} disabled={secIdx===FRA_SECTIONS.length-1}>›</button>
+        </div>
+
+        {/* Section tabs — scroll horizontally, compact (desktop) */}
         <div className="stabs">
           {FRA_SECTIONS.map((s,i)=>{
             const done  = secDone(s);
@@ -1783,8 +1846,20 @@ function Assessment({state, dispatch}) {
         </div>
       </div>
 
-      {/* Card area */}
-      <div className="card-area">
+      {/* Card area — touch swipe support */}
+      <div className="card-area"
+        onTouchStart={e=>{window._swipeX=e.touches[0].clientX;window._swipeY=e.touches[0].clientY;}}
+        onTouchEnd={e=>{
+          if(!window._swipeX)return;
+          const dx=e.changedTouches[0].clientX-window._swipeX;
+          const dy=Math.abs(e.changedTouches[0].clientY-window._swipeY);
+          if(Math.abs(dx)>50&&dy<60&&mode==="card"){
+            if(dx<0)goNextQ();
+            else goPrevQ();
+          }
+          window._swipeX=null;
+        }}
+      >
 
         {/* ── SECTION START CARD ── */}
         {mode==="start" && (
@@ -1823,14 +1898,14 @@ function Assessment({state, dispatch}) {
             />
             <div className="q-footer">
               <button className="q-prev" onClick={goPrevQ} disabled={secIdx===0&&qIdx===0}>←</button>
-              <button className="q-next" style={{background:isAnswered(curQ,answers[curQ.ref]||{})?ac:pr}}
-                onClick={goNextQ}>
-                {qIdx<vqs.length-1
-                  ? isAnswered(curQ,answers[curQ.ref]||{}) ? "Next →" : "Skip →"
-                  : "Finish section →"}
-              </button>
-              {!isAnswered(curQ,answers[curQ.ref]||{})&&(
-                <button className="q-skip" onClick={goNextQ} title="Skip this question">Skip</button>
+              {isAnswered(curQ,answers[curQ.ref]||{}) ? (
+                <button className="q-next" style={{background:ac}} onClick={goNextQ}>
+                  {qIdx<vqs.length-1 ? "Next →" : "Finish section →"}
+                </button>
+              ) : (
+                <button className="q-next q-next-skip" onClick={goNextQ}>
+                  Skip →
+                </button>
               )}
             </div>
           </>
@@ -1840,15 +1915,16 @@ function Assessment({state, dispatch}) {
         {mode==="end" && (
           <div className="sec-end fade">
             <div className="se-icon">{secDone(curSec)?"✅":"📋"}</div>
-            <div className="se-title">{secDone(curSec)?`Section ${curSec.id} complete!`:`Section ${curSec.id} done`}</div>
+            <div className="se-title" style={{color:secDone(curSec)?"#059669":"#0D1117"}}>{secDone(curSec)?`Section ${curSec.id} complete!`:`Section ${curSec.id} done`}</div>
             <div className="se-sub">
               {curSec.title}<br/>
               {secAns(curSec)} of {vqs.length} questions answered
               {secFlag(curSec)>0&&` · ${secFlag(curSec)} flagged`}
             </div>
             <div className="se-stats">
-              <span className="se-stat" style={{background:"#ECFDF5",color:"#C0392B"}}>{secAns(curSec)} answered</span>
+              <span className="se-stat" style={{background:"#ECFDF5",color:"#059669"}}>✓ {secAns(curSec)} answered</span>
               {secFlag(curSec)>0&&<span className="se-stat" style={{background:"#FDF3EE",color:ac}}>⚑ {secFlag(curSec)} flagged</span>}
+              {secDone(curSec)&&<span className="se-stat" style={{background:"#ECFDF5",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
             <button className="se-next" onClick={goNextSec}>
