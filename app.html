@@ -1233,6 +1233,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         </div>)}
 
+        {!["address","occupancy","floorarea","text","number","date","select"].includes(q.t) && (<>
         {/* Flag */}
         <button className={`flag-btn ${flagged?"on":""}`} onClick={handleFlag}>
           <span>{flagged?"🚩":"⚑"}</span>
@@ -1290,6 +1291,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
               </div>
             </div>
           </div>
+        )}</>
         )}
 
         {missed && (
