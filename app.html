@@ -812,7 +812,54 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
   .act-grid{grid-template-columns:1fr;}
   .heatmap{grid-template-columns:repeat(3,1fr);}
 }
-`;
+
+/* ─ AUTH ─ */
+.auth-wrap{min-height:100vh;background:#0D1117;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-box{width:100%;max-width:420px;background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:36px 32px;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
+.auth-logo img{width:40px;height:40px;object-fit:contain;}
+.auth-logo-text{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:#F0F6FF;}
+.auth-logo-text span{color:#E74C3C;}
+.auth-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:6px;}
+.auth-sub{font-size:14px;color:#8B949E;text-align:center;margin-bottom:28px;}
+.auth-field{margin-bottom:16px;}
+.auth-label{font-size:12px;font-weight:700;color:#8B949E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
+.auth-input{width:100%;padding:12px 14px;background:#21262D;border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#F0F6FF;font-size:15px;font-family:'Nunito',sans-serif;transition:border-color .15s;outline:none;}
+.auth-input:focus{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15);}
+.auth-input::placeholder{color:rgba(255,255,255,.25);}
+.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;box-shadow:0 4px 20px rgba(192,57,43,.3);}
+.auth-btn:hover{transform:translateY(-1px);}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-switch{text-align:center;margin-top:20px;font-size:14px;color:#8B949E;}
+.auth-switch a{color:#E74C3C;cursor:pointer;font-weight:700;}
+.auth-error{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#F87171;margin-bottom:16px;}
+/* ─ PRICING MODAL ─ */
+.price-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+.price-sheet{background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:24px 20px 44px;max-height:90vh;overflow-y:auto;}
+.price-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px;}
+.price-sheet-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:4px;}
+.price-sheet-sub{font-size:13px;color:#8B949E;text-align:center;margin-bottom:20px;}
+.pm-plan{background:#21262D;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;margin-bottom:10px;}
+.pm-plan.hot{border-color:rgba(192,57,43,.45);background:rgba(192,57,43,.05);}
+.pm-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.pm-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#F0F6FF;margin-bottom:6px;}
+.pm-price{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:right;flex-shrink:0;}
+.pm-price span{font-size:12px;color:#8B949E;font-weight:500;}
+.pm-feats{list-style:none;margin-top:4px;}
+.pm-feats li{font-size:12px;color:#8B949E;padding:2px 0;}
+.pm-feats li::before{content:"+ ";color:#00BFA5;font-weight:700;}
+.pm-btn{width:100%;padding:11px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 14px rgba(192,57,43,.25);}
+.pm-current{text-align:center;padding:8px;font-size:12px;color:#00BFA5;font-weight:700;}
+.pm-badge{background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+/* ─ USER BAR ─ */
+.user-bar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:#161B22;border-bottom:1px solid rgba(255,255,255,.06);}
+.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#E67E22);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#fff;flex-shrink:0;}
+.user-em{flex:1;font-size:11px;color:#8B949E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-plan{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.user-plan.free{background:rgba(255,255,255,.06);color:#8B949E;}
+.user-plan.starter{background:rgba(0,191,165,.12);color:#00BFA5;}
+.user-plan.pro{background:rgba(192,57,43,.15);color:#E74C3C;}
+.user-signout{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Nunito',sans-serif;margin-left:2px;}`;
 
 // ─── LOGO DROP ────────────────────────────────────────────────────
 function LogoDrop({logo, onLogo}) {
@@ -1256,7 +1303,147 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
 }
 
 // ─── LANDING ──────────────────────────────────────────────────────
-function Landing({dispatch}) {
+
+/* ─ PLANS & STRIPE ─ */
+const PLANS=[
+  {id:'free',name:'Free',price:'Free',per:'',feats:['1 site','163 questions','Basic view']},
+  {id:'starter',name:'Starter',price:'14.99',per:'/mo',feats:['10 sites','PDF export','Cloud sync','Email share']},
+  {id:'pro',name:'Professional',price:'39.99',per:'/mo',hot:true,feats:['Unlimited sites','5 team members','Custom branding','Analytics']},
+  {id:'enterprise',name:'Enterprise',price:'Custom',per:'',contact:true,feats:['Unlimited users','API access','Dedicated support']}
+];
+function goStripe(plan,email){
+  if(plan.contact){window.location.href='mailto:hello@bluejai.co.uk?subject=Enterprise';return;}
+  if(!plan.price||plan.price==='Free'){return;}
+  alert('Payments launching soon! Email hello@bluejai.co.uk for early access pricing.');
+}
+
+/* ─ FIREBASE AUTH STUB ─ Replace with real Firebase when ready ─ */
+const FS_AUTH={
+  _u:null,_cbs:[],
+  onStateChange(cb){cb(this._u);this._cbs.push(cb);return()=>{};},
+  async login(email,pw){
+    const u={uid:'u_'+btoa(email).substring(0,8),email,name:email.split('@')[0],plan:'free'};
+    this._u=u;this._cbs.forEach(c=>c(u));
+    try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+    return u;
+  },
+  async signup(email,pw,name){
+    const u={uid:'u_'+Date.now(),email,name:name||email.split('@')[0],plan:'free'};
+    this._u=u;this._cbs.forEach(c=>c(u));
+    try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+    return u;
+  },
+  async logout(){
+    this._u=null;this._cbs.forEach(c=>c(null));
+    try{localStorage.removeItem('fs_u');}catch(e){}
+  },
+  restore(){try{const s=localStorage.getItem('fs_u');if(s)this._u=JSON.parse(s);}catch(e){}}
+};
+FS_AUTH.restore();
+
+/* ─ AUTH SCREEN ─ */
+function AuthScreen({onAuth}){
+  const[mode,setMode]=React.useState('login');
+  const[email,setEmail]=React.useState('');
+  const[pw,setPw]=React.useState('');
+  const[name,setName]=React.useState('');
+  const[err,setErr]=React.useState('');
+  const[busy,setBusy]=React.useState(false);
+  const go=async(e)=>{
+    e.preventDefault();setErr('');setBusy(true);
+    try{
+      let u;
+      if(mode==='login'){u=await FS_AUTH.login(email,pw);}
+      else{
+        if(!name.trim()){setErr('Please enter your name');setBusy(false);return;}
+        if(pw.length<6){setErr('Password needs 6+ characters');setBusy(false);return;}
+        u=await FS_AUTH.signup(email,pw,name);
+      }
+      onAuth(u);
+    }catch(e){setErr(e.message||'Something went wrong');}
+    setBusy(false);
+  };
+  return(
+    <div className="auth-wrap">
+      <div className="auth-box">
+        <div className="auth-logo">
+          <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" alt=""/>
+          <span className="auth-logo-text">Fire<span>site</span></span>
+        </div>
+        <h2 className="auth-title">{mode==='login'?'Welcome back':'Create account'}</h2>
+        <p className="auth-sub">{mode==='login'?'Sign in to your assessments':'Free to start — no card needed'}</p>
+        {err&&<div className="auth-error">{err}</div>}
+        <form onSubmit={go}>
+          {mode==='signup'&&(
+            <div className="auth-field">
+              <label className="auth-label">Your Name</label>
+              <input className="auth-input" type="text" placeholder="Jane Smith" value={name} onChange={e=>setName(e.target.value)} required/>
+            </div>
+          )}
+          <div className="auth-field">
+            <label className="auth-label">Email</label>
+            <input className="auth-input" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
+          </div>
+          <div className="auth-field">
+            <label className="auth-label">Password</label>
+            <input className="auth-input" type="password" placeholder={mode==='signup'?'Min 6 characters':'Password'} value={pw} onChange={e=>setPw(e.target.value)} required/>
+          </div>
+          <button className="auth-btn" disabled={busy}>{busy?'Please wait...':(mode==='login'?'Sign In':'Create Account')}</button>
+        </form>
+        <div className="auth-switch">
+          {mode==='login'
+            ?<span>No account? <a onClick={()=>{setMode('signup');setErr('');}}>Sign up free</a></span>
+            :<span>Have an account? <a onClick={()=>{setMode('login');setErr('');}}>Sign in</a></span>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─ PRICING MODAL ─ */
+function PricingModal({user,onClose}){
+  const cur=user&&user.plan||'free';
+  return(
+    <div className="price-overlay" onClick={onClose}>
+      <div className="price-sheet" onClick={e=>e.stopPropagation()}>
+        <div className="price-handle"/>
+        <div className="price-sheet-title">Choose Your Plan</div>
+        <div className="price-sheet-sub">Upgrade any time. Cancel any time.</div>
+        {PLANS.map(p=>(
+          <div key={p.id} className={"pm-plan"+(p.hot?' hot':'')}>
+            <div className="pm-row">
+              <div>
+                <div className="pm-name">{p.name}{p.hot&&<span className="pm-badge">Popular</span>}</div>
+                <ul className="pm-feats">{p.feats.map((f,i)=><li key={i}>{f}</li>)}</ul>
+              </div>
+              <div className="pm-price">{p.price==='Free'?'Free':('£'+p.price)}<span>{p.per}</span></div>
+            </div>
+            {cur===p.id
+              ?<div className="pm-current">Your current plan</div>
+              :<button className="pm-btn" onClick={()=>goStripe(p,user&&user.email)}>{p.contact?'Contact Sales':'Upgrade'}</button>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─ USER BAR ─ */
+function UserBar({user,onSignOut,onUpgrade}){
+  const plan=user&&user.plan||'free';
+  const planLabel={free:'Free',starter:'Starter',pro:'Pro',enterprise:'Enterprise'};
+  const init=((user&&(user.name||user.email))||'?').substring(0,2).toUpperCase();
+  return(
+    <div className="user-bar">
+      <div className="user-av">{init}</div>
+      <div className="user-em">{user&&user.email}</div>
+      <span className={"user-plan "+plan} onClick={onUpgrade}>{planLabel[plan]||'Free'} ↑</span>
+      <button className="user-signout" onClick={onSignOut}>Sign out</button>
+    </div>
+  );
+}
+
+function Landing({dispatch, user, onSignOut, onUpgrade}) {
   return (
     <div className="land">
       <nav className="land-nav">
@@ -1266,6 +1453,7 @@ function Landing({dispatch}) {
         </div>
         <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
       </nav>
+      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="hero">
         <div className="hero-ey">The trusted fire risk assessment platform</div>
         <h1 className="hero-h1">Professional fire risk<br/>assessments,<br/><em>built to stand up.</em></h1>
@@ -1504,7 +1692,7 @@ function ClientSetup({state, dispatch}) {
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────
-function Dashboard({state, dispatch}) {
+function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
   const {org, assessments} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
@@ -1539,6 +1727,7 @@ function Dashboard({state, dispatch}) {
         <button className="btn btn-ghost btn-sm" style={{borderColor:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.3)"}} onClick={()=>dispatch({type:"EDIT_ORG"})}>⚙</button>
       </div>
 
+      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="dash-scroll">
         <div className="dash-body">
           <div style={{marginBottom:18}}>
@@ -3070,44 +3259,26 @@ function CompleteScreen({state, dispatch}) {
 // ─── ROOT ─────────────────────────────────────────────────────────
 
 // ─── ROOT ─────────────────────────────────────────────────────────
-function App() {
-  const [state, dispatch] = useReducer(reducer, INIT);
-
-  // Online/offline detection
-  useEffect(() => {
-    const setOnline  = () => dispatch({type:"SET_ONLINE",v:true});
-    const setOffline = () => dispatch({type:"SET_ONLINE",v:false});
-    window.addEventListener("online",  setOnline);
-    window.addEventListener("offline", setOffline);
-    return () => {
-      window.removeEventListener("online",  setOnline);
-      window.removeEventListener("offline", setOffline);
-    };
-  }, []);
-
-  // localStorage persistence
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("firesite_v5f");
-      if (saved) dispatch({type:"HYDRATE", state:{...INIT,...JSON.parse(saved)}});
-    } catch(e){}
-  }, []);
-
-  useEffect(() => {
-    try { localStorage.setItem("firesite_v5f", JSON.stringify(state)); }
-    catch(e){}
-  }, [state]);
-
-  const {screen} = state;
-  return (
+function App(){
+  const[state,dispatch]=useReducer(reducer,INIT);
+  const[user,setUser]=React.useState(FS_AUTH._u);
+  const[showPricing,setShowPricing]=React.useState(false);
+  useEffect(()=>{const a=()=>dispatch({type:"SET_ONLINE",v:true}),b=()=>dispatch({type:"SET_ONLINE",v:false});window.addEventListener("online",a);window.addEventListener("offline",b);return()=>{window.removeEventListener("online",a);window.removeEventListener("offline",b);};},[]);
+  useEffect(()=>FS_AUTH.onStateChange(u=>setUser(u)),[]);
+  useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s)}});}catch(e){};},[]);
+  useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));}catch(e){};},[state]);
+  if(!user)return <AuthScreen onAuth={u=>setUser(u)}/>;
+  const{screen}=state;
+  return(
     <>
-      <style dangerouslySetInnerHTML={{ __html: CSS }}/>
-      {screen==="landing"      && <Landing      dispatch={dispatch}/>}
-      {screen==="setup"        && <Setup         state={state} dispatch={dispatch}/>}
-      {screen==="dashboard"    && <Dashboard     state={state} dispatch={dispatch}/>}
-      {screen==="client-setup" && <ClientSetup   state={state} dispatch={dispatch}/>}
-      {screen==="assessment"   && <Assessment     state={state} dispatch={dispatch}/>}
-      {screen==="complete"     && <CompleteScreen state={state} dispatch={dispatch}/>}
+      <style dangerouslySetInnerHTML={{__html:CSS}}/>
+      {showPricing&&<PricingModal user={user} onClose={()=>setShowPricing(false)}/>}
+      {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={()=>FS_AUTH.logout()} onUpgrade={()=>setShowPricing(true)}/>}
+      {screen==="setup"&&<Setup state={state} dispatch={dispatch}/>}
+      {screen==="dashboard"&&<Dashboard state={state} dispatch={dispatch} user={user} onSignOut={()=>FS_AUTH.logout()} onUpgrade={()=>setShowPricing(true)}/>}
+      {screen==="client-setup"&&<ClientSetup state={state} dispatch={dispatch}/>}
+      {screen==="assessment"&&<Assessment state={state} dispatch={dispatch}/>}
+      {screen==="complete"&&<CompleteScreen state={state} dispatch={dispatch}/>}
     </>
   );
 }
