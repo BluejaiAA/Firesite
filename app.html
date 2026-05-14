@@ -466,9 +466,9 @@ const isAnswered = (q, ans={}) => {
 const isMissed  = (q, ans) => q.required && !isAnswered(q, ans||{});
 const fmtDate   = iso => iso?new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"—";
 const riskCol   = r => r?.startsWith("Critical")?"#B91C1C":r?.startsWith("High")?"#D97706":r?.startsWith("Medium")?"#C0392B":"#059669";
-const riskBg    = r => r?.startsWith("Critical")?"#FEF2F2":r?.startsWith("High")?"#FFFBEB":r?.startsWith("Medium")?"#FDF3EE":"#ECFDF5";
+const riskBg    = r => r?.startsWith("Critical")?"#FEF2F2":r?.startsWith("High")?"#FFFBEB":r?.startsWith("Medium")?"#FDF3EE":"#0D3321";
 const pColor    = p => p?.includes("P1")?"#B91C1C":p?.includes("P2")?"#D97706":p?.includes("P3")?"#C0392B":"#059669";
-const pBg       = p => p?.includes("P1")?"#FEF2F2":p?.includes("P2")?"#FFFBEB":p?.includes("P3")?"#FDF3EE":"#ECFDF5";
+const pBg       = p => p?.includes("P1")?"#FEF2F2":p?.includes("P2")?"#FFFBEB":p?.includes("P3")?"#FDF3EE":"#0D3321";
 
 // Add target date from shortcut
 const addDays = (days) => {
@@ -590,26 +590,26 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 
 /* BIG ANSWER BUTTONS */
 .big-ans{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
-.big-btn{width:100%;padding:17px 18px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;border:2px solid #EAECF0;background:#F9FAFB;color:#8B949E;transition:all .15s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
+.big-btn{width:100%;padding:17px 18px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;border:2px solid #EAECF0;background:#1C2128;color:#8B949E;transition:all .15s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
 .big-btn:active{transform:scale(.97);}
 .big-btn.y,.big-btn.n,.big-btn.na{animation:btnPop .25s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes btnPop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
 .big-btn.y{background:#ECFDF5;border-color:#34D399;color:#065F46;}
 .big-btn.n{background:rgba(248,113,113,.12);border-color:#F87171;color:#F87171;}
-.big-btn.na{background:#F9FAFB;border-color:#D1D5DB;color:#8B949E;}
+.big-btn.na{background:#1C2128;border-color:#D1D5DB;color:#8B949E;}
 .big-btn:not(.y):not(.n):not(.na):hover{border-color:#D1D5DB;color:#E6EDF3;}
 .big-btn-icon{font-size:20px;flex-shrink:0;}
 .big-btn-label{flex:1;}
 .big-btn-check{font-size:18px;margin-left:auto;flex-shrink:0;}
 
 /* SELECT / TEXT INPUTS */
-.qc-sel{width:100%;background:#F9FAFB;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;cursor:pointer;transition:all .1s;}
+.qc-sel{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;cursor:pointer;transition:all .1s;}
 .qc-sel:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
-.qc-inp{width:100%;background:#F9FAFB;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;transition:all .1s;}
+.qc-inp{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;transition:all .1s;}
 .qc-inp:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
 .qc-inp::placeholder{color:#D1D5DB;}
 .mc-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
-.mc-c{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:500;border:2px solid #EAECF0;background:#F9FAFB;color:#8B949E;cursor:pointer;transition:all .12s;}
+.mc-c{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:500;border:2px solid #EAECF0;background:#1C2128;color:#8B949E;cursor:pointer;transition:all .12s;}
 .mc-c.on{background:#FDF3EE;border-color:#C0392B;color:#C0392B;font-weight:600;}
 
 /* AUTO-FLAG BANNER */
@@ -619,7 +619,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .obs-row{display:flex;align-items:center;gap:6px;padding:10px 0;cursor:pointer;user-select:none;}
 .obs-row-label{font-size:12px;color:#6E7681;flex:1;}
 .obs-row-label.has{color:#E6EDF3;font-weight:500;}
-.obs-box{width:100%;background:#F9FAFB;border:2px solid #EAECF0;border-radius:10px;padding:11px 13px;font-size:13px;color:#E6EDF3;outline:none;resize:none;min-height:80px;line-height:1.6;transition:all .1s;margin-bottom:12px;}
+.obs-box{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:11px 13px;font-size:13px;color:#E6EDF3;outline:none;resize:none;min-height:80px;line-height:1.6;transition:all .1s;margin-bottom:12px;}
 .obs-box:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
 .obs-box::placeholder{color:#D1D5DB;}
 
@@ -630,16 +630,16 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .photo-thumb img{width:100%;height:100%;object-fit:cover;}
 .photo-del{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;border:none;cursor:pointer;font-size:9px;display:flex;align-items:center;justify-content:center;}
 .photo-btns{display:flex;gap:7px;margin-bottom:12px;}
-.photo-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:9px;font-size:12px;font-weight:600;border:2px solid #EAECF0;background:#F9FAFB;color:#8B949E;cursor:pointer;transition:all .12s;position:relative;overflow:hidden;}
+.photo-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;border-radius:9px;font-size:12px;font-weight:600;border:2px solid #EAECF0;background:#1C2128;color:#8B949E;cursor:pointer;transition:all .12s;position:relative;overflow:hidden;}
 .photo-btn:hover{border-color:#C0392B;color:#C0392B;background:#FDF3EE;}
 .photo-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;}
 .photo-flash{position:fixed;inset:0;background:#161B22;opacity:0;pointer-events:none;z-index:9999;transition:opacity .1s;}
-.photo-cap{width:100%;background:#F9FAFB;border:1px solid #30363D;border-radius:7px;padding:6px 10px;font-size:11px;color:#E6EDF3;outline:none;margin-bottom:5px;}
+.photo-cap{width:100%;background:#1C2128;border:1px solid #30363D;border-radius:7px;padding:6px 10px;font-size:11px;color:#E6EDF3;outline:none;margin-bottom:5px;}
 .photo-cap::placeholder{color:#D1D5DB;}
 .photo-cap:focus{border-color:#C0392B;}
 
 /* FLAG BUTTON */
-.flag-btn{display:flex;align-items:center;gap:8px;width:100%;padding:12px 14px;border-radius:10px;cursor:pointer;border:2px solid #EAECF0;background:#F9FAFB;color:#6E7681;font-size:13px;font-weight:500;transition:all .12s;margin-bottom:14px;}
+.flag-btn{display:flex;align-items:center;gap:8px;width:100%;padding:12px 14px;border-radius:10px;cursor:pointer;border:2px solid #EAECF0;background:#1C2128;color:#6E7681;font-size:13px;font-weight:500;transition:all .12s;margin-bottom:14px;}
 .flag-btn.on{background:#FDF3EE;border-color:#C0392B;color:#C0392B;font-weight:600;}
 .flag-btn:hover:not(.on){border-color:#C0392B44;color:#C0392B;}
 
@@ -704,8 +704,8 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .dash-scroll{flex:1;overflow-y:auto;}
 .dash-body{padding:18px 16px;max-width:900px;margin:0 auto;}
 .heatmap{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px;}
-.hm-cell{border-radius:7px;padding:7px 5px;text-align:center;border:1px solid transparent;cursor:pointer;transition:all .12s;}
-.hm-cell:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.07);}
+.hm-cell{border-radius:7px;padding:7px 5px;text-align:center;border:1px solid transparent;cursor:pointer;transition:all .12s;background:#1C2128;}
+.hm-cell:hover{transform:translateY(-1px);box-shadow:0 3px 8px rgba(0,0,0,.4);}
 .hm-num{font-size:11px;font-weight:700;margin-bottom:1px;}
 .hm-lbl{font-size:7px;font-weight:500;opacity:.7;}
 .atile{background:#161B22;border:1px solid #30363D;border-radius:10px;padding:14px;cursor:pointer;transition:all .12s;margin-bottom:9px;}
@@ -738,7 +738,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .fg:last-child{margin-bottom:0;}
 .fl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8B949E;}
 .fl .req{color:#DC2626;}
-.fi,.fs,.ft{background:#F9FAFB;border:1.5px solid #30363D;border-radius:8px;padding:9px 12px;color:#0D1117;font-size:13px;outline:none;width:100%;transition:all .1s;}
+.fi,.fs,.ft{background:#1C2128;border:1.5px solid #30363D;border-radius:8px;padding:9px 12px;color:#0D1117;font-size:13px;outline:none;width:100%;transition:all .1s;}
 .fi:focus,.fs:focus,.ft:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
 .fi::placeholder,.ft::placeholder{color:#D1D5DB;}
 .ft{min-height:70px;resize:vertical;line-height:1.6;}
@@ -776,7 +776,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .rpt-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;}
 .rpt-tbl th{padding:6px 8px;text-align:left;font-size:7px;font-weight:700;text-transform:uppercase;color:#fff;}
 .rpt-tbl td{padding:7px 8px;border-bottom:1px solid #F3F4F6;line-height:1.5;vertical-align:top;}
-.rpt-tbl tr:nth-child(even) td{background:#F9FAFB;}
+.rpt-tbl tr:nth-child(even) td{background:#1C2128;}
 .rpt-finding{padding:9px 0;border-bottom:1px solid #F3F4F6;}
 .rpt-finding:last-child{border-bottom:none;}
 .rpt-f-head{display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;}
@@ -791,7 +791,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .app-ref{font-family:'JetBrains Mono',monospace;font-size:7px;color:#6E7681;margin-top:2px;}
 .app-cap{font-size:8px;color:#E6EDF3;line-height:1.4;}
 .sig-card{border:1px solid #30363D;border-radius:6px;overflow:hidden;margin-bottom:10px;}
-.sig-head{background:#F9FAFB;padding:6px 12px;font-size:7px;font-weight:700;text-transform:uppercase;color:#6E7681;border-bottom:1px solid #30363D;}
+.sig-head{background:#1C2128;padding:6px 12px;font-size:7px;font-weight:700;text-transform:uppercase;color:#6E7681;border-bottom:1px solid #30363D;}
 .sig-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .sig-f{display:flex;flex-direction:column;gap:2px;}
 .sig-l{font-size:7px;font-weight:700;text-transform:uppercase;color:#6E7681;}
@@ -806,7 +806,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .act-text{font-size:12px;font-weight:500;color:#0D1117;line-height:1.5;margin-bottom:4px;}
 .act-tags{display:flex;gap:5px;flex-wrap:wrap;}
 .act-tag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:8px;background:#F3F4F6;color:#8B949E;font-family:'JetBrains Mono',monospace;}
-.act-ssel{font-size:10px;background:#F9FAFB;border:1px solid #30363D;border-radius:5px;padding:3px 7px;color:#E6EDF3;outline:none;cursor:pointer;flex-shrink:0;}
+.act-ssel{font-size:10px;background:#1C2128;border:1px solid #30363D;border-radius:5px;padding:3px 7px;color:#E6EDF3;outline:none;cursor:pointer;flex-shrink:0;}
 
 /* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
@@ -832,13 +832,13 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .ti:last-child{border-right:none;}
 
 /* LOGO / COLOUR */
-.logo-drop{border:2px dashed #D1D5DB;border-radius:8px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;min-height:80px;background:#F9FAFB;text-align:center;transition:all .12s;}
+.logo-drop{border:2px dashed #D1D5DB;border-radius:8px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;min-height:80px;background:#1C2128;text-align:center;transition:all .12s;}
 .logo-drop:hover{border-color:#C0392B;background:#FDF3EE;}
 .logo-drop img{max-width:110px;max-height:50px;object-fit:contain;}
 .swatches{display:flex;flex-wrap:wrap;gap:5px;}
 .sw{width:24px;height:24px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .1s;flex-shrink:0;}
 .sw.on{border-color:#0D1117;transform:scale(1.1);}
-.sw-pick{display:flex;align-items:center;justify-content:center;font-size:13px;color:#6E7681;border:1.5px dashed #D1D5DB;background:#F9FAFB;position:relative;overflow:hidden;}
+.sw-pick{display:flex;align-items:center;justify-content:center;font-size:13px;color:#6E7681;border:1.5px dashed #D1D5DB;background:#1C2128;position:relative;overflow:hidden;}
 .sw-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;}
 
 /* ANIMATIONS */
@@ -938,7 +938,7 @@ function AddressFinder({value, onChange}) {
   return(
     <div>
       <div style={{position:"relative",marginBottom:8}}>
-        <input style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
+        <input style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
           placeholder="Enter postcode (e.g. EC2V 4QS) or address..."
           value={query} onChange={e=>handleInput(e.target.value)}/>
         <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
@@ -955,7 +955,7 @@ function AddressFinder({value, onChange}) {
           ))}
         </div>
       )}
-      <textarea style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",resize:"none",minHeight:80,lineHeight:1.6,fontFamily:"'Nunito',sans-serif",marginBottom:8}}
+      <textarea style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",resize:"none",minHeight:80,lineHeight:1.6,fontFamily:"'Nunito',sans-serif",marginBottom:8}}
         placeholder="Or type the full address here..." value={value||""} onChange={e=>{onChange(e.target.value);setQuery(e.target.value);}}/>
     </div>
   );
@@ -985,7 +985,7 @@ function OccupancyPicker({state={},onChange}) {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:12}}>
         {OCC_TYPES.map(t=>(
           <button key={t.cat} onClick={()=>upd({occupancyCat:t.cat,ans:t.cat})}
-            style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #EAECF0",background:cat===t.cat?"#FDF3EE":"#F9FAFB",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
+            style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #EAECF0",background:cat===t.cat?"#FDF3EE":"#1C2128",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
             <div style={{fontSize:22,marginBottom:5}}>{t.icon}</div>
             <div style={{fontSize:11,fontWeight:600,color:cat===t.cat?"#C0392B":"#374151"}}>{t.cat}</div>
             <div style={{fontSize:9,color:"#9CA3AF",marginTop:1}}>{t.sub}</div>
@@ -993,7 +993,7 @@ function OccupancyPicker({state={},onChange}) {
         ))}
       </div>
       {cat&&(
-        <input style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",marginBottom:8,fontFamily:"'Nunito',sans-serif"}}
+        <input style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",marginBottom:8,fontFamily:"'Nunito',sans-serif"}}
           placeholder={"Describe how "+cat.toLowerCase()+" space is used..."}
           value={state.detail||""} onChange={e=>upd({detail:e.target.value})}/>
       )}
@@ -1011,23 +1011,23 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Floor area</div>
           <input type="number" min="0" step="50"
-            style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
+            style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="850" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value})}/>
           <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#9CA3AF",marginTop:2}}>m2 gross internal</div>
         </div>
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Number of floors</div>
           <input type="number" min="1" step="1"
-            style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
+            style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="4" value={state.floors||""} onChange={e=>upd({floors:e.target.value})}/>
           <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#9CA3AF",marginTop:2}}>floors above ground</div>
         </div>
       </div>
       <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-        style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #EAECF0",background:"#F9FAFB",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Nunito',sans-serif"}}>
+        style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #EAECF0",background:"#1C2128",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Nunito',sans-serif"}}>
         Open in Google Maps to measure
       </a>
-      <div style={{fontSize:10,color:"#9CA3AF",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#F9FAFB",borderRadius:8,border:"1px solid #EAECF0"}}>
+      <div style={{fontSize:10,color:"#9CA3AF",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #EAECF0"}}>
         In Google Maps: right-click the building roof outline then Measure distance. Trace the perimeter and multiply by number of floors.
       </div>
     </div>
@@ -1750,7 +1750,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
               <div className="heatmap">
                 {sectionStatus.map(({s,reqDone,anyDone},i)=>(
                   <div key={i} className="hm-cell"
-                    style={{background:reqDone?"#ECFDF5":anyDone?`${ac}0F`:"#F9FAFB",border:`1px solid ${reqDone?"#6EE7B7":anyDone?ac+"33":"#EAECF0"}`}}
+                    style={{background:reqDone?"#0D3321":anyDone?`${ac}0F`:"#1C2128",border:`1px solid ${reqDone?"#6EE7B7":anyDone?ac+"33":"#EAECF0"}`}}
                     onClick={()=>{dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"});dispatch({type:"SEC",i});}}>
                     <div className="hm-num" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{reqDone?"✓":i+1}</div>
                     <div className="hm-lbl" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{s.short||s.title.split(" ")[0]}</div>
@@ -1801,7 +1801,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                         <div className="at-addr">{a.premisesAddress||"Address not set"}</div>
                       </div>
                       <span className="abadge" style={{
-                        background:a.status==="complete"?"#ECFDF5":"#FDF3EE",
+                        background:a.status==="complete"?"#0D3321":"#FDF3EE",
                         color:a.status==="complete"?"#059669":ac,
                         border:`1px solid ${a.status==="complete"?"#6EE7B7":ac+"44"}`,
                         flexShrink:0,whiteSpace:"nowrap"
@@ -2078,7 +2078,7 @@ function Assessment({state, dispatch}) {
             <div className="ss-meta">
               <span className="ss-pill">{vqs.length} question{vqs.length!==1?"s":""}</span>
               <span className="ss-pill">~{intro?.mins||3} min</span>
-              {secAns(curSec)>0&&<span className="ss-pill" style={{background:"#ECFDF5",color:"#C0392B",borderColor:"#6EE7B744"}}>{secAns(curSec)} done</span>}
+              {secAns(curSec)>0&&<span className="ss-pill" style={{background:"#0D3321",color:"#C0392B",borderColor:"#6EE7B744"}}>{secAns(curSec)} done</span>}
             </div>
             <button className="ss-begin" style={{background:pr}} onClick={startSection}>
               {secAns(curSec)>0?"Continue section →":"Begin section →"}
@@ -2129,9 +2129,9 @@ function Assessment({state, dispatch}) {
               {secFlag(curSec)>0&&` · ${secFlag(curSec)} flagged`}
             </div>
             <div className="se-stats">
-              <span className="se-stat" style={{background:"#ECFDF5",color:"#059669"}}>✓ {secAns(curSec)} answered</span>
+              <span className="se-stat" style={{background:"#0D3321",color:"#059669"}}>✓ {secAns(curSec)} answered</span>
               {secFlag(curSec)>0&&<span className="se-stat" style={{background:"#FDF3EE",color:ac}}>⚑ {secFlag(curSec)} flagged</span>}
-              {secDone(curSec)&&<span className="se-stat" style={{background:"#ECFDF5",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
+              {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
             <button className="se-next" onClick={goNextSec}>
@@ -2725,7 +2725,7 @@ function CompleteScreen({state, dispatch}) {
   );
 
   const RFtr = ({pg,tot=7}) => (
-    <div className="rpt-nav" style={{borderTop:"1px solid #EAECF0",background:"#F9FAFB"}}>
+    <div className="rpt-nav" style={{borderTop:"1px solid #EAECF0",background:"#1C2128"}}>
       <span className="rpt-fl">© {new Date().getFullYear()} {org.name||"Assessor"} · Confidential</span>
       <span style={{fontSize:8,fontWeight:700,color:pr}}>Firesite™</span>
       <span className="rpt-fl">Page {pg} of {tot}</span>
@@ -2796,7 +2796,7 @@ function CompleteScreen({state, dispatch}) {
           {/* Stats */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>
             {[
-              {v:answered,l:"Answered",col:"#059669",bg:"#ECFDF5"},
+              {v:answered,l:"Answered",col:"#059669",bg:"#0D3321"},
               {v:flagged,l:"Flagged",col:ac,bg:"#FDF3EE"},
               {v:FRA_SECTIONS.length,l:"Sections",col:pr,bg:"#F8F9FC"},
             ].map((s,i)=>(
@@ -2839,7 +2839,7 @@ function CompleteScreen({state, dispatch}) {
                   return (
                     <div key={i} title={s.title}
                       onClick={()=>{dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"});dispatch({type:"SEC",i});}}
-                      style={{cursor:"pointer",display:"flex",alignItems:"center",gap:4,background:done?"#ECFDF5":"#F3F4F6",border:`1px solid ${done?"#6EE7B7":"#EAECF0"}`,color:done?"#065F46":"#9CA3AF",borderRadius:6,padding:"4px 8px",fontSize:10,fontWeight:done?600:400}}>
+                      style={{cursor:"pointer",display:"flex",alignItems:"center",gap:4,background:done?"#0D3321":"#F3F4F6",border:`1px solid ${done?"#6EE7B7":"#EAECF0"}`,color:done?"#065F46":"#9CA3AF",borderRadius:6,padding:"4px 8px",fontSize:10,fontWeight:done?600:400}}>
                       {done?"✓":i+1} {s.short||s.title.split(" ")[0]}
                     </div>
                   );
@@ -2992,7 +2992,7 @@ function CompleteScreen({state, dispatch}) {
                   </div>
                 ))}
               </div>
-              <div style={{padding:"5px 12px",background:"#F9FAFB",display:"flex",justifyContent:"space-between",borderTop:"1px solid #EAECF0"}}>
+              <div style={{padding:"5px 12px",background:"#1C2128",display:"flex",justifyContent:"space-between",borderTop:"1px solid #EAECF0"}}>
                 <span style={{fontSize:8,color:"#9CA3AF"}}>Prepared by: {org.assessor||"Assessor"}{org.quals?` · ${org.quals}`:""}</span>
                 <span style={{fontSize:8,fontWeight:700,color:pr}}>Firesite™</span>
               </div>
@@ -3063,12 +3063,12 @@ function CompleteScreen({state, dispatch}) {
                 <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#9CA3AF",marginBottom:5,fontWeight:600,textTransform:"uppercase",letterSpacing:.8}}>Risk Matrix</div>
                 <div style={{display:"grid",gridTemplateColumns:"60px 1fr 1fr 1fr",border:"1px solid #EAECF0",borderRadius:6,overflow:"hidden",fontSize:9,marginBottom:12}}>
                   {["","Slight Harm","Moderate Harm","Extreme Harm"].map((h,i)=>(
-                    <div key={i} style={{padding:"5px 6px",background:"#F9FAFB",borderBottom:"1px solid #EAECF0",borderLeft:i>0?"1px solid #EAECF0":"none",fontWeight:700,fontSize:7,textTransform:"uppercase",color:"#6B7280",textAlign:i===0?"left":"center"}}>{h}</div>
+                    <div key={i} style={{padding:"5px 6px",background:"#1C2128",borderBottom:"1px solid #EAECF0",borderLeft:i>0?"1px solid #EAECF0":"none",fontWeight:700,fontSize:7,textTransform:"uppercase",color:"#6B7280",textAlign:i===0?"left":"center"}}>{h}</div>
                   ))}
-                  {[["Low","#ECFDF5","#065F46","#FFFBEB","#92400E","#FEF3C7","#B45309"],
+                  {[["Low","#0D3321","#065F46","#FFFBEB","#92400E","#FEF3C7","#B45309"],
                     ["Medium","#FFFBEB","#92400E","#FEF3C7","#B45309","#FEF2F2","#991B1B"],
                     ["High","#FEF3C7","#B45309","#FEF2F2","#991B1B","#7B1C1C","#FECACA"]].map(([l,...cs])=>[
-                    <div key={l} style={{padding:"7px 6px",background:"#F9FAFB",borderTop:"1px solid #EAECF0",fontSize:8,fontWeight:700,textTransform:"uppercase",color:"#6B7280"}}>{l}</div>,
+                    <div key={l} style={{padding:"7px 6px",background:"#1C2128",borderTop:"1px solid #EAECF0",fontSize:8,fontWeight:700,textTransform:"uppercase",color:"#6B7280"}}>{l}</div>,
                     ...[0,1,2].map(i=>(
                       <div key={i} style={{padding:"7px",textAlign:"center",fontWeight:700,fontSize:9,background:cs[i*2],color:cs[i*2+1],borderLeft:"1px solid #EAECF0",borderTop:"1px solid #EAECF0"}}>
                         {[["Trivial","Tolerable","Moderate"],["Tolerable","Moderate","Substantial"],["Moderate","Substantial","Intolerable"]][["Low","Medium","High"].indexOf(l)][i]}
