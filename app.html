@@ -503,7 +503,7 @@ const estMins = (assessments_obj, answers) => {
 const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:'Nunito',sans-serif;color:#0D1117;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+html,body{height:100%;font-family:'Nunito',sans-serif;color:#F0F6FC;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
 button,input,select,textarea{font-family:'Nunito',sans-serif;}
 ::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px;}
 
@@ -520,10 +520,10 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .tn-back.lt:hover{border-color:#6E7681;color:#E6EDF3;}
 .tn-mid{flex:1;min-width:0;}
 .tn-title{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.tn-title.dk{color:#fff;} .tn-title.lt{color:#0D1117;}
+.tn-title.dk{color:#fff;} .tn-title.lt{color:#F0F6FC;}
 .tn-sub{font-size:9px;color:rgba(255,255,255,.25);margin-top:1px;}
 .tn-save{font-size:9px;white-space:nowrap;flex-shrink:0;}
-.tn-offline{font-size:9px;font-weight:700;background:#F59E0B;color:#0D1117;padding:2px 8px;border-radius:10px;flex-shrink:0;}
+.tn-offline{font-size:9px;font-weight:700;background:#F59E0B;color:#F0F6FC;padding:2px 8px;border-radius:10px;flex-shrink:0;}
 
 /* ─ CARD FLOW WRAP ─ */
 .assess-wrap{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:#0D1117;}
@@ -549,7 +549,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .stabs::-webkit-scrollbar{display:none;}
 .stab{padding:8px 11px;font-size:10px;font-weight:500;color:#6E7681;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none;display:flex;align-items:center;gap:3px;transition:all .1s;}
 .stab:hover{color:#E6EDF3;}
-.stab.on{color:#0D1117;border-bottom-color:#C0392B;font-weight:600;}
+.stab.on{color:#F0F6FC;border-bottom-color:#C0392B;font-weight:600;}
 .stab.done{color:#059669;border-bottom-color:#059669;}
 .stab.miss{color:#DC2626;}
 .stab-miss-dot{width:4px;height:4px;border-radius:50%;background:#DC2626;}
@@ -561,7 +561,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .sec-start{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .ss-icon{font-size:52px;margin-bottom:18px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
 .ss-num{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
-.ss-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:#0D1117;margin-bottom:10px;line-height:1.1;}
+.ss-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:#F0F6FC;margin-bottom:10px;line-height:1.1;}
 .ss-desc{font-size:13px;color:#8B949E;line-height:1.65;max-width:280px;margin-bottom:24px;}
 .ss-meta{display:flex;gap:12px;margin-bottom:28px;}
 .ss-pill{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;background:#FDF3EE;color:#C0392B;border:1px solid #C0392B22;}
@@ -582,7 +582,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .qc-dot.todo{background:#E5E7EB;}
 .qc-dot.miss{background:#DC2626;}
 
-.qc-question{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#0D1117;line-height:1.25;margin-bottom:12px;}
+.qc-question{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#F0F6FC;line-height:1.25;margin-bottom:12px;}
 .qc-req{color:#DC2626;font-size:13px;}
 
 .qc-guide-btn{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;color:#C0392B;background:#FDF3EE;border:1px solid #C0392B1A;border-radius:20px;padding:3px 10px;cursor:pointer;margin-bottom:16px;}
@@ -676,7 +676,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 /* SECTION END CARD */
 .sec-end{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .se-icon{font-size:52px;margin-bottom:16px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 4px 12px rgba(5,150,105,.25));}
-.se-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:700;color:#0D1117;margin-bottom:6px;}
+.se-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:700;color:#F0F6FC;margin-bottom:6px;}
 .se-sub{font-size:12px;color:#8B949E;margin-bottom:20px;line-height:1.6;}
 .se-stats{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
 .se-stat{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:600;}
@@ -713,7 +713,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .atile.complete{border-left:3px solid #059669;}
 .atile.draft{border-left:3px solid #C0392B;}
 .at-ref{font-family:'JetBrains Mono',monospace;font-size:8px;color:#6E7681;margin-bottom:2px;}
-.at-name{font-family:'Nunito',sans-serif;font-size:17px;font-weight:700;color:#0D1117;margin-bottom:1px;line-height:1.2;}
+.at-name{font-family:'Nunito',sans-serif;font-size:17px;font-weight:700;color:#F0F6FC;margin-bottom:1px;line-height:1.2;}
 .at-addr{font-size:10px;color:#6E7681;margin-bottom:7px;}
 .at-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px;}
 .abadge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;}
@@ -725,7 +725,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .tcrd-top{padding:14px 13px 10px;}
 .tcrd-ic{font-size:22px;margin-bottom:9px;}
 .tcrd-tag{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
-.tcrd-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#0D1117;margin-bottom:3px;}
+.tcrd-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:#F0F6FC;margin-bottom:3px;}
 .tcrd-desc{font-size:10px;color:#8B949E;line-height:1.5;}
 .tcrd-ft{padding:9px 13px;border-top:1px solid #30363D;}
 .tcrd-btn{width:100%;padding:7px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid;background:transparent;transition:all .1s;}
@@ -738,7 +738,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .fg:last-child{margin-bottom:0;}
 .fl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#8B949E;}
 .fl .req{color:#DC2626;}
-.fi,.fs,.ft{background:#1C2128;border:1.5px solid #30363D;border-radius:8px;padding:9px 12px;color:#0D1117;font-size:13px;outline:none;width:100%;transition:all .1s;}
+.fi,.fs,.ft{background:#1C2128;border:1.5px solid #30363D;border-radius:8px;padding:9px 12px;color:#F0F6FC;font-size:13px;outline:none;width:100%;transition:all .1s;}
 .fi:focus,.fs:focus,.ft:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
 .fi::placeholder,.ft::placeholder{color:#D1D5DB;}
 .ft{min-height:70px;resize:vertical;line-height:1.6;}
@@ -770,7 +770,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .rpt-body{padding:18px 16px;}
 .rpt-sh{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid #EAECF0;}
 .rpt-sn{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#EAECF0;line-height:1;flex-shrink:0;}
-.rpt-st{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#0D1117;}
+.rpt-st{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#F0F6FC;}
 .rpt-sl{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1px;}
 .rpt-p{font-size:10px;line-height:1.75;color:#C9D1D9;margin-bottom:10px;}
 .rpt-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;}
@@ -803,7 +803,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .act-item:last-child{border-bottom:none;}
 .act-pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
 .act-body{flex:1;min-width:0;}
-.act-text{font-size:12px;font-weight:500;color:#0D1117;line-height:1.5;margin-bottom:4px;}
+.act-text{font-size:12px;font-weight:500;color:#F0F6FC;line-height:1.5;margin-bottom:4px;}
 .act-tags{display:flex;gap:5px;flex-wrap:wrap;}
 .act-tag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:8px;background:#F3F4F6;color:#8B949E;font-family:'JetBrains Mono',monospace;}
 .act-ssel{font-size:10px;background:#1C2128;border:1px solid #30363D;border-radius:5px;padding:3px 7px;color:#E6EDF3;outline:none;cursor:pointer;flex-shrink:0;}
@@ -822,7 +822,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .hero{padding:44px 16px 36px;max-width:640px;margin:0 auto;}
 .hero-ey{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#C0392B;display:flex;align-items:center;gap:7px;margin-bottom:10px;}
 .hero-ey::before{content:'';width:14px;height:1px;background:#C0392B;}
-.hero-h1{font-family:'Nunito',sans-serif;font-size:clamp(32px,8vw,50px);font-weight:700;line-height:1.07;color:#0D1117;margin-bottom:12px;}
+.hero-h1{font-family:'Nunito',sans-serif;font-size:clamp(32px,8vw,50px);font-weight:700;line-height:1.07;color:#F0F6FC;margin-bottom:12px;}
 .hero-h1 em{font-style:italic;color:#C0392B;}
 .hero-p{font-size:13px;color:#8B949E;line-height:1.7;max-width:420px;margin-bottom:22px;}
 .hero-btns{display:flex;gap:8px;flex-wrap:wrap;}
@@ -837,7 +837,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .logo-drop img{max-width:110px;max-height:50px;object-fit:contain;}
 .swatches{display:flex;flex-wrap:wrap;gap:5px;}
 .sw{width:24px;height:24px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .1s;flex-shrink:0;}
-.sw.on{border-color:#0D1117;transform:scale(1.1);}
+.sw.on{border-color:#F0F6FC;transform:scale(1.1);}
 .sw-pick{display:flex;align-items:center;justify-content:center;font-size:13px;color:#6E7681;border:1.5px dashed #D1D5DB;background:#1C2128;position:relative;overflow:hidden;}
 .sw-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;}
 
@@ -875,8 +875,8 @@ function LogoDrop({logo, onLogo}) {
       onDragOver={e=>e.preventDefault()}
       onDrop={e=>{e.preventDefault();handle(e.dataTransfer.files[0]);}}>
       <input ref={ref} type="file" accept="image/*" style={{display:"none"}} onChange={e=>handle(e.target.files[0])}/>
-      {logo ? <><img src={logo} alt="logo"/><span style={{fontSize:9,color:"#9CA3AF"}}>Tap to change</span></> :
-        <><span style={{fontSize:20}}>🖼️</span><span style={{fontSize:11,fontWeight:600,color:"#374151"}}>Drop or tap to upload</span><span style={{fontSize:9,color:"#9CA3AF"}}>PNG, SVG or JPG</span></>}
+      {logo ? <><img src={logo} alt="logo"/><span style={{fontSize:9,color:"#6E7681"}}>Tap to change</span></> :
+        <><span style={{fontSize:20}}>🖼️</span><span style={{fontSize:11,fontWeight:600,color:"#374151"}}>Drop or tap to upload</span><span style={{fontSize:9,color:"#6E7681"}}>PNG, SVG or JPG</span></>}
     </div>
   );
 }
@@ -943,14 +943,14 @@ function AddressFinder({value, onChange}) {
           value={query} onChange={e=>handleInput(e.target.value)}/>
         <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
       </div>
-      {loading&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>Looking up address...</div>}
-      {error&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>{error}</div>}
+      {loading&&<div style={{fontSize:11,color:"#6E7681",padding:"6px 12px"}}>Looking up address...</div>}
+      {error&&<div style={{fontSize:11,color:"#6E7681",padding:"6px 12px"}}>{error}</div>}
       {results.length>0&&(
         <div style={{background:"#161B22",border:"1.5px solid #30363D",borderRadius:10,overflow:"hidden",marginBottom:8,boxShadow:"0 4px 16px rgba(0,0,0,.08)"}}>
           {results.map((r,i)=>(
             <div key={i} style={{padding:"11px 14px",fontSize:12,color:"#374151",cursor:"pointer",borderBottom:"1px solid #F3F4F6"}} onClick={()=>selectResult(r)}>
               <div style={{fontWeight:600,color:"#1C1C1C"}}>{r.display}</div>
-              {r.sub&&<div style={{color:"#9CA3AF",fontSize:11}}>{r.sub}</div>}
+              {r.sub&&<div style={{color:"#6E7681",fontSize:11}}>{r.sub}</div>}
             </div>
           ))}
         </div>
@@ -988,7 +988,7 @@ function OccupancyPicker({state={},onChange}) {
             style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #EAECF0",background:cat===t.cat?"#FDF3EE":"#1C2128",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
             <div style={{fontSize:22,marginBottom:5}}>{t.icon}</div>
             <div style={{fontSize:11,fontWeight:600,color:cat===t.cat?"#C0392B":"#374151"}}>{t.cat}</div>
-            <div style={{fontSize:9,color:"#9CA3AF",marginTop:1}}>{t.sub}</div>
+            <div style={{fontSize:9,color:"#6E7681",marginTop:1}}>{t.sub}</div>
           </button>
         ))}
       </div>
@@ -1013,21 +1013,21 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
           <input type="number" min="0" step="50"
             style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="850" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value})}/>
-          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#9CA3AF",marginTop:2}}>m2 gross internal</div>
+          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>m2 gross internal</div>
         </div>
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Number of floors</div>
           <input type="number" min="1" step="1"
             style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="4" value={state.floors||""} onChange={e=>upd({floors:e.target.value})}/>
-          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#9CA3AF",marginTop:2}}>floors above ground</div>
+          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>floors above ground</div>
         </div>
       </div>
       <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
         style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #EAECF0",background:"#1C2128",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Nunito',sans-serif"}}>
         Open in Google Maps to measure
       </a>
-      <div style={{fontSize:10,color:"#9CA3AF",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #EAECF0"}}>
+      <div style={{fontSize:10,color:"#6E7681",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #EAECF0"}}>
         In Google Maps: right-click the building roof outline then Measure distance. Trace the perimeter and multiply by number of floors.
       </div>
     </div>
@@ -1119,13 +1119,13 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         <div className="qc-header">
           <span className="qc-ref">{q.ref}</span>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <span style={{fontSize:10,color:"#9CA3AF",fontWeight:500}}>{qIdx+1}<span style={{opacity:.5}}>/{totalVisible}</span></span>
+            <span style={{fontSize:10,color:"#6E7681",fontWeight:500}}>{qIdx+1}<span style={{opacity:.5}}>/{totalVisible}</span></span>
             <div className="qc-dots">
               {Array.from({length:Math.min(totalVisible,9)}).map((_,i)=>{
                 const cls = i<qIdx?"done":i===qIdx?"now":"todo";
                 return <div key={i} className={`qc-dot ${cls}`}/>;
               })}
-              {totalVisible>9 && <span style={{fontSize:9,color:"#9CA3AF",marginLeft:2}}>+{totalVisible-9}</span>}
+              {totalVisible>9 && <span style={{fontSize:9,color:"#6E7681",marginLeft:2}}>+{totalVisible-9}</span>}
             </div>
           </div>
         </div>
@@ -1195,7 +1195,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
 
         {/* Observation — collapsed by default */}
         <div className={`obs-row ${note?"has":""}`} onClick={()=>setShowNote(s=>!s)}>
-          <span style={{fontSize:12,color:"#9CA3AF"}}>{showNote?"▴":"▾"}</span>
+          <span style={{fontSize:12,color:"#6E7681"}}>{showNote?"▴":"▾"}</span>
           <span className={`obs-row-label ${note?"has":""}`}>
             {note?"Observation added — tap to edit":"Add observation (optional)"}
           </span>
@@ -1220,7 +1220,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           <input key={p.id} className="photo-cap" placeholder="Caption…"
             value={p.caption} onChange={e=>updPhotos(photosArr.map(x=>x.id===p.id?{...x,caption:e.target.value}:x))}/>
         ))}
-        <div className="photo-btns">
+        {!["address","occupancy","floorarea","text","number","date"].includes(q.t) && (<div className="photo-btns">
           <div className="photo-btn">
             <input ref={camRef} type="file" accept="image/*" capture="environment"
               onChange={e=>handleFiles(e.target.files)}/>
@@ -1231,13 +1231,13 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
               onChange={e=>handleFiles(e.target.files)}/>
             🖼 Library
           </div>
-        </div>
+        </div>)}
 
         {/* Flag */}
         <button className={`flag-btn ${flagged?"on":""}`} onClick={handleFlag}>
           <span>{flagged?"🚩":"⚑"}</span>
           <span style={{flex:1}}>{flagged?"Flagged for Action Plan":"Flag for Action Plan"}</span>
-          {photosArr.length>0 && <span style={{fontSize:10,color:"#9CA3AF"}}>📷{photosArr.length}</span>}
+          {photosArr.length>0 && <span style={{fontSize:10,color:"#6E7681"}}>📷{photosArr.length}</span>}
         </button>
 
         {/* Action panel */}
@@ -1543,10 +1543,10 @@ function Setup({state, dispatch}) {
         <LogoDrop logo={org.logo} onLogo={v=>upd({logo:v})}/></div>
       <div className="g2" style={{marginBottom:16}}>
         <div className="fg"><label className="fl">Primary colour</label>
-          <div style={{fontSize:9,color:"#9CA3AF",marginBottom:5}}>Header, nav, buttons</div>
+          <div style={{fontSize:9,color:"#6E7681",marginBottom:5}}>Header, nav, buttons</div>
           <ColourPicker value={org.primaryColor||"#0D1117"} onChange={v=>upd({primaryColor:v})}/></div>
         <div className="fg"><label className="fl">Accent colour</label>
-          <div style={{fontSize:9,color:"#9CA3AF",marginBottom:5}}>Highlights, markers</div>
+          <div style={{fontSize:9,color:"#6E7681",marginBottom:5}}>Highlights, markers</div>
           <ColourPicker value={org.accentColor||"#C0392B"} onChange={v=>upd({accentColor:v})}/></div>
       </div>
       <label className="fl" style={{display:"block",marginBottom:8}}>Live cover preview</label>
@@ -1569,7 +1569,7 @@ function Setup({state, dispatch}) {
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",background:"#1C2128"}}>
           {[["Reference","FRA-2026-001"],["Risk Rating","MEDIUM"]].map(([l,v])=>(
             <div key={l} style={{padding:"7px 11px",borderRight:"1px solid #F3F4F6",borderBottom:"1px solid #F3F4F6"}}>
-              <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",color:"#9CA3AF",marginBottom:1}}>{l}</div>
+              <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",color:"#6E7681",marginBottom:1}}>{l}</div>
               <div style={{fontSize:10,fontWeight:600,color:v==="MEDIUM"?"#D97706":"#0D1117"}}>{v}</div>
             </div>
           ))}
@@ -1734,7 +1734,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
             <div style={{fontFamily:"'Nunito',sans-serif",fontSize:24,fontWeight:700,color:"#0D1117",lineHeight:1.1,marginBottom:3}}>
               {firstName?`Morning, ${firstName}.`:"Your assessments."}
             </div>
-            <div style={{fontSize:11,color:"#9CA3AF"}}>
+            <div style={{fontSize:11,color:"#6E7681"}}>
               {assessments.length===0?"Start your first assessment below.":
                `${assessments.length} assessment${assessments.length>1?"s":""} · ${completed.length} complete · ${drafts.length} in progress`}
             </div>
@@ -1758,7 +1758,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                 ))}
               </div>
               {activeDraft.answers&&(
-                <div style={{fontSize:10,color:"#9CA3AF",textAlign:"right"}}>~{estMins(null,draftAns)} min remaining</div>
+                <div style={{fontSize:10,color:"#6E7681",textAlign:"right"}}>~{estMins(null,draftAns)} min remaining</div>
               )}
             </div>
           )}
@@ -1773,7 +1773,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                   <span style={{fontSize:15}}>{s.ic}</span>
                   <div>
                     <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:s.col,lineHeight:1}}>{s.v}</div>
-                    <div style={{fontSize:9,color:"#9CA3AF",marginTop:2}}>{s.l}</div>
+                    <div style={{fontSize:9,color:"#6E7681",marginTop:2}}>{s.l}</div>
                   </div>
                 </div>
               ))}
@@ -1812,12 +1812,12 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                       {a.clientName&&<span className="abadge" style={{background:"#F3F4F6",color:"#6B7280"}}>{a.clientName}</span>}
                       {a.riskRating&&<span className="abadge" style={{background:riskBg(a.riskRating),color:riskCol(a.riskRating),border:`1px solid ${riskCol(a.riskRating)}33`}}>{a.riskRating.split("—")[0].trim()}</span>}
                       {flagCount>0&&<span className="abadge" style={{background:"#FDF3EE",color:ac}}>⚑ {flagCount}</span>}
-                      {a.savedAt&&<span style={{fontSize:9,color:"#9CA3AF"}}>Saved {a.savedAt}</span>}
+                      {a.savedAt&&<span style={{fontSize:9,color:"#6E7681"}}>Saved {a.savedAt}</span>}
                     </div>
                     {a.status==="draft"&&answered>0&&(
                       <div style={{marginBottom:7}}>
                         <div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}>
-                          <span style={{fontSize:9,color:"#9CA3AF"}}>{pct}% complete</span>
+                          <span style={{fontSize:9,color:"#6E7681"}}>{pct}% complete</span>
                           <span style={{fontSize:9,color:ac,fontWeight:600}}>~{estMins(null,a.answers||{})} min left</span>
                         </div>
                         <div className="at-prog"><div className="at-prog-fill" style={{width:`${pct}%`,background:ac}}/></div>
@@ -1837,7 +1837,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
 
           {/* Tool cards */}
           <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#0D1117",marginBottom:3}}>Assessment Types</div>
-          <div style={{fontSize:10,color:"#9CA3AF",marginBottom:10}}>Professional forms for every fire safety assessment</div>
+          <div style={{fontSize:10,color:"#6E7681",marginBottom:10}}>Professional forms for every fire safety assessment</div>
           <div className="tool-grid">
             {tools.map(t=>(
               <div key={t.key} className="tcrd" onClick={()=>t.key==="fra"&&dispatch({type:"NEW_ASSESSMENT"})}>
@@ -1867,7 +1867,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
 // ─── ASSESSMENT — card-by-card flow ──────────────────────────────
 function Assessment({state, dispatch}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
-  if (!a) return <div style={{padding:40,textAlign:"center",color:"#9CA3AF"}}>Assessment not found. <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Back</button></div>;
+  if (!a) return <div style={{padding:40,textAlign:"center",color:"#6E7681"}}>Assessment not found. <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Back</button></div>;
 
   const {org, showMissed} = state;
   const ac = org.accentColor||"#C0392B";
@@ -2083,7 +2083,7 @@ function Assessment({state, dispatch}) {
             <button className="ss-begin" style={{background:pr}} onClick={startSection}>
               {secAns(curSec)>0?"Continue section →":"Begin section →"}
             </button>
-            {secIdx>0&&<button style={{background:"none",border:"none",fontSize:11,color:"#9CA3AF",cursor:"pointer",marginTop:12}} onClick={()=>{dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>← Previous section</button>}
+            {secIdx>0&&<button style={{background:"none",border:"none",fontSize:11,color:"#6E7681",cursor:"pointer",marginTop:12}} onClick={()=>{dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>← Previous section</button>}
           </div>
         )}
 
@@ -2802,7 +2802,7 @@ function CompleteScreen({state, dispatch}) {
             ].map((s,i)=>(
               <div key={i} style={{background:s.bg,border:`1px solid ${s.col}22`,borderRadius:9,padding:"12px 10px",textAlign:"center"}}>
                 <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:700,color:s.col,lineHeight:1}}>{s.v}</div>
-                <div style={{fontSize:9,color:"#9CA3AF",marginTop:3}}>{s.l}</div>
+                <div style={{fontSize:9,color:"#6E7681",marginTop:3}}>{s.l}</div>
               </div>
             ))}
           </div>
@@ -2822,7 +2822,7 @@ function CompleteScreen({state, dispatch}) {
                 ["Photos taken",allPhotos.length+" photo"+(allPhotos.length!==1?"s":"")],
               ].map(([l,v])=>(
                 <div key={l} style={{display:"flex",padding:"7px 0",borderBottom:"1px solid #F9FAFB",gap:10}}>
-                  <span style={{width:100,flexShrink:0,fontSize:8,fontWeight:700,textTransform:"uppercase",letterSpacing:.4,color:"#9CA3AF",paddingTop:2}}>{l}</span>
+                  <span style={{width:100,flexShrink:0,fontSize:8,fontWeight:700,textTransform:"uppercase",letterSpacing:.4,color:"#6E7681",paddingTop:2}}>{l}</span>
                   <span style={{fontSize:12,color:"#374151",flex:1,whiteSpace:"pre-line",lineHeight:1.5}}>{v}</span>
                 </div>
               ))}
@@ -2865,9 +2865,9 @@ function CompleteScreen({state, dispatch}) {
                       </div>
                     </div>
                   ))}
-                  {allPhotos.length>8&&<div style={{width:60,height:60,borderRadius:6,background:"#F3F4F6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#9CA3AF",fontWeight:600}}>+{allPhotos.length-8}</div>}
+                  {allPhotos.length>8&&<div style={{width:60,height:60,borderRadius:6,background:"#F3F4F6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#6E7681",fontWeight:600}}>+{allPhotos.length-8}</div>}
                 </div>
-                <div style={{fontSize:10,color:"#9CA3AF",marginTop:8}}>Photos appear in report findings and Photo Evidence Appendix (Page 7)</div>
+                <div style={{fontSize:10,color:"#6E7681",marginTop:8}}>Photos appear in report findings and Photo Evidence Appendix (Page 7)</div>
               </div>
             </div>
           )}
@@ -2890,11 +2890,11 @@ function CompleteScreen({state, dispatch}) {
         <div style={{padding:"16px"}}>
           <div style={{marginBottom:14}}>
             <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:"#0D1117",marginBottom:3}}>Action Plan</div>
-            <div style={{fontSize:11,color:"#9CA3AF"}}>{actionItems.length} item{actionItems.length!==1?"s":""} — update status as actions are resolved</div>
+            <div style={{fontSize:11,color:"#6E7681"}}>{actionItems.length} item{actionItems.length!==1?"s":""} — update status as actions are resolved</div>
           </div>
 
           {actionItems.length===0 ? (
-            <div style={{textAlign:"center",padding:"40px 20px",color:"#9CA3AF"}}>
+            <div style={{textAlign:"center",padding:"40px 20px",color:"#6E7681"}}>
               <div style={{fontSize:32,marginBottom:10,opacity:.3}}>⚑</div>
               <div style={{fontFamily:"'Nunito',sans-serif",fontSize:17,marginBottom:5,color:"#6B7280"}}>No items flagged</div>
               <div style={{fontSize:12}}>Flag questions during the assessment to build your action plan</div>
@@ -2947,7 +2947,7 @@ function CompleteScreen({state, dispatch}) {
           <div style={{padding:"12px 16px",background:"#161B22",borderBottom:"1px solid #30363D",display:"flex",gap:8,alignItems:"center"}}>
             <div style={{flex:1}}>
               <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700}}>Report Preview</div>
-              <div style={{fontSize:10,color:"#9CA3AF"}}>Your branded report — {actionItems.length} findings, {allPhotos.length} photos, {7} pages</div>
+              <div style={{fontSize:10,color:"#6E7681"}}>Your branded report — {actionItems.length} findings, {allPhotos.length} photos, {7} pages</div>
             </div>
             <button className="btn btn-dark btn-sm" style={{background:pr,flexShrink:0}}
               onClick={()=>generatePDF(a, org)}>
@@ -2987,13 +2987,13 @@ function CompleteScreen({state, dispatch}) {
                   ["Risk Rating",(risk||"Not set").split("—")[0].trim()],["Next Review",a.nextReview||"—"],
                   ["Resp. Person",(a.rpName||"—")+(a.rpTitle?"\n"+a.rpTitle:"")],["Client",a.clientName||"—"]].map(([l,v])=>(
                   <div key={l} style={{padding:"8px 12px",borderRight:"1px solid #F3F4F6",borderBottom:"1px solid #F3F4F6"}}>
-                    <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",letterSpacing:.5,color:"#9CA3AF",marginBottom:2}}>{l}</div>
+                    <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",letterSpacing:.5,color:"#6E7681",marginBottom:2}}>{l}</div>
                     <div style={{fontSize:10,fontWeight:600,color:l==="Risk Rating"?riskCol(risk):"#0D1117",whiteSpace:"pre-line",lineHeight:1.3}}>{v}</div>
                   </div>
                 ))}
               </div>
               <div style={{padding:"5px 12px",background:"#1C2128",display:"flex",justifyContent:"space-between",borderTop:"1px solid #EAECF0"}}>
-                <span style={{fontSize:8,color:"#9CA3AF"}}>Prepared by: {org.assessor||"Assessor"}{org.quals?` · ${org.quals}`:""}</span>
+                <span style={{fontSize:8,color:"#6E7681"}}>Prepared by: {org.assessor||"Assessor"}{org.quals?` · ${org.quals}`:""}</span>
                 <span style={{fontSize:8,fontWeight:700,color:pr}}>Firesite™</span>
               </div>
               <RFtr pg={1}/>
@@ -3015,7 +3015,7 @@ function CompleteScreen({state, dispatch}) {
                       ["Legislation","Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021"]
                     ].map(([l,v])=>(
                       <tr key={l}>
-                        <td style={{width:100,fontWeight:700,fontSize:8,textTransform:"uppercase",color:"#9CA3AF",padding:"5px 0",borderBottom:"1px solid #F3F4F6",verticalAlign:"top"}}>{l}</td>
+                        <td style={{width:100,fontWeight:700,fontSize:8,textTransform:"uppercase",color:"#6E7681",padding:"5px 0",borderBottom:"1px solid #F3F4F6",verticalAlign:"top"}}>{l}</td>
                         <td style={{padding:"5px 0 5px 8px",borderBottom:"1px solid #F3F4F6",color:"#374151",lineHeight:1.5}}>{v}</td>
                       </tr>
                     ))}
@@ -3060,7 +3060,7 @@ function CompleteScreen({state, dispatch}) {
                   </div>
                 ):<p className="rpt-p">Risk rating not set — complete Section 12.</p>}
                 {/* Risk matrix */}
-                <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#9CA3AF",marginBottom:5,fontWeight:600,textTransform:"uppercase",letterSpacing:.8}}>Risk Matrix</div>
+                <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#6E7681",marginBottom:5,fontWeight:600,textTransform:"uppercase",letterSpacing:.8}}>Risk Matrix</div>
                 <div style={{display:"grid",gridTemplateColumns:"60px 1fr 1fr 1fr",border:"1px solid #EAECF0",borderRadius:6,overflow:"hidden",fontSize:9,marginBottom:12}}>
                   {["","Slight Harm","Moderate Harm","Extreme Harm"].map((h,i)=>(
                     <div key={i} style={{padding:"5px 6px",background:"#1C2128",borderBottom:"1px solid #EAECF0",borderLeft:i>0?"1px solid #EAECF0":"none",fontWeight:700,fontSize:7,textTransform:"uppercase",color:"#6B7280",textAlign:i===0?"left":"center"}}>{h}</div>
@@ -3107,7 +3107,7 @@ function CompleteScreen({state, dispatch}) {
                       </div>
                     )}
                   </div>
-                )) : <p className="rpt-p" style={{color:"#9CA3AF",fontStyle:"italic"}}>No significant findings recorded.</p>}
+                )) : <p className="rpt-p" style={{color:"#6E7681",fontStyle:"italic"}}>No significant findings recorded.</p>}
               </div>
               <RFtr pg={4}/>
             </div>
@@ -3148,7 +3148,7 @@ function CompleteScreen({state, dispatch}) {
                     <thead><tr style={{background:pr}}><th>Ref</th><th>Action</th><th>P</th><th>Responsible</th><th>By</th><th>Status</th></tr></thead>
                     <tbody>{actionItems.map((item,i)=>(
                       <tr key={i}>
-                        <td style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#9CA3AF",whiteSpace:"nowrap"}}>{item.ref}</td>
+                        <td style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#6E7681",whiteSpace:"nowrap"}}>{item.ref}</td>
                         <td style={{maxWidth:180}}>{item.action?.slice(0,100)||item.text?.slice(0,80)||"—"}{(item.action?.length>100||(!item.action&&item.text?.length>80))?"…":""}</td>
                         <td style={{whiteSpace:"nowrap"}}><span style={{fontSize:8,fontWeight:700,color:pColor(item.priority)}}>{item.priority?.split(" — ")[0]||"P3"}</span></td>
                         <td style={{fontSize:9}}>{item.responsible||"—"}</td>
@@ -3157,7 +3157,7 @@ function CompleteScreen({state, dispatch}) {
                       </tr>
                     ))}</tbody>
                   </table>
-                ):<p className="rpt-p" style={{fontStyle:"italic",color:"#9CA3AF"}}>No actions recorded.</p>}
+                ):<p className="rpt-p" style={{fontStyle:"italic",color:"#6E7681"}}>No actions recorded.</p>}
               </div>
               <RFtr pg={5}/>
             </div>
@@ -3184,7 +3184,7 @@ function CompleteScreen({state, dispatch}) {
                       `. ${positives>0?"A number of positive fire safety management arrangements were also noted. ":""}The Responsible Person is advised to implement all recommended actions within the timescales specified in the Action Plan.`;
                   })()
                 }</p>
-                {org.reportFooter&&<p className="rpt-p" style={{color:"#9CA3AF",fontSize:9}}>{org.reportFooter}</p>}
+                {org.reportFooter&&<p className="rpt-p" style={{color:"#6E7681",fontSize:9}}>{org.reportFooter}</p>}
                 <div className="sig-card">
                   <div className="sig-head">Assessor Signature</div>
                   <div className="sig-body">
@@ -3200,7 +3200,7 @@ function CompleteScreen({state, dispatch}) {
                     <div className="sig-f"><div className="sig-l">Name</div><div className="sig-v">{a.rpName||"—"}</div></div>
                     <div className="sig-f"><div className="sig-l">Title</div><div className="sig-v">{a.rpTitle||"—"}</div></div>
                     <div className="sig-f"><div className="sig-l">Signature</div><div className="sig-c">Awaiting signature</div></div>
-                    <div className="sig-f"><div className="sig-l">Date</div><div className="sig-v" style={{color:"#9CA3AF",borderColor:"#D1D5DB"}}>—</div></div>
+                    <div className="sig-f"><div className="sig-l">Date</div><div className="sig-v" style={{color:"#6E7681",borderColor:"#D1D5DB"}}>—</div></div>
                   </div>
                 </div>
               </div>
@@ -3227,7 +3227,7 @@ function CompleteScreen({state, dispatch}) {
                     </div>
                   </>
                 ) : (
-                  <div style={{textAlign:"center",padding:"30px 20px",color:"#9CA3AF"}}>
+                  <div style={{textAlign:"center",padding:"30px 20px",color:"#6E7681"}}>
                     <div style={{fontSize:28,marginBottom:8,opacity:.3}}>📷</div>
                     <div style={{fontFamily:"'Nunito',sans-serif",fontSize:15,color:"#6B7280",marginBottom:5}}>No photos recorded</div>
                     <div style={{fontSize:11}}>Add photos to questions during the assessment to populate this appendix. Photos appear both here and inline within the relevant finding in Section D.</div>
