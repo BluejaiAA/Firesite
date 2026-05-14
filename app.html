@@ -31,7 +31,53 @@ navigator.serviceWorker.register("/sw.js",{scope:"/"})
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body,#root{height:100%;width:100%;}
 body{overflow-x:hidden;-webkit-font-smoothing:antialiased;}
-</style>
+/* ─ AUTH ─ */
+.auth-wrap{min-height:100vh;background:#0D1117;display:flex;align-items:center;justify-content:center;padding:24px;}
+.auth-box{width:100%;max-width:420px;background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:36px 32px;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
+.auth-logo img{width:40px;height:40px;object-fit:contain;}
+.auth-logo-text{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:#F0F6FF;}
+.auth-logo-text span{color:#E74C3C;}
+.auth-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:6px;}
+.auth-sub{font-size:14px;color:#8B949E;text-align:center;margin-bottom:28px;}
+.auth-field{margin-bottom:16px;}
+.auth-label{font-size:12px;font-weight:700;color:#8B949E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
+.auth-input{width:100%;padding:12px 14px;background:#21262D;border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#F0F6FF;font-size:15px;font-family:'Nunito',sans-serif;transition:border-color .15s;outline:none;}
+.auth-input:focus{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15);}
+.auth-input::placeholder{color:rgba(255,255,255,.25);}
+.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;box-shadow:0 4px 20px rgba(192,57,43,.3);}
+.auth-btn:hover{transform:translateY(-1px);}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-switch{text-align:center;margin-top:20px;font-size:14px;color:#8B949E;}
+.auth-switch a{color:#E74C3C;cursor:pointer;font-weight:700;}
+.auth-error{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#F87171;margin-bottom:16px;}
+/* ─ PRICING MODAL ─ */
+.price-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+.price-sheet{background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:24px 20px 44px;max-height:90vh;overflow-y:auto;}
+.price-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px;}
+.price-sheet-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:4px;}
+.price-sheet-sub{font-size:13px;color:#8B949E;text-align:center;margin-bottom:20px;}
+.pm-plan{background:#21262D;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;margin-bottom:10px;}
+.pm-plan.hot{border-color:rgba(192,57,43,.45);background:rgba(192,57,43,.05);}
+.pm-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.pm-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#F0F6FF;margin-bottom:6px;}
+.pm-price{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:right;flex-shrink:0;}
+.pm-price span{font-size:12px;color:#8B949E;font-weight:500;}
+.pm-feats{list-style:none;margin-top:4px;}
+.pm-feats li{font-size:12px;color:#8B949E;padding:2px 0;}
+.pm-feats li::before{content:"+ ";color:#00BFA5;font-weight:700;}
+.pm-btn{width:100%;padding:11px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 14px rgba(192,57,43,.25);}
+.pm-current{text-align:center;padding:8px;font-size:12px;color:#00BFA5;font-weight:700;}
+.pm-badge{background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}
+/* ─ USER BAR ─ */
+.user-bar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:#161B22;border-bottom:1px solid rgba(255,255,255,.06);}
+.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#E67E22);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#fff;flex-shrink:0;}
+.user-em{flex:1;font-size:11px;color:#8B949E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-plan{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;}
+.user-plan.free{background:rgba(255,255,255,.06);color:#8B949E;}
+.user-plan.starter{background:rgba(0,191,165,.12);color:#00BFA5;}
+.user-plan.pro{background:rgba(192,57,43,.15);color:#E74C3C;}
+.user-signout{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Nunito',sans-serif;margin-left:2px;}</style>
 </head>
 <body>
 <div id="root"></div>
@@ -813,135 +859,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
   .heatmap{grid-template-columns:repeat(3,1fr);}
 }
 
-/* ─ AUTH ─ */
-.auth-wrap{min-height:100vh;background:#0D1117;display:flex;align-items:center;justify-content:center;padding:24px;}
-.auth-box{width:100%;max-width:420px;background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:36px 32px;box-shadow:0 24px 60px rgba(0,0,0,.5);}
-.auth-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
-.auth-logo img{width:40px;height:40px;object-fit:contain;}
-.auth-logo-text{font-family:'Nunito',sans-serif;font-size:24px;font-weight:900;color:#F0F6FF;}
-.auth-logo-text span{color:#E74C3C;}
-.auth-title{font-family:'Nunito',sans-serif;font-size:22px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:6px;}
-.auth-sub{font-size:14px;color:#8B949E;text-align:center;margin-bottom:28px;}
-.auth-field{margin-bottom:16px;}
-.auth-label{font-size:12px;font-weight:700;color:#8B949E;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:block;}
-.auth-input{width:100%;padding:12px 14px;background:#21262D;border:1.5px solid rgba(255,255,255,.1);border-radius:10px;color:#F0F6FF;font-size:15px;font-family:'Nunito',sans-serif;transition:border-color .15s;outline:none;}
-.auth-input:focus{border-color:#C0392B;box-shadow:0 0 0 3px rgba(192,57,43,.15);}
-.auth-input::placeholder{color:rgba(255,255,255,.25);}
-.auth-btn{width:100%;padding:14px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;box-shadow:0 4px 20px rgba(192,57,43,.3);}
-.auth-btn:hover{transform:translateY(-1px);}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.auth-switch{text-align:center;margin-top:20px;font-size:14px;color:#8B949E;}
-.auth-switch a{color:#E74C3C;cursor:pointer;font-weight:700;}
-.auth-error{background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#F87171;margin-bottom:16px;}
-/* ─ PRICING MODAL ─ */
-.price-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
-.price-sheet{background:#161B22;border:1px solid rgba(255,255,255,.08);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:24px 20px 44px;max-height:90vh;overflow-y:auto;}
-.price-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 20px;}
-.price-sheet-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:center;margin-bottom:4px;}
-.price-sheet-sub{font-size:13px;color:#8B949E;text-align:center;margin-bottom:20px;}
-.pm-plan{background:#21262D;border:1.5px solid rgba(255,255,255,.07);border-radius:14px;padding:16px;margin-bottom:10px;}
-.pm-plan.hot{border-color:rgba(192,57,43,.45);background:rgba(192,57,43,.05);}
-.pm-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
-.pm-name{font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;color:#F0F6FF;margin-bottom:6px;}
-.pm-price{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#F0F6FF;text-align:right;flex-shrink:0;}
-.pm-price span{font-size:12px;color:#8B949E;font-weight:500;}
-.pm-feats{list-style:none;margin-top:4px;}
-.pm-feats li{font-size:12px;color:#8B949E;padding:2px 0;}
-.pm-feats li::before{content:"+ ";color:#00BFA5;font-weight:700;}
-.pm-btn{width:100%;padding:11px;background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:10px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;margin-top:12px;box-shadow:0 4px 14px rgba(192,57,43,.25);}
-.pm-current{text-align:center;padding:8px;font-size:12px;color:#00BFA5;font-weight:700;}
-.pm-badge{background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:8px;vertical-align:middle;}
-/* ─ USER BAR ─ */
-.user-bar{display:flex;align-items:center;gap:8px;padding:7px 16px;background:#161B22;border-bottom:1px solid rgba(255,255,255,.06);}
-.user-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#E67E22);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:10px;color:#fff;flex-shrink:0;}
-.user-em{flex:1;font-size:11px;color:#8B949E;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.user-plan{padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.user-plan.free{background:rgba(255,255,255,.06);color:#8B949E;}
-.user-plan.starter{background:rgba(0,191,165,.12);color:#00BFA5;}
-.user-plan.pro{background:rgba(192,57,43,.15);color:#E74C3C;}
-.user-signout{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Nunito',sans-serif;margin-left:2px;}`;
-
-// ─── LOGO DROP ────────────────────────────────────────────────────
-function LogoDrop({logo, onLogo}) {
-  const ref = useRef();
-  const handle = f => {
-    if (!f?.type.startsWith("image/")) return;
-    const r = new FileReader();
-    r.onload = e => onLogo(e.target.result);
-    r.readAsDataURL(f);
-  };
-  return (
-    <div className="logo-drop" onClick={()=>ref.current.click()}
-      onDragOver={e=>e.preventDefault()}
-      onDrop={e=>{e.preventDefault();handle(e.dataTransfer.files[0]);}}>
-      <input ref={ref} type="file" accept="image/*" style={{display:"none"}} onChange={e=>handle(e.target.files[0])}/>
-      {logo ? <><img src={logo} alt="logo"/><span style={{fontSize:9,color:"#9CA3AF"}}>Tap to change</span></> :
-        <><span style={{fontSize:20}}>🖼️</span><span style={{fontSize:11,fontWeight:600,color:"#374151"}}>Drop or tap to upload</span><span style={{fontSize:9,color:"#9CA3AF"}}>PNG, SVG or JPG</span></>}
-    </div>
-  );
-}
-
-// ─── COLOUR PICKER ────────────────────────────────────────────────
-const SW_COLOURS = ["#0D1117","#1B3461","#C0392B","#065F46","#7B1C1C","#1D4ED8","#9333EA","#B45309","#0369A1","#374151"];
-function ColourPicker({value, onChange}) {
-  return (
-    <div className="swatches">
-      {SW_COLOURS.map(c=>(
-        <div key={c} className={`sw ${value===c?"on":""}`} style={{background:c}} onClick={()=>onChange(c)}/>
-      ))}
-      <div className="sw sw-pick" style={{width:24,height:24,borderRadius:5}}>
-        🎨<input type="color" value={value||"#0D1117"} onChange={e=>onChange(e.target.value)}/>
-      </div>
-    </div>
-  );
-}
-
-// ─── QUESTION CARD (single-question card-by-card flow) ────────────
-// ─── ADDRESS FINDER ──────────────────────────────────────────────
-function AddressFinder({value, onChange}) {
-  const [query,setQuery]=useState(value||"");
-  const [results,setResults]=useState([]);
-  const [loading,setLoading]=useState(false);
-  const [selected,setSelected]=useState(!!value);
-  const [error,setError]=useState("");
-  const debounce=useRef(null);
-  const search=async(q)=>{
-    if(!q||q.length<2){setResults([]);return;}
-    setLoading(true);setError("");
-    try{
-      const isPostcode=/^[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}$/i.test(q.trim());
-      if(isPostcode){
-        const r=await fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(q.trim()));
-        const d=await r.json();
-        if(d.status===200&&d.result){
-          const pc=d.result;
-          setResults([{display:pc.admin_district+(pc.parish&&pc.parish!==pc.admin_district?", "+pc.parish:""),sub:pc.postcode+" - "+(pc.nuts||pc.region||""),full:(pc.admin_district||"")+", "+pc.postcode}]);
-        }else{setError("Postcode not found. Enter address manually.");setResults([]);}
-      }else{setResults([{display:"Enter postcode for best results",sub:"e.g. EC2V 4QS",full:"",isHint:true}]);}
-    }catch(e){setError("Lookup unavailable - type address manually.");setResults([]);}
-    setLoading(false);
-  };
-  const handleInput=v=>{setQuery(v);setSelected(false);onChange(v);if(debounce.current)clearTimeout(debounce.current);debounce.current=setTimeout(()=>search(v),500);};
-  const selectResult=r=>{if(r.isHint)return;setQuery(r.full||r.display);onChange(r.full||r.display);setResults([]);setSelected(true);};
-  const clear=()=>{setQuery("");onChange("");setSelected(false);setResults([]);};
-  if(selected&&value)return(
-    <div style={{background:"#FDF3EE",border:"1px solid #C0392B33",borderRadius:10,padding:"11px 14px",marginBottom:8}}>
-      <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:1,color:"#C0392B",marginBottom:3}}>Address confirmed</div>
-      <div style={{fontSize:13,color:"#1C1C1C",lineHeight:1.5,flex:1}}>{value}</div>
-      <div style={{marginTop:8}}>
-        <textarea style={{width:"100%",background:"#fff",border:"1px solid #EAECF0",borderRadius:7,padding:"8px 10px",fontSize:12,color:"#374151",outline:"none",resize:"none",minHeight:64,lineHeight:1.5,fontFamily:"'Nunito',sans-serif"}}
-          placeholder="Add building name, street number and full address..." value={value} onChange={e=>onChange(e.target.value)}/>
-      </div>
-      <span style={{fontSize:10,fontWeight:600,color:"#C0392B",cursor:"pointer",marginTop:6,display:"inline-block"}} onClick={clear}>Change</span>
-    </div>
-  );
-  return(
-    <div>
-      <div style={{position:"relative",marginBottom:8}}>
-        <input style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
-          placeholder="Enter postcode (e.g. EC2V 4QS) or address..."
-          value={query} onChange={e=>handleInput(e.target.value)}/>
-        <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
+`9;</button>
       </div>
       {loading&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>Looking up address...</div>}
       {error&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>{error}</div>}
