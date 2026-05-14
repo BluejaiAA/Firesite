@@ -75,6 +75,27 @@
 - Tagline: Professional fire risk assessments, in your pocket
 - Target users: fire risk assessors, H&S consultants, facilities managers, landlords
 
+
+## STANDARDS COMPLIANCE (MANDATORY — apply to ALL recommendations)
+Every autofill recommendation, guidance text and action plan entry MUST reference applicable standards:
+- RRO 2005 (as amended by Fire Safety Act 2021) — PRIMARY legal duty
+- PAS 79-1:2020 — PRIMARY methodology for premises other than housing
+- PAS 79-2:2020 — housing assessments
+- ADB 2019 Approved Document B (Vol 1 dwellings, Vol 2 all other buildings)
+- BS 9999:2017 Fire safety in design, management and use of buildings
+- BS 5839-1:2017 Fire detection and alarm systems — non-domestic
+- BS 5839-6:2019 Fire detection and alarm systems — domestic
+- BS 5266-1:2016 Emergency lighting
+- BS EN 1125 / BS EN 179 Emergency exit hardware
+- BS EN 1154 Controlled door closing devices (fire door self-closers)
+- BS 7671:2018+A2 IET Wiring Regulations 18th Edition
+- Building Safety Act 2022 (18m+ / 7+ storeys higher-risk regime)
+- Fire Safety Act 2021 (external walls, flat entrance doors)
+- DCLG Guides (all at gov.uk/government/collections/fire-safety-law-and-guidance-documents-for-business):
+  Offices/shops · Factories/warehouses · Sleeping accommodation · Residential care · Educational · Places of assembly (small + large) · Theatres/cinemas · Open air events · Healthcare · Transport · Animal premises
+
+UI TERMINOLOGY: Always use "Assessor's Comments" (not "Observations") throughout the app.
+
 ## DEFERRED — PLANNED NEXT
 - Real Firebase Auth (replace FS_AUTH localStorage stub) — needs Firebase config from owner
 - Real Firestore cloud sync (assessments currently localStorage only)
