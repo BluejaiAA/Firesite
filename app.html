@@ -1193,15 +1193,15 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         )}
 
-        {/* Observation — collapsed by default */}
+        {/* Assessor comments — collapsed by default */}
         <div className={`obs-row ${note?"has":""}`} onClick={()=>setShowNote(s=>!s)}>
           <span style={{fontSize:12,color:"#6E7681"}}>{showNote?"▴":"▾"}</span>
           <span className={`obs-row-label ${note?"has":""}`}>
-            {note?"Observation added — tap to edit":"Add observation (optional)"}
+            {note?"Assessor's comments added — tap to edit":"Add assessor's comments (optional)"}
           </span>
         </div>
         {showNote && (
-          <textarea className="obs-box" placeholder="Assessor's observations…"
+          <textarea className="obs-box" placeholder="Assessor's comments…"
             value={note} onChange={e=>upd({note:e.target.value})} autoFocus={!note}/>
         )}
 
