@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Firesite — Fire Risk Assessment Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:#0D1117;color:#F0F6FC;min-height:100vh;}
+.shell{background:#161B22;border-bottom:1px solid #30363D;padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:200;}
+.shell-logo{font-weight:900;font-size:17px;color:#F0F6FC;letter-spacing:-0.3px;}
+.shell-logo span{color:#E74C3C;}
+.shell-info{flex:1;font-size:12px;color:#8B949E;}
+.shell-btns{display:flex;gap:8px;}
+.btn{background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;}
+.btn-ghost{background:rgba(255,255,255,.06);color:#8B949E;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;}
+.preview-bg{padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:0;}
+.page{width:210mm;background:#fff;color:#111827;box-shadow:0 6px 40px rgba(0,0,0,.55);margin-bottom:3px;position:relative;overflow:hidden;font-family:'Source Serif 4',Georgia,serif;font-size:8.5pt;line-height:1.6;}
+.page-accent{position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,#C0392B 0%,#E8773A 55%,#C0392B 100%);}
+.rh{display:flex;align-items:center;justify-content:space-between;padding:5mm 14mm 3mm 17mm;border-bottom:1px solid #E5E7EB;}
+.rh-logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:9pt;color:#C0392B;letter-spacing:-0.2px;}
+.rh-logo em{color:#E67E22;font-style:normal;}
+.rh-addr{font-family:'Nunito',sans-serif;font-size:6.5pt;color:#9CA3AF;text-align:right;line-height:1.3;}
+.rf{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:3mm 14mm;border-top:1px solid #F3F4F6;}
+.rf-text{font-family:'Nunito',sans-serif;font-size:6pt;color:#C9D1D9;}
+.rf-pgnum{font-family:'Nunito',sans-serif;font-size:7pt;font-weight:900;color:#C0392B;}
+.page-body{padding:5mm 14mm 14mm 17mm;}
+.sh{display:flex;align-items:center;gap:7px;margin:5mm 0 3mm;}
+.sh:first-child{margin-top:0;}
+.sh-num{background:linear-gradient(135deg,#C0392B,#E67E22);color:#fff;font-family:'Nunito',sans-serif;font-size:7.5pt;font-weight:900;min-width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 4px;}
+.sh-text{font-family:'Nunito',sans-serif;font-size:11pt;font-weight:900;color:#111827;flex:1;}
+.sh-rule{flex:1;height:1px;background:linear-gradient(90deg,#E5E7EB,transparent);}
+.exec-box{background:#FEF2F2;border:1.5px solid #FECACA;border-left:4px solid #C0392B;border-radius:0 6px 6px 0;padding:4mm 5mm;margin-bottom:5mm;}
+.exec-label{font-family:'Nunito',sans-serif;font-size:6.5pt;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#C0392B;margin-bottom:1.5mm;}
+.exec-text{font-size:8.5pt;color:#374151;line-height:1.7;}
+.dtable{width:100%;border-collapse:collapse;margin-bottom:4mm;font-size:8pt;}
+.dtable tr:nth-child(even) td{background:#F9FAFB;}
+.dtable td{padding:2.5mm 3.5mm;border:1px solid #E5E7EB;vertical-align:top;}
+.dtable td.lbl{font-family:'Nunito',sans-serif;font-weight:800;color:#6B7280;width:34%;background:#F3F4F6!important;font-size:7pt;letter-spacing:.2px;}
+.dtable td.val{color:#111827;}
+.finding{border:1px solid #E5E7EB;border-radius:6px;margin-bottom:3mm;overflow:hidden;break-inside:avoid;}
+.finding-head{background:#F9FAFB;padding:2mm 3.5mm;display:flex;align-items:flex-start;gap:6px;border-bottom:1px solid #E5E7EB;}
+.fref{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:900;color:#fff;background:#6B7280;padding:1.5px 5px;border-radius:3px;flex-shrink:0;margin-top:1px;}
+.fref.flagged{background:#C0392B;}
+.fq{font-family:'Nunito',sans-serif;font-size:7.5pt;font-weight:700;color:#374151;flex:1;line-height:1.4;}
+.chip{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:900;padding:2px 7px;border-radius:20px;flex-shrink:0;margin-top:1px;}
+.chip.yes{background:#D1FAE5;color:#065F46;}
+.chip.no{background:#FEE2E2;color:#991B1B;}
+.chip.na{background:#F3F4F6;color:#6B7280;}
+.chip.yna{background:#FEF3C7;color:#92400E;}
+.chip.txt{background:#EFF6FF;color:#1D4ED8;}
+.chip.na2{background:#F3F4F6;color:#9CA3AF;font-style:italic;}
+.finding-body{padding:2mm 3.5mm;}
+.comment-lbl{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#C0392B;margin-bottom:1mm;}
+.comment-txt{font-size:8pt;color:#374151;line-height:1.6;}
+.na-note{font-size:7.5pt;color:#9CA3AF;font-style:italic;}
+.photo-strip{display:flex;flex-wrap:wrap;gap:3mm;margin-top:2mm;}
+.photo-thumb{width:30mm;height:22mm;object-fit:cover;border-radius:4px;border:1px solid #E5E7EB;}
+.photo-placeholder{width:30mm;height:22mm;background:#F3F4F6;border-radius:4px;border:1px dashed #D1D5DB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+.photo-placeholder-icon{font-size:16px;color:#9CA3AF;}
+.photo-placeholder-ref{font-family:'Nunito',sans-serif;font-size:5.5pt;color:#9CA3AF;text-align:center;}
+.flag-tag{display:inline-flex;align-items:center;gap:3px;background:#FEF3C7;border:1px solid #FCD34D;padding:1.5px 6px;border-radius:3px;font-family:'Nunito',sans-serif;font-size:6pt;font-weight:700;color:#92400E;margin-top:1.5mm;}
+.atable{width:100%;border-collapse:collapse;font-size:7pt;margin-bottom:5mm;table-layout:fixed;}
+.atable th{background:#C0392B;color:#fff;font-family:'Nunito',sans-serif;font-size:6.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:2.5mm 3mm;text-align:left;border:1px solid #A93226;}
+.atable td{padding:2.5mm 3mm;border:1px solid #E5E7EB;vertical-align:top;color:#111827;line-height:1.5;}
+.atable tr:nth-child(even) td{background:#FAFAFA;}
+.atable .col-ref{width:9%;}.atable .col-finding{width:24%;}.atable .col-action{width:32%;}.atable .col-guidance{width:15%;}.atable .col-priority{width:10%;}.atable .col-photo{width:10%;}
+.aref{font-family:'Nunito',sans-serif;font-size:6.5pt;font-weight:900;color:#C0392B;}
+.pbadge{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:800;padding:2px 5px;border-radius:3px;display:inline-block;white-space:nowrap;}
+.pbadge.p1{background:#FEE2E2;color:#991B1B;border:1px solid #FECACA;}
+.pbadge.p2{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;}
+.pbadge.p3{background:#DBEAFE;color:#1E40AF;border:1px solid #BFDBFE;}
+.pbadge.p4{background:#F3F4F6;color:#374151;border:1px solid #D1D5DB;}
+.guidance-ref{font-family:'Nunito',sans-serif;font-size:5.5pt;color:#6B7280;line-height:1.4;}
+.photo-index-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin-bottom:5mm;}
+.pi-item{border:1px solid #E5E7EB;border-radius:5px;overflow:hidden;break-inside:avoid;}
+.pi-img{width:100%;height:30mm;object-fit:cover;display:block;background:#F3F4F6;}
+.pi-placeholder{width:100%;height:30mm;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-size:24px;color:#D1D5DB;}
+.pi-meta{padding:2mm 2.5mm;}
+.pi-num{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:900;color:#C0392B;margin-bottom:.5mm;}
+.pi-caption{font-family:'Nunito',sans-serif;font-size:6.5pt;color:#374151;line-height:1.35;}
+.pi-ref-tag{font-family:'Nunito',sans-serif;font-size:5.5pt;color:#9CA3AF;margin-top:.5mm;}
+.risk-box{display:flex;align-items:flex-start;gap:8mm;padding:5mm;border:1.5px solid #E5E7EB;border-radius:7px;margin-bottom:4mm;}
+.risk-badge-big{font-family:'Nunito',sans-serif;font-size:14pt;font-weight:900;padding:3mm 6mm;border-radius:5px;line-height:1;flex-shrink:0;}
+.risk-badge-big.high{background:#FEE2E2;color:#C0392B;border:2px solid #C0392B;}
+.risk-badge-big.medium{background:#FEF3C7;color:#B45309;border:2px solid #D97706;}
+.risk-badge-big.low{background:#D1FAE5;color:#065F46;border:2px solid #059669;}
+.risk-desc{font-size:8.5pt;color:#374151;line-height:1.65;}
+.risk-desc strong{font-family:'Nunito',sans-serif;font-weight:900;color:#111827;display:block;margin-bottom:1.5mm;font-size:9.5pt;}
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-bottom:5mm;}
+.sig-box{border:1px solid #E5E7EB;border-radius:6px;padding:3.5mm;}
+.sig-lbl{font-family:'Nunito',sans-serif;font-size:6pt;font-weight:900;text-transform:uppercase;letter-spacing:1px;color:#9CA3AF;margin-bottom:1.5mm;}
+.sig-val{font-family:'Nunito',sans-serif;font-size:9pt;font-weight:700;color:#111827;border-bottom:1px dashed #D1D5DB;padding-bottom:2mm;min-height:7mm;}
+.sig-sub{font-size:6pt;color:#9CA3AF;margin-top:1mm;}
+.declaration{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;padding:3.5mm;margin-bottom:5mm;}
+.declaration p{font-size:7.5pt;color:#6B7280;line-height:1.65;}
+.standards-grid{display:grid;grid-template-columns:1fr 1fr;gap:2mm 6mm;}
+.std{display:flex;align-items:flex-start;gap:4px;font-size:7pt;color:#374151;}
+.std-dot{width:4px;height:4px;border-radius:50%;background:#C0392B;flex-shrink:0;margin-top:4px;}
+.std-code{font-family:'Nunito',sans-serif;font-weight:900;color:#C0392B;}
+.limitations{background:#FFFBEB;border:1px solid #FCD34D;border-radius:5px;padding:3.5mm;margin-top:4mm;}
+.lim-title{font-family:'Nunito',sans-serif;font-size:7pt;font-weight:900;color:#92400E;margin-bottom:1mm;}
+.lim-text{font-size:7.5pt;color:#78350F;line-height:1.65;}
+.cover{display:flex;flex-direction:column;min-height:297mm;background:#fff;}
+.cover-bar{position:absolute;left:0;top:0;bottom:0;width:14mm;background:linear-gradient(180deg,#C0392B 0%,#E8773A 50%,#C0392B 100%);}
+.cover-inner{margin-left:14mm;padding:14mm 16mm 12mm 12mm;display:flex;flex-direction:column;min-height:297mm;}
+.cover-logo-row{display:flex;align-items:center;gap:9px;margin-bottom:42mm;}
+.cover-logo-img{width:38px;height:38px;object-fit:contain;}
+.cover-logo-name{font-family:'Nunito',sans-serif;font-size:20pt;font-weight:900;color:#111827;letter-spacing:-.5px;}
+.cover-logo-name em{color:#C0392B;font-style:normal;}
+.cover-logo-tagline{font-family:'Nunito',sans-serif;font-size:7pt;color:#9CA3AF;margin-top:-1px;letter-spacing:.3px;}
+.cover-doc-type{font-family:'Nunito',sans-serif;font-size:7pt;font-weight:800;text-transform:uppercase;letter-spacing:2.5px;color:#C0392B;margin-bottom:5px;}
+.cover-main-title{font-family:'Nunito',sans-serif;font-size:26pt;font-weight:900;color:#111827;line-height:1.1;margin-bottom:3mm;}
+.cover-address{font-family:'Source Serif 4',serif;font-size:13pt;color:#6B7280;font-style:italic;margin-bottom:8mm;line-height:1.4;}
+.cover-divider{width:40mm;height:3px;background:linear-gradient(90deg,#C0392B,#E67E22);border-radius:2px;margin-bottom:8mm;}
+.cover-risk{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:5px;font-family:'Nunito',sans-serif;font-weight:900;font-size:11pt;margin-bottom:12mm;width:fit-content;}
+.cover-risk.high{background:#FEE2E2;color:#C0392B;border:2px solid #C0392B;}
+.cover-risk.medium{background:#FEF3C7;color:#B45309;border:2px solid #D97706;}
+.cover-risk.low{background:#D1FAE5;color:#065F46;border:2px solid #059669;}
+.cover-meta{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;margin-bottom:auto;}
+.cm-lbl{font-family:'Nunito',sans-serif;font-size:6.5pt;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#9CA3AF;padding-top:1px;}
+.cm-val{font-family:'Nunito',sans-serif;font-size:8.5pt;font-weight:700;color:#111827;}
+.cover-foot{border-top:1px solid #E5E7EB;padding-top:4mm;margin-top:8mm;}
+.cover-foot-text{font-family:'Nunito',sans-serif;font-size:6pt;color:#9CA3AF;line-height:1.5;}
+.cover-foot-stds{font-family:'Nunito',sans-serif;font-size:5.5pt;color:#C9D1D9;margin-top:2px;}
+@media print{body{background:#fff;}.shell,.preview-bg>*:not(.page){display:none!important;}.preview-bg{padding:0;gap:0;}.page{box-shadow:none;margin:0;page-break-after:always;}.page:last-child{page-break-after:auto;}@page{size:A4;margin:0;}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="shell-logo">Fire<span>site</span> <span style="font-size:10px;font-weight:400;color:#8B949E;margin-left:4px;">by Bluejai</span></div>
+  <div class="shell-info">Fire Risk Assessment Report — print or save as PDF via browser print dialog</div>
+  <div class="shell-btns">
+    <button class="btn-ghost" onclick="toggleSample()">Load Sample Data</button>
+    <button class="btn" onclick="window.print()">🖸 Print / Save PDF</button>
+  </div>
+</div>
+<div class="preview-bg" id="report-root"></div>
+<script>
+const SAMPLE_DATA = {
+  meta:{id:"FSA-2025-0047",date:"14 May 2025",assessorName:"J. Davies MIFPO",assessorQuals:"MIFPO, NEBOSH Fire Certificate, FPA Graduate",assessorContact:"j.davies@firesiteapp.co.uk",clientName:"Acme Properties Ltd",nextReviewDate:"May 2026",dclgGuide:"Offices and Shops"},
+  premises:{address:"Unit 4, Station Road Industrial Estate\nCardiff, CF24 5AB",use:"Light industrial workshop with first-floor offices (mixed use)",floors:"2",area:"Approx. 850 m\u00B2",maxOccupancy:"21\u201350",construction:"1980s steel-framed, brick infill, flat asphalt roof",buildingHeight18m:false,hasBasement:false,sleepingRisk:false,listedBuilding:false,previousFRA:true,previousFRADate:"June 2022",responsiblePerson:"Mr David Hughes, Operations Manager",rpContact:"07700 900123 / d.hughes@acme.co.uk",rpTrained:true},
+  overallRisk:"medium",
+  riskJustification:"The premises presents a MEDIUM level of fire risk. The general housekeeping and fuel load management is satisfactory in most areas. However, deficiencies have been identified relating to the lack of an active PAT testing programme, absence of a current EICR, a partially obstructed escape corridor, and fire alarm call point testing records that are incomplete. One fire door self-closer was found inoperative on the first-floor landing. These matters are addressed in the Action Plan and must be resolved within the timescales indicated. The overall risk level is not tolerable until the P1 and P2 actions are resolved.",
+  findings:[
+    {ref:"1.9",section:"Ignition Sources & Fuel Load",question:"Is the building kept reasonably free from accumulated waste and unnecessary combustible material?",answer:"no",comment:"A significant accumulation of flattened cardboard packaging was observed in the first-floor plant room corridor, stacked to approximately 1.2m in height. Combustible materials including cardboard cartons and plastic wrap were also stored directly adjacent to the main distribution board within storeroom 3. These constitute an unnecessary fuel load in close proximity to an ignition source and must be removed immediately.",flagged:true,photos:[{id:"IMG_001",caption:"Cardboard accumulation in plant room corridor, first floor"},{id:"IMG_002",caption:"Combustible materials adjacent to distribution board, storeroom 3"}],guidance:"RRO Art.8 / DCLG Offices & Shops Pt.2 §1.1 / PAS 79-1 §8.3"},
+    {ref:"2.1",section:"Electrical Safety",question:"Are portable electrical appliances subject to a regular programme of inspection and testing (PAT)?",answer:"no",comment:"No portable appliance testing programme is in place. Multiple portable appliances observed in use throughout both floors including a kettle, microwave oven, two desktop fans and several phone chargers. The responsible person confirmed that no PAT testing has ever been carried out. Formal PAT testing should be introduced at a frequency appropriate to the risk, in accordance with the IET Code of Practice 5th Edition.",flagged:true,photos:[{id:"IMG_003",caption:"Multiple portable appliances in use without PAT records, first-floor office"}],guidance:"RRO Art.17 / DCLG §2.1 / IET CoP 5th Ed / PAS 79-1 §8.4"},
+    {ref:"2.3",section:"Electrical Safety",question:"Is the fixed electrical installation tested periodically by a competent electrical engineer?",answer:"no",comment:"No Electrical Installation Condition Report (EICR) could be produced for inspection. The responsible person confirmed uncertainty as to when the installation was last formally tested. Industrial premises of this type should be subject to periodic inspection at intervals not exceeding 3 years (BS 7671 / IET Wiring Regulations). Given the age of the building (circa 1980s) and the industrial use, an EICR should be obtained as a matter of priority.",flagged:true,photos:[],guidance:"RRO Art.17 / BS 7671:2018+A2 / DCLG §2.2 / PAS 79-1 §8.4"},
+    {ref:"3.5",section:"Fire Doors",question:"Are all fire door self-closing devices in full working order, closing and latching from any open position?",answer:"no",comment:"The self-closing device to the FD30S door on the first-floor landing was found to be inoperative. The door was observed to stop approximately 150mm short of the frame when released from the 90 degree position, failing to latch. This renders the fire door ineffective. Immediate remedial action is required.",flagged:true,photos:[{id:"IMG_004",caption:"Inoperative self-closer — first floor landing fire door, failing to latch from 90 degrees"}],guidance:"BS 9999:2017 §21 / ADB Vol.2 B1 / BS EN 1154 / PAS 79-1 §8.7"},
+    {ref:"7.7",section:"Means of Escape",question:"Are all escape routes and corridors free from obstructions at all times?",answer:"no",comment:"A roller-cage stock trolley was found partially obstructing the ground-floor escape corridor adjacent to the goods loading entrance, reducing the effective clear width to approximately 700mm at the narrowest point. The minimum clear width for this escape route serving up to 50 persons should be maintained at not less than 1000mm at all times.",flagged:true,photos:[{id:"IMG_005",caption:"Roller-cage trolley obstructing ground floor escape corridor — approx 700mm clear width observed"}],guidance:"RRO Art.14 / ADB Vol.2 B1 §3.27 / BS 9999:2017 §22.1 / DCLG §3.1"},
+    {ref:"8.9",section:"Fire Alarm System",question:"Is a weekly fire alarm call point test being carried out and recorded in a fire safety log?",answer:"no",comment:"Weekly call point test records were not produced for inspection. The responsible person stated that testing is carried out occasionally but acknowledged that no formal records are kept. Under BS 5839-1:2017 and the RRO 2005, weekly functional tests of at least one call point must be conducted and recorded.",flagged:true,photos:[],guidance:"BS 5839-1:2017 §45.2 / RRO Art.17 / PAS 79-1 §8.8 / DCLG §4.2"},
+    {ref:"6.2",section:"Fire Safety Management",question:"Have all staff received appropriate fire safety awareness training?",answer:"no",comment:"The responsible person confirmed that formal fire safety induction training was last provided in 2021. Three members of staff employed since that date have received no formal fire safety training.",flagged:true,photos:[],guidance:"RRO Art.21 / DCLG §6.1 / PAS 79-1 §8.9"},
+    {ref:"P1.1",section:"Premises Details",question:"State the full address of the premises under assessment.",answer:"text",comment:"Unit 4, Station Road Industrial Estate, Cardiff, CF24 5AB",flagged:false,photos:[],guidance:""},
+    {ref:"R2.1",section:"Responsible Person",question:"State the name of the Responsible Person as defined under Article 3 of the RRO 2005.",answer:"text",comment:"Mr David Hughes, Operations Manager, Acme Properties Ltd",flagged:false,photos:[],guidance:""},
+    {ref:"9.4",section:"Firefighting Equipment",question:"Are portable fire extinguishers of the correct type and in the correct locations?",answer:"not_assessed",comment:"",flagged:false,photos:[],guidance:""}
+  ]
+};
+
+const SMART_ACTIONS = {
+  "3.5":{action:"Replace inoperative self-closing device to fire door on first-floor landing as a matter of immediate urgency. The door must achieve full close and latch from any position up to and including 90 degrees under its own power, in accordance with BS EN 1154. Until repaired, do not prop or hold open.",priority:"p1",guidance:"PAS 79-1:2020 §8.7 / BS EN 1154 / BS 9999:2017 §21 / ADB Vol.2 B1"},
+  "1.9":{action:"Remove all accumulated combustible waste from the plant room corridor and storeroom 3 immediately. Introduce a weekly housekeeping inspection regime with written records retained in the fire safety log.",priority:"p2",guidance:"PAS 79-1:2020 §8.3 / RRO Art.8 / DCLG Offices & Shops §1.1"},
+  "2.1":{action:"Introduce a programme of portable appliance testing (PAT) in accordance with the IET Code of Practice for In-Service Inspection and Testing (5th Edition). Retain test records in the fire safety log.",priority:"p2",guidance:"PAS 79-1:2020 §8.4 / RRO Art.17 / IET CoP 5th Ed / DCLG §2.1"},
+  "2.3":{action:"Commission an Electrical Installation Condition Report (EICR) from a competent electrician (NICEIC/NAPIT registered). For industrial premises the recommended periodic inspection interval is 3 years (BS 7671).",priority:"p2",guidance:"PAS 79-1:2020 §8.4 / BS 7671:2018+A2:2022 / RRO Art.17 / DCLG §2.2"},
+  "7.7":{action:"Clear all obstructions from the ground-floor escape corridor immediately. Introduce management controls to ensure the minimum 1000mm clear width is maintained at all times.",priority:"p2",guidance:"PAS 79-1:2020 §8.6 / ADB Vol.2 B1 §3.27 / BS 9999:2017 §22.1 / DCLG §3.1"},
+  "8.9":{action:"Establish a weekly fire alarm call point test programme immediately. Record date, time, zone tested, and tester name in the fire safety log. Arrange a 6-monthly service inspection by a competent contractor certificated to BS 5839-1.",priority:"p2",guidance:"PAS 79-1:2020 §8.8 / BS 5839-1:2017 §45.2 / RRO Art.17 / DCLG §4.2"},
+  "6.2":{action:"Arrange fire safety awareness training for all staff, with priority for the three individuals employed since 2021. Incorporate fire safety awareness into the induction programme for all new starters.",priority:"p3",guidance:"PAS 79-1:2020 §8.9 / RRO Art.21 / DCLG §6.1"}
+};
+
+const PRIORITY_ORDER = {p1:0,p2:1,p3:2,p4:3};
+
+function getPhotoIndexData(findings){const photos=[];findings.forEach(f=>{(f.photos||[]).forEach(p=>{photos.push({...p,ref:f.ref,section:f.section});});});return photos;}
+function actionPlanRows(findings){return findings.filter(f=>f.flagged).map(f=>{const s=SMART_ACTIONS[f.ref];return{ref:f.ref,section:f.section,finding:f.comment||f.question,action:s?s.action:"Review and implement appropriate corrective measures.",guidance:s?s.guidance:(f.guidance||""),priority:s?s.priority:"p3",photos:f.photos||[]};}).sort((a,b)=>(PRIORITY_ORDER[a.priority]||3)-(PRIORITY_ORDER[b.priority]||3));}
+function riskClass(r){return(r||"").toLowerCase();}
+function riskLabel(r){const m={high:"HIGH RISK",medium:"MEDIUM RISK",low:"LOW RISK",tolerable:"TOLERABLE"};return m[(r||"").toLowerCase()]||r||"\u2014";}
+function chipClass(a){if(a==="yes")return"yes";if(a==="no")return"no";if(a==="na")return"na";if(a==="yna")return"yna";if(a==="not_assessed")return"na2";return"txt";}
+function chipLabel(a){if(a==="yes")return"YES";if(a==="no")return"NO";if(a==="na")return"N/A";if(a==="yna")return"YES/NA";if(a==="not_assessed")return"Not assessed";return a||"\u2014";}
+function pBadge(p){const labels={p1:"P1 \u2014 Immediate",p2:"P2 \u2014 1 Month",p3:"P3 \u2014 3 Months",p4:"P4 \u2014 12 Months"};return `<span class="pbadge ${p}">${labels[p]||p}</span>`;}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function nl2br(s){return esc(s||"").replace(/\n/g,"<br>");}
+
+function renderReport(data){
+  const A=data;
+  const allPhotos=getPhotoIndexData(A.findings||[]);
+  const actionRows=actionPlanRows(A.findings||[]);
+  const p=A.premises||{};
+  const sections={};
+  (A.findings||[]).forEach(f=>{if(!sections[f.section])sections[f.section]=[];sections[f.section].push(f);});
+
+  const coverPage=`<div class="page cover"><div class="cover-bar"></div><div class="cover-inner"><div class="cover-logo-row"><img class="cover-logo-img" src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" onerror="this.style.display='none'" alt="Firesite logo"><div><div class="cover-logo-name">Fire<em>site</em></div><div class="cover-logo-tagline">by Bluejai &nbsp;\u00B7&nbsp; Professional fire risk assessments, in your pocket</div></div></div><div class="cover-doc-type">Fire Risk Assessment Report</div><div class="cover-main-title">Fire Risk<br>Assessment</div><div class="cover-address">${nl2br(p.address||"\u2014")}</div><div class="cover-divider"></div><div class="cover-risk ${riskClass(A.overallRisk)}">&\#9632; ${riskLabel(A.overallRisk)}</div><div class="cover-meta"><span class="cm-lbl">Report Ref</span><span class="cm-val">${esc(A.meta?.id||"\u2014")}</span><span class="cm-lbl">Assessment Date</span><span class="cm-val">${esc(A.meta?.date||"\u2014")}</span><span class="cm-lbl">Assessor</span><span class="cm-val">${esc(A.meta?.assessorName||"\u2014")}</span><span class="cm-lbl">Qualifications</span><span class="cm-val">${esc(A.meta?.assessorQuals||"\u2014")}</span><span class="cm-lbl">Client</span><span class="cm-val">${esc(A.meta?.clientName||"\u2014")}</span><span class="cm-lbl">Resp. Person</span><span class="cm-val">${esc(p.responsiblePerson||"\u2014")}</span><span class="cm-lbl">Next Review</span><span class="cm-val">${esc(A.meta?.nextReviewDate||"Within 12 months")}</span><span class="cm-lbl">DCLG Guide</span><span class="cm-val">${esc(A.meta?.dclgGuide||"\u2014")}</span><span class="cm-lbl">Actions Raised</span><span class="cm-val">${actionRows.length} (${actionRows.filter(x=>x.priority==="p1").length} immediate, ${actionRows.filter(x=>x.priority==="p2").length} within 1 month)</span><span class="cm-lbl">Photos</span><span class="cm-val">${allPhotos.length} image${allPhotos.length===1?"":"s"} attached</span></div><div class="cover-foot"><div class="cover-foot-text">This report has been prepared by ${esc(A.meta?.assessorName||"\u2014")} on behalf of ${esc(A.meta?.clientName||"\u2014")} in accordance with the Regulatory Reform (Fire Safety) Order 2005 and PAS 79-1:2020.</div><div class="cover-foot-stds">Standards: RRO 2005 \u00B7 PAS 79-1:2020 \u00B7 ADB (2019) \u00B7 BS 9999:2017 \u00B7 BS 5839-1:2017 \u00B7 BS 5266-1:2016 \u00B7 Building Safety Act 2022 \u00B7 DCLG Guide: ${esc(A.meta?.dclgGuide||"applicable premises type")}</div></div></div></div>`;
+
+  const premisesPage=`<div class="page"><div class="page-accent"></div><div class="rh"><div class="rh-logo">Fire<em>site</em></div><div class="rh-addr">${nl2br(p.address||"\u2014")}<br>${esc(A.meta?.id||"")}</div></div><div class="page-body"><div class="exec-box"><div class="exec-label">Executive Summary</div><div class="exec-text">${esc(A.riskJustification||"No summary available.")}</div></div><div class="sh"><div class="sh-num">A</div><div class="sh-text">Premises Details</div><div class="sh-rule"></div></div><table class="dtable"><tr><td class="lbl">Address</td><td class="val">${nl2br(p.address||"\u2014")}</td></tr><tr><td class="lbl">Primary Use</td><td class="val">${esc(p.use||"\u2014")}</td></tr><tr><td class="lbl">Floors / Area</td><td class="val">${esc(p.floors||"\u2014")} floor(s) &nbsp;\u00B7&nbsp; ${esc(p.area||"\u2014")}</td></tr><tr><td class="lbl">Max Occupancy</td><td class="val">${esc(p.maxOccupancy||"\u2014")}</td></tr><tr><td class="lbl">Construction</td><td class="val">${esc(p.construction||"\u2014")}</td></tr><tr><td class="lbl">Over 18m Height</td><td class="val">${p.buildingHeight18m?"YES \u2014 Building Safety Act 2022 applies":"No"}</td></tr><tr><td class="lbl">Basement Level(s)</td><td class="val">${p.hasBasement?"Yes":"None identified"}</td></tr><tr><td class="lbl">Sleeping Risk</td><td class="val">${p.sleepingRisk?"YES \u2014 sleeping accommodation present":"No sleeping accommodation"}</td></tr><tr><td class="lbl">Listed Building</td><td class="val">${p.listedBuilding?"Yes":"No"}</td></tr><tr><td class="lbl">Previous FRA</td><td class="val">${p.previousFRA?("Yes \u2014 "+esc(p.previousFRADate||"date not stated")):"No previous assessment identified"}</td></tr></table><div class="sh"><div class="sh-num">B</div><div class="sh-text">Responsible Person</div><div class="sh-rule"></div></div><table class="dtable"><tr><td class="lbl">Name &amp; Title</td><td class="val">${esc(p.responsiblePerson||"\u2014")}</td></tr><tr><td class="lbl">Contact</td><td class="val">${esc(p.rpContact||"\u2014")}</td></tr><tr><td class="lbl">Fire Safety Training</td><td class="val">${p.rpTrained?"Evidence of training reviewed":"No evidence of training \u2014 see Action Plan"}</td></tr></table></div><div class="rf"><span class="rf-text">OFFICIAL FIRE RISK ASSESSMENT REPORT \u2014 ${esc(A.meta?.id||"")} \u2014 ${esc(A.meta?.date||"")}</span><span class="rf-pgnum">Page 2</span></div></div>`;
+
+  let findingsHtml="";let secIdx=0;
+  Object.keys(sections).forEach(secName=>{
+    secIdx++;
+    findingsHtml+=`<div class="sh"><div class="sh-num">${secIdx}</div><div class="sh-text">${esc(secName)}</div><div class="sh-rule"></div></div>`;
+    sections[secName].forEach(f=>{
+      const isNA=f.answer==="not_assessed";
+      findingsHtml+=`<div class="finding"><div class="finding-head"><span class="fref${f.flagged?" flagged":""}">${esc(f.ref)}</span><span class="fq">${esc(f.question)}</span><span class="chip ${chipClass(f.answer)}">${chipLabel(f.answer)}</span></div><div class="finding-body">${isNA?`<div class="na-note">Not assessed during this inspection.</div>`:(f.comment?`<div class="comment-lbl">Assessor's Comments</div><div class="comment-txt">${nl2br(f.comment)}</div>`:"")}${f.flagged?`<div class="flag-tag">&#9873; Raised in Action Plan</div>`:""}${(f.photos||[]).length>0?`<div class="photo-strip">${f.photos.map(ph=>`<div class="photo-placeholder"><div class="photo-placeholder-icon">\uD83D\uDCF7</div><div class="photo-ref-label">${esc(ph.id)}<br><span style="color:#C9D1D9;font-size:5pt;">${esc(ph.caption)}</span></div></div>`).join("")}</div>`:""}</div></div>`;
+    });
+  });
+
+  const findingsPage=`<div class="page"><div class="page-accent"></div><div class="rh"><div class="rh-logo">Fire<em>site</em></div><div class="rh-addr">${nl2br(p.address||"\u2014")}<br>${esc(A.meta?.id||"")}</div></div><div class="page-body"><div class="sh" style="margin-top:0"><div class="sh-num" style="background:#6B7280">\u2736</div><div class="sh-text">Assessment Findings</div><div class="sh-rule"></div></div>${findingsHtml}</div><div class="rf"><span class="rf-text">OFFICIAL FIRE RISK ASSESSMENT REPORT \u2014 ${esc(A.meta?.id||"")} \u2014 ${esc(A.meta?.date||"")}</span><span class="rf-pgnum">Page 3</span></div></div>`;
+
+  const actionRowsHtml=actionRows.map(row=>`<tr><td><div class="aref">${esc(row.ref)}</div><div style="font-family:'Nunito',sans-serif;font-size:5.5pt;color:#9CA3AF">${esc(row.section)}</div></td><td style="font-size:6.5pt;color:#374151">${esc(row.finding.substring(0,180)+(row.finding.length>180?"\u2026":""))}</td><td style="font-size:6.5pt;color:#111827">${esc(row.action)}</td><td><span class="guidance-ref">${esc(row.guidance)}</span></td><td>${pBadge(row.priority)}</td><td>${(row.photos||[]).length>0?row.photos.map(ph=>`<div class="photo-placeholder" style="width:18mm;height:14mm;margin-bottom:1mm"><div style="font-size:12px;color:#D1D5DB">\uD83D\uDCF7</div><div class="photo-ref-label" style="font-size:5pt">${esc(ph.id)}</div></div>`).join(""):`<span style="font-family:'Nunito',sans-serif;font-size:6pt;color:#D1D5DB">\u2014</span>`}</td></tr>`).join("");
+
+  const actionPage=`<div class="page"><div class="page-accent"></div><div class="rh"><div class="rh-logo">Fire<em>site</em></div><div class="rh-addr">${nl2br(p.address||"\u2014")}<br>${esc(A.meta?.id||"")}</div></div><div class="page-body"><div class="sh" style="margin-top:0"><div class="sh-num" style="background:linear-gradient(135deg,#C0392B,#E67E22)">!</div><div class="sh-text">Action Plan</div><div class="sh-rule"></div></div><p style="font-size:7.5pt;color:#6B7280;margin-bottom:3mm;font-family:'Nunito',sans-serif;">Actions listed in priority order. Prepared in accordance with PAS 79-1:2020, ADB, BS 9999:2017, BS 5839-1:2017 and the DCLG guide (${esc(A.meta?.dclgGuide||"\u2014")}). The Responsible Person must ensure completion within stated timescales.</p><table class="atable"><colgroup><col class="col-ref"><col class="col-finding"><col class="col-action"><col class="col-guidance"><col class="col-priority"><col class="col-photo"></colgroup><thead><tr><th>Ref</th><th>Finding</th><th>Recommended Action</th><th>Guidance</th><th>Priority</th><th>Photo(s)</th></tr></thead><tbody>${actionRowsHtml}</tbody></table><div class="limitations"><div class="lim-title">Priority Key</div><div class="lim-text"><strong style="color:#991B1B">P1 \u2014 Immediate:</strong> Significant risk to life. Action within 24\u201348 hours.<br><strong style="color:#92400E">P2 \u2014 Within 1 Month:</strong> Matters materially affecting fire safety.<br><strong style="color:#1E40AF">P3 \u2014 Within 3 Months:</strong> Matters to address within the next quarter.<br><strong style="color:#374151">P4 \u2014 Within 12 Months:</strong> Longer-term improvements.</div></div></div><div class="rf"><span class="rf-text">OFFICIAL FIRE RISK ASSESSMENT REPORT \u2014 ${esc(A.meta?.id||"")} \u2014 ${esc(A.meta?.date||"")}</span><span class="rf-pgnum">Page 4</span></div></div>`;
+
+  const photoIndexHtml=allPhotos.length>0?`<div class="photo-index-grid">${allPhotos.map((ph,i)=>`<div class="pi-item"><div class="pi-placeholder">\uD83D\uDCF7</div><div class="pi-meta"><div class="pi-num">Photo ${i+1} of ${allPhotos.length} &nbsp;\u00B7&nbsp; ${esc(ph.id)}</div><div class="pi-caption">${esc(ph.caption||"No caption")}</div><div class="pi-ref-tag">Ref: ${esc(ph.ref)} &nbsp;\u00B7&nbsp; ${esc(ph.section)}</div></div></div>`).join("")}</div>`:`<div style="font-family:'Nunito',sans-serif;font-size:9pt;color:#9CA3AF;text-align:center;padding:10mm 0;border:1px dashed #E5E7EB;border-radius:6px;">No photographs were attached to this assessment.</div>`;
+  const photoPage=`<div class="page"><div class="page-accent"></div><div class="rh"><div class="rh-logo">Fire<em>site</em></div><div class="rh-addr">${nl2br(p.address||"\u2014")}<br>${esc(A.meta?.id||"")}</div></div><div class="page-body"><div class="sh" style="margin-top:0"><div class="sh-num" style="background:#374151">\uD83D\uDCF7</div><div class="sh-text">Photographic Evidence Index</div><div class="sh-rule"></div></div><p style="font-family:'Nunito',sans-serif;font-size:7.5pt;color:#6B7280;margin-bottom:4mm;">${allPhotos.length} photograph${allPhotos.length===1?"":"s"} recorded during this assessment.</p>${photoIndexHtml}</div><div class="rf"><span class="rf-text">OFFICIAL FIRE RISK ASSESSMENT REPORT \u2014 ${esc(A.meta?.id||"")} \u2014 ${esc(A.meta?.date||"")}</span><span class="rf-pgnum">Page 5</span></div></div>`;
+
+  const signaturePage=`<div class="page"><div class="page-accent"></div><div class="rh"><div class="rh-logo">Fire<em>site</em></div><div class="rh-addr">${nl2br(p.address||"\u2014")}<br>${esc(A.meta?.id||"")}</div></div><div class="page-body"><div class="sh" style="margin-top:0"><div class="sh-num">C</div><div class="sh-text">Overall Risk Rating</div><div class="sh-rule"></div></div><div class="risk-box"><div class="risk-badge-big ${riskClass(A.overallRisk)}">${riskLabel(A.overallRisk)}</div><div class="risk-desc"><strong>Risk Determination \u2014 ${riskLabel(A.overallRisk)}</strong>${esc(A.riskJustification||"\u2014")}</div></div><div class="sh"><div class="sh-num">D</div><div class="sh-text">Assessor's Declaration &amp; Signature</div><div class="sh-rule"></div></div><div class="declaration"><p>This fire risk assessment has been carried out in accordance with the Regulatory Reform (Fire Safety) Order 2005 (as amended by the Fire Safety Act 2021) and PAS 79-1:2020. The assessment is based on conditions observed at the time of inspection and represents a snapshot in time.</p><p style="margin-top:2mm;">The assessor accepts no liability for the accuracy of information provided by third parties. This report should be read in full and the Action Plan implemented within the stated timescales.</p></div><div class="sig-grid"><div class="sig-box"><div class="sig-lbl">Assessor Name</div><div class="sig-val">${esc(A.meta?.assessorName||"")}</div><div class="sig-sub">Print name</div></div><div class="sig-box"><div class="sig-lbl">Qualifications</div><div class="sig-val">${esc(A.meta?.assessorQuals||"")}</div><div class="sig-sub">Membership / certification</div></div><div class="sig-box"><div class="sig-lbl">Signature</div><div class="sig-val"></div><div class="sig-sub">Sign here</div></div><div class="sig-box"><div class="sig-lbl">Date of Assessment</div><div class="sig-val">${esc(A.meta?.date||"")}</div><div class="sig-sub">DD Month YYYY</div></div><div class="sig-box"><div class="sig-lbl">Responsible Person</div><div class="sig-val">${esc(p.responsiblePerson||"")}</div><div class="sig-sub">Print name \u2014 acknowledges receipt</div></div><div class="sig-box"><div class="sig-lbl">RP Signature &amp; Date</div><div class="sig-val"></div><div class="sig-sub">Sign and date to acknowledge</div></div></div><div class="sh"><div class="sh-num">E</div><div class="sh-text">Standards &amp; Guidance Referenced</div><div class="sh-rule"></div></div><div class="standards-grid"><div class="std"><div class="std-dot"></div><span><span class="std-code">RRO 2005</span> Regulatory Reform (Fire Safety) Order 2005 (as amended)</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">PAS 79-1:2020</span> Fire risk assessments \u2014 premises other than housing</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">ADB 2019</span> Approved Document B \u2014 Fire Safety</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">BS 9999:2017</span> Fire safety in the design, management and use of buildings</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">BS 5839-1:2017</span> Fire detection and alarm systems</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">BS 5266-1:2016</span> Emergency lighting</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">BS EN 1154:1997</span> Controlled door closing devices</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">BS 7671:2018+A2</span> IET Wiring Regulations 18th Edition</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">Building Safety Act 2022</span> Higher-risk buildings regime</span></div><div class="std"><div class="std-dot"></div><span><span class="std-code">DCLG Guide</span> ${esc(A.meta?.dclgGuide||"Applicable premises type")}</span></div></div><div class="limitations" style="margin-top:4mm;"><div class="lim-title">Limitations of this Assessment</div><div class="lim-text">This assessment covers the areas of the premises inspected on the date shown. It does not constitute a structural survey or specialist fire engineering report. Recommendations do not override any requirements imposed by the enforcing authority or other legislation.</div></div></div><div class="rf"><span class="rf-text">OFFICIAL FIRE RISK ASSESSMENT REPORT \u2014 ${esc(A.meta?.id||"")} \u2014 ${esc(A.meta?.date||"")}</span><span class="rf-pgnum">Page 6</span></div></div>`;
+
+  document.getElementById("report-root").innerHTML=coverPage+premisesPage+findingsPage+actionPage+photoPage+signaturePage;
+}
+
+renderReport(SAMPLE_DATA);
+function toggleSample(){renderReport(SAMPLE_DATA);}
+
+// Production hook — call from app.html:
+// localStorage.setItem('fs_report_data', JSON.stringify(assessment));
+// window.open('report.html');
+// On load: const d=JSON.parse(localStorage.getItem('fs_report_data')||'null'); if(d) renderReport(d);
+window.renderFiresiteReport = function(a){renderReport(a);};
+</script>
+</body>
+</html>
