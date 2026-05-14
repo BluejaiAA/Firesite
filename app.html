@@ -859,7 +859,89 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
   .heatmap{grid-template-columns:repeat(3,1fr);}
 }
 
-`9;</button>
+`;
+
+// ─── LOGO DROP ────────────────────────────────────────────────────
+function LogoDrop({logo, onLogo}) {
+  const ref = useRef();
+  const handle = f => {
+    if (!f?.type.startsWith("image/")) return;
+    const r = new FileReader();
+    r.onload = e => onLogo(e.target.result);
+    r.readAsDataURL(f);
+  };
+  return (
+    <div className="logo-drop" onClick={()=>ref.current.click()}
+      onDragOver={e=>e.preventDefault()}
+      onDrop={e=>{e.preventDefault();handle(e.dataTransfer.files[0]);}}>
+      <input ref={ref} type="file" accept="image/*" style={{display:"none"}} onChange={e=>handle(e.target.files[0])}/>
+      {logo ? <><img src={logo} alt="logo"/><span style={{fontSize:9,color:"#9CA3AF"}}>Tap to change</span></> :
+        <><span style={{fontSize:20}}>🖼️</span><span style={{fontSize:11,fontWeight:600,color:"#374151"}}>Drop or tap to upload</span><span style={{fontSize:9,color:"#9CA3AF"}}>PNG, SVG or JPG</span></>}
+    </div>
+  );
+}
+
+// ─── COLOUR PICKER ────────────────────────────────────────────────
+const SW_COLOURS = ["#0D1117","#1B3461","#C0392B","#065F46","#7B1C1C","#1D4ED8","#9333EA","#B45309","#0369A1","#374151"];
+function ColourPicker({value, onChange}) {
+  return (
+    <div className="swatches">
+      {SW_COLOURS.map(c=>(
+        <div key={c} className={`sw ${value===c?"on":""}`} style={{background:c}} onClick={()=>onChange(c)}/>
+      ))}
+      <div className="sw sw-pick" style={{width:24,height:24,borderRadius:5}}>
+        🎨<input type="color" value={value||"#0D1117"} onChange={e=>onChange(e.target.value)}/>
+      </div>
+    </div>
+  );
+}
+
+// ─── QUESTION CARD (single-question card-by-card flow) ────────────
+// ─── ADDRESS FINDER ──────────────────────────────────────────────
+function AddressFinder({value, onChange}) {
+  const [query,setQuery]=useState(value||"");
+  const [results,setResults]=useState([]);
+  const [loading,setLoading]=useState(false);
+  const [selected,setSelected]=useState(!!value);
+  const [error,setError]=useState("");
+  const debounce=useRef(null);
+  const search=async(q)=>{
+    if(!q||q.length<2){setResults([]);return;}
+    setLoading(true);setError("");
+    try{
+      const isPostcode=/^[A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2}$/i.test(q.trim());
+      if(isPostcode){
+        const r=await fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(q.trim()));
+        const d=await r.json();
+        if(d.status===200&&d.result){
+          const pc=d.result;
+          setResults([{display:pc.admin_district+(pc.parish&&pc.parish!==pc.admin_district?", "+pc.parish:""),sub:pc.postcode+" - "+(pc.nuts||pc.region||""),full:(pc.admin_district||"")+", "+pc.postcode}]);
+        }else{setError("Postcode not found. Enter address manually.");setResults([]);}
+      }else{setResults([{display:"Enter postcode for best results",sub:"e.g. EC2V 4QS",full:"",isHint:true}]);}
+    }catch(e){setError("Lookup unavailable - type address manually.");setResults([]);}
+    setLoading(false);
+  };
+  const handleInput=v=>{setQuery(v);setSelected(false);onChange(v);if(debounce.current)clearTimeout(debounce.current);debounce.current=setTimeout(()=>search(v),500);};
+  const selectResult=r=>{if(r.isHint)return;setQuery(r.full||r.display);onChange(r.full||r.display);setResults([]);setSelected(true);};
+  const clear=()=>{setQuery("");onChange("");setSelected(false);setResults([]);};
+  if(selected&&value)return(
+    <div style={{background:"#FDF3EE",border:"1px solid #C0392B33",borderRadius:10,padding:"11px 14px",marginBottom:8}}>
+      <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:1,color:"#C0392B",marginBottom:3}}>Address confirmed</div>
+      <div style={{fontSize:13,color:"#1C1C1C",lineHeight:1.5,flex:1}}>{value}</div>
+      <div style={{marginTop:8}}>
+        <textarea style={{width:"100%",background:"#fff",border:"1px solid #EAECF0",borderRadius:7,padding:"8px 10px",fontSize:12,color:"#374151",outline:"none",resize:"none",minHeight:64,lineHeight:1.5,fontFamily:"'Nunito',sans-serif"}}
+          placeholder="Add building name, street number and full address..." value={value} onChange={e=>onChange(e.target.value)}/>
+      </div>
+      <span style={{fontSize:10,fontWeight:600,color:"#C0392B",cursor:"pointer",marginTop:6,display:"inline-block"}} onClick={clear}>Change</span>
+    </div>
+  );
+  return(
+    <div>
+      <div style={{position:"relative",marginBottom:8}}>
+        <input style={{width:"100%",background:"#F9FAFB",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
+          placeholder="Enter postcode (e.g. EC2V 4QS) or address..."
+          value={query} onChange={e=>handleInput(e.target.value)}/>
+        <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
       </div>
       {loading&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>Looking up address...</div>}
       {error&&<div style={{fontSize:11,color:"#9CA3AF",padding:"6px 12px"}}>{error}</div>}
