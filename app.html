@@ -148,26 +148,48 @@ const SECTION_PRIORITY = {
 
 // ─── SMART ACTIONS ────────────────────────────────────────────────
 const SMART_ACTIONS = {
-  "7.9":  {action:"Remove deadlock from final exit door and replace with panic latch compliant with BS EN 1125. Implement immediately — door must not be locked during occupied hours.", priority:"P1 — Immediate"},
-  "3.5":  {action:"Replace inoperative self-closing device on fire door. Door must close fully and latch from any open position including 90° under its own power.", priority:"P1 — Immediate"},
-  "7.10": {action:"Replace key-operated lock on final exit door with single-operation release device. Implement immediately.", priority:"P1 — Immediate"},
-  "8.4":  {action:"Arrange emergency inspection of fire alarm system by competent contractor. Do not rely on this premises having adequate fire warning until confirmed operational.", priority:"P1 — Immediate"},
-  "3.4":  {action:"Arrange inspection of all fire doors by a competent fire door inspector. Repair or replace defective doors. Maintain log of all fire door inspections.", priority:"P2 — Within 1 month"},
-  "3.9":  {action:"Adjust or replace fire doors where gap tolerances exceed 3mm at sides/top or 8mm at threshold. Commission competent fire door contractor.", priority:"P2 — Within 1 month"},
-  "3.10": {action:"Fit intumescent strips and cold smoke seals to all fire doors where these are missing or damaged.", priority:"P2 — Within 1 month"},
-  "8.11": {action:"Reposition any obstructions to manual call points. Maintain minimum 500mm clear access at all times.", priority:"P2 — Within 1 month"},
-  "7.12": {action:"Test all emergency lighting units and replace any failed luminaires. Arrange full 3-hour discharge test and retain certificate.", priority:"P2 — Within 1 month"},
-  "7.7":  {action:"Clear all obstructions from escape corridors. Implement management controls to ensure routes remain clear. Brief all staff.", priority:"P2 — Within 1 month"},
-  "2.3":  {action:"Commission an Electrical Installation Condition Report (EICR) from a competent electrical contractor.", priority:"P2 — Within 1 month"},
-  "8.9":  {action:"Establish weekly fire alarm call point test programme and record in log book. Arrange 6-monthly service.", priority:"P2 — Within 1 month"},
-  "1.9":  {action:"Remove accumulated combustible waste. Implement weekly housekeeping inspection regime with records.", priority:"P3 — Within 3 months"},
-  "9.8":  {action:"Introduce monthly visual checks for all portable fire extinguishers recorded in the fire safety log.", priority:"P3 — Within 3 months"},
-  "6.5":  {action:"Arrange evacuation drill within 3 months. Record date, time, evacuation time, total evacuees and issues identified.", priority:"P3 — Within 3 months"},
-  "2.1":  {action:"Introduce a programme of portable appliance testing (PAT) appropriate to the risk level and frequency of use.", priority:"P3 — Within 3 months"},
-  "R2.3": {action:"Arrange suitable fire safety management training for the Responsible Person from a recognised body.", priority:"P3 — Within 3 months"},
-  "6.2":  {action:"Arrange fire safety awareness training for all staff covering: alarm raising, evacuation procedure, assembly point and extinguisher awareness.", priority:"P3 — Within 3 months"},
-  "6.3":  {action:"Identify and train a sufficient number of Fire Wardens including practical use of firefighting equipment.", priority:"P3 — Within 3 months"},
-  "4.4":  {action:"Relocate external waste containers to a designated area away from the building structure.", priority:"P3 — Within 3 months"},
+  "7.9":   {action:"Remove deadlock from final exit door and replace with panic latch compliant with BS EN 1125. Implement immediately.",priority:"P1 — Immediate",on:"y"},
+  "3.5":   {action:"Replace inoperative self-closing device on fire door. Must close fully and latch from any open position.",priority:"P1 — Immediate",on:"n"},
+  "7.10":  {action:"Replace key-operated lock on final exit door with single-operation release device. Implement immediately.",priority:"P1 — Immediate",on:"n"},
+  "8.4":   {action:"Arrange emergency inspection of fire alarm system by competent contractor.",priority:"P1 — Immediate",on:"n"},
+  "2.5":   {action:"Rectify all outstanding C1, C2 and FI coded EICR items. Obtain completion certificates.",priority:"P1 — Immediate",on:"n"},
+  "5.2":   {action:"Review maximum occupancy immediately. Implement controls to prevent safe capacity being exceeded.",priority:"P1 — Immediate",on:"y"},
+  "7.5":   {action:"Provide an additional alternative escape route accessible from all parts of the building.",priority:"P1 — Immediate",on:"n"},
+  "7.19":  {action:"Ensure all final exits lead to a place of ultimate safety away from the building.",priority:"P1 — Immediate",on:"n"},
+  "3.4":   {action:"Arrange inspection of all fire doors by a competent fire door inspector.",priority:"P2 — Within 1 month",on:"n"},
+  "3.9":   {action:"Adjust or replace fire doors where gap tolerances exceed 3mm at sides/top or 8mm at threshold.",priority:"P2 — Within 1 month",on:"n"},
+  "3.10":  {action:"Fit intumescent strips and cold smoke seals to all fire doors where missing or damaged.",priority:"P2 — Within 1 month",on:"n"},
+  "3.1":   {action:"Commission compartmentation survey to identify hidden fire spread pathways.",priority:"P2 — Within 1 month",on:"y"},
+  "8.11":  {action:"Reposition obstructions to manual call points. Maintain minimum 500mm clear access.",priority:"P2 — Within 1 month",on:"n"},
+  "7.12":  {action:"Test all emergency lighting units and replace failed luminaires. Arrange 3-hour discharge test.",priority:"P2 — Within 1 month",on:"n"},
+  "7.11a": {action:"Improve internal illumination of escape routes. Install emergency lighting per BS 5266-1:2016.",priority:"P2 — Within 1 month",on:"n"},
+  "7.11b": {action:"Improve external illumination of final exit areas to enable safe exit in darkness.",priority:"P2 — Within 1 month",on:"n"},
+  "7.7":   {action:"Clear all obstructions from escape corridors. Implement management controls.",priority:"P2 — Within 1 month",on:"n"},
+  "7.8":   {action:"Remove or repair trip hazards on escape routes. Document in fire safety log.",priority:"P2 — Within 1 month",on:"n"},
+  "7.17":  {action:"Prepare individual PEEPs for all occupants who cannot self-evacuate. Test and review regularly.",priority:"P2 — Within 1 month",on:"n"},
+  "2.3":   {action:"Commission an EICR from a competent electrical contractor registered with NICEIC or NAPIT.",priority:"P2 — Within 1 month",on:"n"},
+  "4.1":   {action:"Implement arson controls: improve perimeter security, remove external combustibles, review CCTV.",priority:"P2 — Within 1 month",on:"y"},
+  "4.3":   {action:"Install security systems: CCTV coverage of entrances and intruder alarm as a minimum.",priority:"P2 — Within 1 month",on:"n"},
+  "1.5":   {action:"Review storage and handling of flammable/combustible materials. Implement HSE/DSEAR controls.",priority:"P2 — Within 1 month",on:"n"},
+  "1.7":   {action:"Ensure space heaters are guarded, 500mm from combustibles, covered by written policy.",priority:"P2 — Within 1 month",on:"n"},
+  "1.8":   {action:"Remove or recover upholstered furniture with exposed foam. Replacement must comply with BS 7177.",priority:"P2 — Within 1 month",on:"n"},
+  "1.18":  {action:"Implement physical separation between ignition sources and combustibles. Photograph non-compliance.",priority:"P2 — Within 1 month",on:"n"},
+  "1.19":  {action:"Implement fire controls in cooking area: suppression, fire blanket, thermal cut-offs, extraction cleaning.",priority:"P2 — Within 1 month",on:"n"},
+  "7.2":   {action:"Review travel distances against ADB Vol 2 Table 3. Add routes or detection where limits are exceeded.",priority:"P2 — Within 1 month",on:"n"},
+  "8.9":   {action:"Establish weekly fire alarm call point test programme and record in log book. Arrange 6-monthly service.",priority:"P2 — Within 1 month",on:"n"},
+  "1.9":   {action:"Remove accumulated combustible waste. Implement weekly housekeeping inspection regime.",priority:"P3 — Within 3 months",on:"n"},
+  "9.8":   {action:"Introduce monthly visual checks for all portable fire extinguishers.",priority:"P3 — Within 3 months",on:"n"},
+  "6.5":   {action:"Arrange evacuation drill within 3 months. Record date, time, evacuation time and issues.",priority:"P3 — Within 3 months",on:"n"},
+  "2.1":   {action:"Introduce a programme of PAT appropriate to the risk level and frequency of use.",priority:"P3 — Within 3 months",on:"n"},
+  "R2.3":  {action:"Arrange suitable fire safety management training for the Responsible Person from IFPO or IFE.",priority:"P3 — Within 3 months",on:"n"},
+  "6.2":   {action:"Arrange fire safety awareness training for all staff.",priority:"P3 — Within 3 months",on:"n"},
+  "6.3":   {action:"Identify and train a sufficient number of Fire Wardens including use of firefighting equipment.",priority:"P3 — Within 3 months",on:"n"},
+  "4.4":   {action:"Relocate external waste containers to at least 10 metres from the building.",priority:"P3 — Within 3 months",on:"n"},
+  "1.20":  {action:"Arrange deep clean of kitchen extraction canopies and ductwork. Implement BESA TR/19 schedule.",priority:"P3 — Within 3 months",on:"n"},
+  "2.2":   {action:"Arrange a PAT programme. Frequency risk-based: annually for high-use equipment.",priority:"P3 — Within 3 months",on:"Not conducted"},
+  "2.6":   {action:"Manage trailing lead risks: cable management, no daisy-chaining, replace with fixed sockets.",priority:"P3 — Within 3 months",on:"y"},
+  "4.6":   {action:"Relocate combustible items stored within 10 metres of the building.",priority:"P3 — Within 3 months",on:"n"},
+  "5.6":   {action:"Implement visitor management: fire safety briefing on arrival, sign-in register, evacuation person.",priority:"P3 — Within 3 months",on:"y"},
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
@@ -186,167 +208,172 @@ const SECTION_INTROS = {
   12: {icon:"⚖️", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
 };
 const FRA_SECTIONS = [
-  { id:1, title:"Premises Details", short:"Premises", questions:[
-    {ref:"P1.1",q:"State the full address of the premises under assessment.",t:"address",required:true},
+  {id:1,title:"Premises Details",short:"Premises",questions:[
+    {ref:"P1.1",q:"State the full address of the premises under assessment.",t:"address",required:true,postcodeLookup:true},
     {ref:"P1.2",q:"What is the primary use and occupancy of the premises?",t:"occupancy",required:true},
     {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true},
-    {ref:"P1.3a",q:"Does the building exceed 18 metres in height? If yes, does it fall under the Building Safety Act 2022 higher-risk regime?",t:"yn",required:true,g:"Buildings over 18m (approx 7 storeys) are subject to additional regulatory requirements under the Building Safety Act 2022."},
+    {ref:"P1.3a",q:"Does the building exceed 18 metres in height? If yes, does it fall under the Building Safety Act 2022 higher-risk regime?",t:"yn",required:true,g:"Buildings over 18m (approx 7 storeys) are subject to additional requirements under the Building Safety Act 2022."},
     {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels? If yes, state the number and primary use.",t:"textarea",required:true,g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design."},
-    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"select",opts:["1–10","11–20","21–50","51–100","101–250","251–500","500+"],required:true},
-    {ref:"P1.5",q:"Are any parts of the premises used for sleeping accommodation?",t:"yn",required:true,g:"Sleeping risk fundamentally changes the required level of fire protection. If yes, automatic detection to BS 5839 is likely required throughout."},
+    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"select",opts:["1-10","11-20","21-50","51-100","101-250","251-500","500+"],required:true},
+    {ref:"P1.5",q:"Are any parts of the premises used for sleeping accommodation?",t:"yn",required:true,g:"Sleeping risk fundamentally changes fire protection requirements. Automatic detection to BS 5839 is likely required throughout."},
     {ref:"P1.6",q:"Describe the construction type and approximate age of the building.",t:"text",required:false},
-    {ref:"P1.7",q:"Have there been any recent alterations, extensions or changes of use to the building?",t:"yn",required:false,g:"Material changes may invalidate previous assessments and affect compartmentation, means of escape and the adequacy of existing fire precautions."},
-    {ref:"P1.8",q:"Is the building listed or within a conservation area? If yes, state the listing grade.",t:"yn",required:false,g:"Listed status can restrict alterations to fire doors, compartmentation and other fire precautions — this must be factored into recommendations."},
-    {ref:"P1.9",q:"Is a current fire risk assessment already in place for these premises? If yes, state the date of the last assessment and who carried it out.",t:"yn",required:false,g:"Establishes whether this is a new or review assessment and whether any previous actions remain outstanding."},
+    {ref:"P1.7",q:"Have there been any recent alterations, extensions or changes of use to the building?",t:"yn",required:false,g:"Material changes may invalidate previous assessments and affect compartmentation and means of escape."},
+    {ref:"P1.8",q:"Is the building listed or within a conservation area? If yes, state the listing grade.",t:"yn",required:false,g:"Listed status can restrict alterations to fire doors, compartmentation and other fire precautions."},
+    {ref:"P1.9",q:"Is a current fire risk assessment already in place for these premises?",t:"yn",required:false,g:"Establishes whether this is a new or review assessment.",sub:{on:"y",fields:[{ref:"P1.9a",q:"Date of last assessment",t:"text",ph:"DD/MM/YYYY"},{ref:"P1.9b",q:"Assessor name and organisation",t:"text",ph:"Name, Company"}]}},
   ]},
-  { id:2, title:"Responsible Person", short:"Resp. Person", questions:[
+  {id:2,title:"Responsible Person",short:"Resp. Person",questions:[
     {ref:"R2.1",q:"State the name of the Responsible Person as defined under Article 3 of the RRO 2005.",t:"text",required:true},
-    {ref:"R2.2",q:"State the Responsible Person's job title and contact details.",t:"text",required:true},
-    {ref:"R2.3",q:"Has the Responsible Person undertaken appropriate fire safety management training?",t:"yn",required:true,g:"The Responsible Person must be competent. Ask for evidence of relevant training — courses from recognised bodies such as IFPO, IFE or equivalent."},
+    {ref:"R2.2a",q:"Responsible Person - Job Title",t:"text",required:true},
+    {ref:"R2.2b",q:"Responsible Person - Phone Number",t:"text",required:true},
+    {ref:"R2.2c",q:"Responsible Person - Email Address",t:"text",required:true},
+    {ref:"R2.3",q:"Has the Responsible Person undertaken appropriate fire safety management training?",t:"yn",required:true,g:"Ask for evidence from recognised bodies such as IFPO or IFE.",noCamera:true},
     {ref:"R2.4",q:"Name any other duty holders or persons with partial control of the premises.",t:"text",required:false},
-    {ref:"R2.5",q:"Are fire safety responsibilities clearly documented and communicated to all relevant persons?",t:"yn",required:true},
+    {ref:"R2.5",q:"Are fire safety responsibilities clearly documented and communicated to all relevant persons?",t:"yn",required:true,g:"Relevant persons includes employees, contractors, visitors and members of the public. Evidence includes a fire safety policy, staff handbook or induction records.",noCamera:true},
   ]},
-  { id:3, title:"Ignition Sources & Fuel Load", short:"Ignition & Fuel", questions:[
-    {ref:"1.1",q:"Describe the main fuel sources identified within the building.",t:"text",required:true,g:"Look for: paper/cardboard, furniture, waste materials, floor/wall coverings, flammable liquids or gases, timber, textiles. Record type, quantity and location."},
-    {ref:"1.2",q:"Could conditions within the premises give rise to a flammable or explosive atmosphere?",t:"yn",required:true,g:"Consider: LPG storage, solvent-based products, fuel storage, spray painting, commercial kitchens. If yes, a formal DSEAR assessment is required."},
-    {ref:"1.3",q:"If yes to 1.2 — has a formal DSEAR assessment been completed?",t:"ynna",required:false},
-    {ref:"1.4",q:"If yes to 1.3 — have the findings and actions been fully acted upon?",t:"ynna",required:false},
+  {id:3,title:"Ignition Sources and Fuel Load",short:"Ignition + Fuel",questions:[
+    {ref:"1.1",q:"Describe the main fuel sources identified within the building.",t:"text",required:true,g:"Look for: paper/cardboard, furniture, waste, floor coverings, flammable liquids, timber, textiles."},
+    {ref:"1.2",q:"Could conditions within the premises give rise to a flammable or explosive atmosphere?",t:"yn",required:true,g:"Consider: LPG storage, solvent-based products, fuel storage, spray painting. If yes, a formal DSEAR assessment is required."},
+    {ref:"1.3",q:"If yes to 1.2 - has a formal DSEAR assessment been completed?",t:"ynna",required:false},
+    {ref:"1.4",q:"If yes to 1.3 - have the findings and actions been fully acted upon?",t:"ynna",required:false},
     {ref:"1.5",q:"Are flammable liquids, gases and combustible materials handled and stored safely?",t:"ynna",required:true},
     {ref:"1.6",q:"Are substances hazardous to fire safety managed with appropriate storage and handling controls?",t:"ynna",required:true},
     {ref:"1.7",q:"Are space heaters guarded, stable, and kept clear of combustibles?",t:"ynna",required:true},
     {ref:"1.8",q:"Is upholstered furniture in acceptable condition with no exposed foam?",t:"ynna",required:false},
-    {ref:"1.9",q:"Is the building kept reasonably free from accumulated waste and unnecessary combustible material?",t:"yn",required:true,g:"Check: stairwells, plant rooms, roof spaces, under-stair cupboards, loading bays and external areas. Waste should not accumulate between collection points."},
-    {ref:"1.10",q:"Is smoking permitted on site? If yes, confirm whether: (a) designated areas and fire-safe receptacles are provided, and (b) the smoking policy was being observed at the time of this assessment.",t:"yn",required:true,g:"Discarded smoking materials are a leading cause of fire. Note any evidence of smoking in non-designated areas or improper disposal of waste."},
+    {ref:"1.9",q:"Is the building kept reasonably free from accumulated waste and unnecessary combustible material?",t:"yn",required:true,g:"Check: stairwells, plant rooms, roof spaces, under-stair cupboards, loading bays and external areas."},
+    {ref:"1.10",q:"Is smoking permitted on site?",t:"yn",required:true,g:"Discarded smoking materials are a leading cause of fire.",sub:{on:"y",fields:[{ref:"1.10a",q:"Are appropriate fire-safe receptacles provided in designated smoking areas?",t:"yn",ph:""},{ref:"1.10b",q:"Was the smoking policy being observed at the time of this assessment?",t:"yn",ph:""}]}},
     {ref:"1.13",q:"Is a mains gas supply present in the building?",t:"yn",required:true},
-    {ref:"1.14",q:"If yes — are gas appliances serviced annually by a Gas Safe registered engineer?",t:"ynna",required:false},
+    {ref:"1.14",q:"If yes - are gas appliances serviced annually by a Gas Safe registered engineer?",t:"ynna",required:false},
     {ref:"1.15",q:"Is an oil-based heating or fuel supply present?",t:"yn",required:false},
-    {ref:"1.16",q:"If yes — are oil-fired appliances inspected annually by an OFTEC contractor?",t:"ynna",required:false},
-    {ref:"1.17",q:"Are portable or plug-in heating devices in use anywhere within the premises?",t:"yn",required:true},
+    {ref:"1.16",q:"If yes - are oil-fired appliances inspected annually by an OFTEC contractor?",t:"ynna",required:false},
+    {ref:"1.17",q:"Are portable or plug-in heating devices in use anywhere within the premises?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"1.17a",q:"Are suitable control measures in place for portable heating devices?",t:"multi",opts:["PAT testing in place","EICR covers portable heaters","Written policy and user guidance in place","Devices are of an approved type","None of the above"],ph:""}]}},
     {ref:"1.18",q:"Is there clear separation between combustible materials and identified ignition sources?",t:"ynna",required:true},
     {ref:"1.19",q:"Where cooking takes place, are adequate precautions in place to reduce the risk of fire?",t:"ynna",required:false},
     {ref:"1.20",q:"Are kitchen extraction canopies, filters and ductwork cleaned on a schedule appropriate to frequency of use?",t:"ynna",required:false},
   ]},
-  { id:4, title:"Electrical Safety", short:"Electrical", questions:[
+  {id:4,title:"Electrical Safety",short:"Electrical",questions:[
     {ref:"2.1",q:"Are portable electrical appliances subject to a regular programme of inspection and testing (PAT)?",t:"yn",required:true},
-    {ref:"2.2",q:"At what interval is PAT currently carried out?",t:"select",opts:["Annually","1–2 Years","2–3 Years","3 Years+","Not conducted","N/A"],required:false},
-    {ref:"2.3",q:"Is the fixed electrical installation tested periodically by a competent electrical engineer?",t:"ynna",required:true,g:"Ask to see the most recent EICR. Offices: every 5 years. Industrial: every 3 years. Check all C1, C2 and C3 coded items have been actioned."},
-    {ref:"2.4",q:"How long ago was the most recent EICR carried out?",t:"select",opts:["Under 3 Years","3–5 Years","Over 5 Years","Not Conducted","N/A"],required:true},
+    {ref:"2.2",q:"At what interval is PAT currently carried out?",t:"select",opts:["Annually","1-2 Years","2-3 Years","3 Years+","Not conducted","N/A"],required:false},
+    {ref:"2.3",q:"Is the fixed electrical installation tested periodically by a competent electrical engineer?",t:"ynna",required:true,g:"Ask to see the most recent EICR. Offices: every 5 years. Industrial: every 3 years.",sub:{on:"y",fields:[{ref:"2.3a",q:"Name of electrical engineer or company who undertook the EICR",t:"text",ph:"Name, Company"},{ref:"2.3b",q:"Date the EICR was completed",t:"text",ph:"DD/MM/YYYY"},{ref:"2.3c",q:"EICR certificate reference (if available)",t:"text",ph:"Optional"}]}},
+    {ref:"2.4",q:"How long ago was the most recent EICR carried out?",t:"select",opts:["Under 3 Years","3-5 Years","Over 5 Years","Not Conducted","N/A"],required:true},
     {ref:"2.5",q:"Have all C1, C2, C3 and FI items from the latest EICR been properly resolved?",t:"ynna",required:true},
     {ref:"2.6",q:"Are trailing leads, multi-way adaptors or extension blocks in use?",t:"yn",required:true},
-    {ref:"2.7",q:"If yes — are the associated risks adequately controlled?",t:"ynna",required:false},
-    {ref:"2.8",q:"Are electric vehicle (EV) charging facilities provided at or within the premises?",t:"yn",required:true},
-    {ref:"2.9",q:"If yes — are appropriate fire safety controls in place for EV charging?",t:"ynna",required:false},
-    {ref:"2.10",q:"Are lithium-ion, lead-acid or other batteries stored, charged or used on site?",t:"yn",required:true},
-    {ref:"2.11",q:"If yes — are the fire risks from battery storage and charging adequately managed?",t:"ynna",required:false},
+    {ref:"2.7",q:"If yes - are the associated risks adequately controlled?",t:"ynna",required:false},
+    {ref:"2.8",q:"Are electric vehicle (EV) charging facilities provided at or within the premises?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"2.8a",q:"How many EV charging points are installed?",t:"text",ph:"e.g. 4"},{ref:"2.8b",q:"Location of EV charging points",t:"text",ph:"e.g. underground car park"},{ref:"2.8c",q:"Were the EV chargers installed after the most recent EICR was completed?",t:"yn",ph:""},{ref:"2.8d",q:"Is there a separate EICR report covering the EV charging installation?",t:"yn",ph:""},{ref:"2.8e",q:"Name of electrical engineer who certified the EV installation",t:"text",ph:"Name, Company"},{ref:"2.8f",q:"Date of EV installation EICR",t:"text",ph:"DD/MM/YYYY"}]}},
+    {ref:"2.9",q:"If yes - are appropriate fire safety controls in place for EV charging?",t:"ynna",required:false},
+    {ref:"2.10",q:"Are lithium-ion, lead-acid or other batteries stored, charged or used on site?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"2.10a",q:"Where are the batteries stored or charged?",t:"text",ph:"e.g. server room, storeroom"}]}},
+    {ref:"2.11",q:"If yes - are the fire risks from battery storage and charging adequately managed?",t:"ynna",required:false},
     {ref:"2.12",q:"Are solar photovoltaic (PV) panels or other renewable energy systems installed?",t:"yn",required:false},
-    {ref:"2.13",q:"If yes — are the fire risks associated with the PV installation adequately controlled?",t:"ynna",required:false},
+    {ref:"2.13",q:"If yes - are the fire risks associated with the PV installation adequately controlled?",t:"ynna",required:false},
   ]},
-  { id:5, title:"Arson Risk & Security", short:"Arson", questions:[
-    {ref:"4.1",q:"Is there a credible arson risk associated with this building or its surrounding grounds?",t:"yn",required:true},
-    {ref:"4.2",q:"If yes — are controls currently in place sufficient to reduce the risk to an acceptable level?",t:"ynna",required:false},
-    {ref:"4.3",q:"Are security systems such as CCTV or an intruder alarm installed and operational?",t:"yn",required:true},
+  {id:5,title:"Arson Risk and Security",short:"Arson",questions:[
+    {ref:"4.1",q:"Is there a credible arson risk associated with this building or its surrounding grounds?",t:"yn",required:true,g:"A credible arson risk exists where there is a history of arson or vandalism; easy unauthorised access; accessible external combustibles; evidence of trespass; or the building is vacant, isolated or in a high-crime area."},
+    {ref:"4.2",q:"If yes - are controls currently in place sufficient to reduce the risk to an acceptable level?",t:"ynna",required:false},
+    {ref:"4.3",q:"Are security systems installed and operational to deter or detect unauthorised access?",t:"yn",required:true,g:"The absence of any deterrent system in a building with an identified arson risk is a significant finding.",sub:{on:"y",fields:[{ref:"4.3a",q:"Which security systems are in place? (select all that apply)",t:"multi",opts:["CCTV","Intruder Alarm","Access Control","Security Lighting","Security Patrols","Other"],ph:""},{ref:"4.3b",q:"Additional comments on security arrangements",t:"textarea",ph:"e.g. CCTV covers car park and main entrance, monitored by ARC"}]}},
     {ref:"4.4",q:"Are external waste and refuse containers stored away from the building?",t:"ynna",required:true},
     {ref:"4.5",q:"Are external bins secured to prevent unauthorised access or deliberate ignition?",t:"ynna",required:false},
     {ref:"4.6",q:"Are combustible items stored at least 10 metres from the building structure?",t:"ynna",required:true},
   ]},
-  { id:6, title:"People at Risk", short:"People at Risk", questions:[
-    {ref:"5.1",q:"Which categories of person are present in or around the building?",t:"multi",opts:["Employees","Contractors","Lone Workers","Service Users","Visitors","General Public","Young Persons","Disabled Persons","Other"],required:true},
+  {id:6,title:"People at Risk",short:"People at Risk",questions:[
+    {ref:"5.1",q:"Which categories of person are present in or around the building?",t:"multi",opts:["Employees","Contractors","Lone Workers","Service Users","Visitors","General Public","Young Persons","Disabled Persons","Other"],required:true,noCamera:true},
     {ref:"5.2",q:"Does the number of people typically present exceed the building's assessed maximum occupancy?",t:"yn",required:true},
-    {ref:"5.3",q:"Are any occupants known to have a physical, sensory or cognitive condition affecting their ability to evacuate?",t:"yn",required:true,g:"Consider: mobility impairment, hearing or visual loss, mental health conditions, pregnancy, temporary injury, language barriers. This triggers PEEP requirements."},
-    {ref:"5.4",q:"If yes — have Personal Emergency Evacuation Plans (PEEPs) or a GEEP been prepared?",t:"ynna",required:false},
-    {ref:"5.5",q:"If yes — what evacuation aids are available?",t:"multi",opts:["Evacuation Chair","Evacuation Sledge / Mat","Carry Chair or Stretcher","Evacuation Lift","None","N/A"],required:false},
+    {ref:"5.3",q:"Are any occupants known to have a physical, sensory or cognitive condition affecting their ability to evacuate?",t:"yn",required:true,g:"Consider: mobility impairment, hearing or visual loss, mental health conditions, pregnancy, temporary injury, language barriers.",sub:{on:"y",fields:[{ref:"5.3a",q:"What arrangements are currently in place to assist these occupants in evacuation?",t:"textarea",ph:"e.g. PEEPs prepared, evacuation chairs on each floor, trained warden assigned to each individual"}]}},
+    {ref:"5.4",q:"If yes - have Personal Emergency Evacuation Plans (PEEPs) or a GEEP been prepared?",t:"ynna",required:false},
+    {ref:"5.5",q:"If yes - what evacuation aids are available?",t:"multi",opts:["Evacuation Chair","Evacuation Sledge / Mat","Carry Chair or Stretcher","Evacuation Lift","None","N/A"],required:false},
     {ref:"5.6",q:"Is it foreseeable that people unfamiliar with the building will be present?",t:"yn",required:true},
-    {ref:"5.7",q:"If yes — what steps are taken to ensure the safe evacuation of unfamiliar visitors?",t:"text",required:false},
+    {ref:"5.7",q:"If yes - what steps are taken to ensure the safe evacuation of unfamiliar visitors?",t:"text",required:false},
     {ref:"5.8",q:"Where refuge points are provided, are they suitably protected and accessible?",t:"ynna",required:false},
   ]},
-  { id:7, title:"Means of Escape", short:"Escape Routes", questions:[
-    {ref:"7.1",q:"What evacuation strategy applies to this building?",t:"select",opts:["Simultaneous (full evacuation)","Phased Evacuation","Stay Put (defend in place)","Other"],required:true},
-    {ref:"7.2",q:"Do escape route travel distances fall within the limits set out in applicable guidance?",t:"yn",required:true},
-    {ref:"7.3",q:"Are there sufficient final exits in both number and clear width?",t:"yn",required:true},
-    {ref:"7.4",q:"Are escape corridors and stairways wide enough to accommodate all occupants?",t:"yn",required:true},
+  {id:7,title:"Means of Escape",short:"Escape Routes",questions:[
+    {ref:"7.1",q:"What evacuation strategy applies to this building?",t:"select",opts:["Simultaneous (full evacuation)","Phased Evacuation","Stay Put (defend in place)","Other"],required:true,noCamera:true},
+    {ref:"7.2",q:"Do escape route travel distances fall within the limits set out in applicable guidance?",t:"yn",required:true,noCamera:true,g:"ADB Vol 2 Table 3: single direction 18m max; multiple directions 45m max (non-sprinklered)."},
+    {ref:"7.3",q:"Are there sufficient final exits in both number and clear width for the occupancy of this building?",t:"yn",required:true,g:"Minimum clear widths (ADB/BS 9999): 750mm for up to 60 persons; 850mm for up to 110 persons; 1050mm for up to 220 persons.",widthCheck:true},
+    {ref:"7.4",q:"Are escape corridors and stairways wide enough to accommodate all occupants?",t:"yn",required:true,g:"Minimum corridor: 1000mm general; 1200mm where wheelchair users expected. Stair widths: 1000mm minimum for up to 150 persons.",widthCheck:true},
     {ref:"7.5",q:"If one escape route is unavailable, is an alternative accessible from all parts of the building?",t:"yn",required:true},
     {ref:"7.6",q:"Are all escape routes clearly signposted with compliant directional and pictographic signage?",t:"yn",required:true},
     {ref:"7.7",q:"Are escape corridors and walkways free from stored items that would hinder evacuation?",t:"yn",required:true},
-    {ref:"7.8",q:"Are escape routes clear of hazards — raised thresholds, loose flooring or wet surfaces?",t:"yn",required:true},
-    {ref:"7.9",q:"Are any final exits found to be locked, secured or obstructed during occupied hours?",t:"yn",required:true,g:"Test every final exit door. A locked final exit during occupied hours is an immediate Priority 1 finding requiring same-day remediation."},
-    {ref:"7.10",q:"Can all final exit doors be opened immediately from inside by a single operation without a key?",t:"yn",required:true,g:"Push bars and lever handles are acceptable. Thumb-turn locks are acceptable. Key-operated locks on occupied exits are NOT acceptable. Test each door at time of visit."},
-    {ref:"7.11",q:"Are escape routes and final exit areas adequately illuminated — internally and externally?",t:"yn",required:true},
+    {ref:"7.8",q:"Are escape routes clear of hazards - raised thresholds, loose flooring or wet surfaces?",t:"yn",required:true},
+    {ref:"7.9",q:"Are any final exits found to be locked, secured or obstructed during occupied hours?",t:"yn",required:true,g:"A locked final exit during occupied hours is an immediate Priority 1 finding."},
+    {ref:"7.10",q:"Can all final exit doors be opened immediately from inside by a single operation without a key?",t:"yn",required:true,g:"Key-operated locks on occupied exits are NOT acceptable."},
+    {ref:"7.11a",q:"Are escape routes and final exit areas adequately illuminated internally?",t:"yn",required:true},
+    {ref:"7.11b",q:"Are final exit areas and external escape routes adequately illuminated externally?",t:"yn",required:true},
     {ref:"7.12",q:"Where emergency lighting is installed, is it confirmed to be in working order?",t:"ynna",required:true},
     {ref:"7.13",q:"Is emergency lighting tested monthly and subjected to a full 3-hour discharge test annually?",t:"ynna",required:true},
     {ref:"7.14",q:"Where external metal fire escape staircases exist, have they been structurally inspected within 5 years?",t:"ynna",required:false},
-    {ref:"7.15",q:"Is a formal assembly point designated and known to all occupants? State its location.",t:"text",required:true},
+    {ref:"7.15a",q:"Is a formal fire assembly point designated for this building?",t:"yn",required:true},
+    {ref:"7.15b",q:"State the location of the assembly point.",t:"text",required:true},
+    {ref:"7.15c",q:"Is the assembly point location known to all occupants?",t:"yn",required:true},
     {ref:"7.16",q:"Describe the arrangements used to confirm that all occupants, including visitors, have evacuated.",t:"text",required:true},
-    {ref:"7.17",q:"Are Personal Emergency Evacuation Plans (PEEPs) in place for all occupants who may not be able to self-evacuate unaided?",t:"yn",required:true,g:"PEEPs are a legal requirement where mobility-impaired or vulnerable persons are present. Each plan should be individual, practiced and reviewed regularly."},
-    {ref:"7.18",q:"Where PEEPs are required — are suitable refuge areas or areas of rescue assistance provided and clearly signed?",t:"ynna",required:false,g:"Refuges must be fire-protected, have two-way communication with a staffed point, and be large enough to accommodate a wheelchair."},
-    {ref:"7.19",q:"Do all final exits lead to a confirmed place of ultimate safety — an open space or public road, away from the building?",t:"yn",required:true,g:"A final exit that leads into an enclosed courtyard, dead end or back into the building does not constitute a safe means of escape."},
+    {ref:"7.17",q:"Are PEEPs in place for all occupants who may not be able to self-evacuate unaided?",t:"yn",required:true,g:"PEEPs are a legal requirement where mobility-impaired or vulnerable persons are present."},
+    {ref:"7.18",q:"Where PEEPs are required - are suitable refuge areas provided and clearly signed?",t:"ynna",required:false},
+    {ref:"7.19",q:"Do all final exits lead to a confirmed place of ultimate safety - an open space or public road?",t:"yn",required:true},
   ]},
-  { id:8, title:"Fire Doors & Compartmentation", short:"Fire Doors", questions:[
-    {ref:"3.1",q:"Are there building features that could cause fire to spread more rapidly than expected? (voids, ductwork, cladding)",t:"yn",required:true},
+  {id:8,title:"Fire Doors and Compartmentation",short:"Fire Doors",questions:[
+    {ref:"3.1",q:"Are there building features that could cause fire to spread more rapidly than expected?",t:"yn",required:true},
     {ref:"3.2",q:"Could smoke travel between spaces, floors or compartments in a way that presents a risk to life?",t:"yn",required:true},
     {ref:"3.3",q:"Where suspended or false ceilings are present, have fire-stopping measures been incorporated?",t:"ynna",required:false},
     {ref:"3.4",q:"Are fire-rated doors installed where required, properly specified, fitted and maintained?",t:"ynna",required:true},
-    {ref:"3.5",q:"Do the self-closing mechanisms on all fire doors operate effectively and reliably?",t:"ynna",required:true,g:"Open each fire door to 90° and release. It must close fully and latch under its own power. Closers held open with wedges, furniture or free-standing magnets not linked to the alarm are an immediate finding."},
+    {ref:"3.5",q:"Do the self-closing mechanisms on all fire doors operate effectively and reliably?",t:"ynna",required:true,g:"Open each fire door to 90 degrees and release. It must close fully and latch under its own power."},
     {ref:"3.6",q:"Are fire doors clearly identified with appropriate signage and kept closed when not in use?",t:"ynna",required:true},
     {ref:"3.7",q:"Do any fire doors have ventilation grilles or openings that significantly reduce their effectiveness?",t:"ynna",required:false},
     {ref:"3.8",q:"Do final exit doors and doors on escape routes swing open in the direction of escape travel?",t:"yn",required:true},
-    {ref:"3.9",q:"Are the door gaps within acceptable tolerances — maximum 3mm at sides/top, maximum 8mm at threshold?",t:"yn",required:true,g:"Use a gap gauge or 2p coin (approx 3mm) to test. Gaps over tolerance allow smoke and flame to bypass the door assembly. Check all fire doors — not a sample."},
+    {ref:"3.9",q:"Are the door gaps within acceptable tolerances - maximum 3mm at sides/top, maximum 8mm at threshold?",t:"yn",required:true},
     {ref:"3.10",q:"Are intumescent strips and cold smoke seals present and in good condition on all required doors?",t:"yn",required:true},
-    {ref:"3.11",q:"Are all service penetrations through compartment walls and floors (cables, pipes, ducts) correctly fire-stopped with appropriate materials?",t:"yn",required:true,g:"Unsealed penetrations are one of the most common compartmentation failures found on site. Check service risers, ceiling voids and areas above suspended ceilings."},
-    {ref:"3.12",q:"Are cavity barriers installed and in good condition within concealed spaces, ceiling voids and roof spaces where required?",t:"yn",required:true,g:"Cavity barriers prevent unseen fire spread through voids. Particularly important in older buildings with extensive timber roof structures or suspended ceilings."},
-    {ref:"3.13",q:"Where fire-rated glazing is installed, is it correctly specified, certified and free from damage or unauthorised modification?",t:"ynna",required:false,g:"Fire-rated glazing must be installed in a compliant frame system — the glass alone does not provide the rating without the correct framing."},
+    {ref:"3.11",q:"Are all service penetrations through compartment walls and floors correctly fire-stopped?",t:"yn",required:true},
+    {ref:"3.12",q:"Are cavity barriers installed and in good condition within concealed spaces and roof spaces?",t:"yn",required:true},
+    {ref:"3.13",q:"Where fire-rated glazing is installed, is it correctly specified, certified and free from damage?",t:"ynna",required:false},
   ]},
-  { id:9, title:"Fire Detection & Alarm", short:"Detection", questions:[
+  {id:9,title:"Fire Detection and Alarm",short:"Detection",questions:[
     {ref:"8.1",q:"Would a fire be detected quickly enough for the alarm to be raised before escape routes are compromised?",t:"yn",required:true},
     {ref:"8.2",q:"Can an alarm be raised by any person discovering a fire without putting themselves at risk?",t:"yn",required:true},
     {ref:"8.3",q:"Is the fire warning signal capable of being perceived throughout the entire building?",t:"yn",required:true},
     {ref:"8.4",q:"Is a fire alarm system installed and confirmed to be in working order?",t:"ynna",required:true},
-    {ref:"8.5",q:"Specify the category and standard of the fire alarm system installed (e.g. BS 5839-1 Category L2, Category M).",t:"text",required:true},
-    {ref:"8.6",q:"Is the alarm system's cause-and-effect configuration consistent with the evacuation strategy adopted?",t:"ynna",required:true},
+    {ref:"8.5",q:"Specify the category and standard of the fire alarm system installed (e.g. BS 5839-1 Category L2).",t:"text",required:true},
+    {ref:"8.6",q:"Is the alarm system cause-and-effect configuration consistent with the evacuation strategy adopted?",t:"ynna",required:true},
     {ref:"8.7",q:"Is the fire alarm system connected to and monitored by a third-party Alarm Receiving Centre (ARC)?",t:"ynna",required:false},
     {ref:"8.8",q:"Does the alarm system have a standby power supply for mains failure?",t:"ynna",required:true},
-    {ref:"8.9",q:"Is the alarm subject to daily visual checks, weekly call point tests and at least 6-monthly servicing?",t:"ynna",required:true,g:"Ask to see the fire alarm log book. Weekly test entries should name the call point tested (rotating through all points). 6-monthly service should show engineer name, certificate and any defects."},
+    {ref:"8.9",q:"Is the alarm subject to daily visual checks, weekly call point tests and at least 6-monthly servicing?",t:"ynna",required:true},
     {ref:"8.10",q:"Identify the contractor responsible for periodic inspection and servicing of the alarm system.",t:"text",required:true},
     {ref:"8.11",q:"Are all manual call points readily visible, clearly identified and free from obstruction?",t:"ynna",required:true},
     {ref:"8.12",q:"Are appropriate measures in place to minimise the occurrence of false or unwanted fire signals?",t:"ynna",required:true},
-    {ref:"8.13",q:"Is the fire alarm control panel located in a suitable position accessible to the fire service on arrival?",t:"yn",required:true,g:"The panel should ideally be located at the main entrance or a position agreed with the fire service. Check for mimic panels or remote indicators where the main panel is not near the entrance."},
-    {ref:"8.14",q:"Where AOV (automatic opening vent) or mechanical smoke control systems are installed, are they integrated with the fire alarm and confirmed to be in working order?",t:"ynna",required:false,g:"AOVs and smoke control systems must be tested as part of the fire alarm service regime. Confirm triggering zones, test frequency and last test date."},
+    {ref:"8.13",q:"Is the fire alarm control panel located in a suitable position accessible to the fire service on arrival?",t:"yn",required:true},
+    {ref:"8.14",q:"Where AOV or mechanical smoke control systems are installed, are they integrated with the fire alarm?",t:"ynna",required:false},
   ]},
-  { id:10, title:"Firefighting Equipment", short:"Firefighting", questions:[
+  {id:10,title:"Firefighting Equipment",short:"Firefighting",questions:[
     {ref:"9.1",q:"Is an automatic sprinkler or water suppression system installed in the building?",t:"yn",required:true},
-    {ref:"9.2",q:"If yes — is the system tested and inspected at intervals specified in the maintenance contract?",t:"ynna",required:false},
+    {ref:"9.2",q:"If yes - is the system tested and inspected at intervals specified in the maintenance contract?",t:"ynna",required:false},
     {ref:"9.3",q:"Are dry or wet rising mains installed within the building for fire service use?",t:"yn",required:true},
-    {ref:"9.4",q:"If yes — does a contractor carry out a 6-monthly visual inspection and annual pressure test?",t:"ynna",required:false},
+    {ref:"9.4",q:"If yes - does a contractor carry out a 6-monthly visual inspection and annual pressure test?",t:"ynna",required:false},
     {ref:"9.5",q:"Describe the types and distribution of portable extinguishers provided within the building.",t:"text",required:true},
     {ref:"9.6",q:"Is the type, number and distribution of portable extinguishers appropriate for the identified fire risks?",t:"yn",required:true},
     {ref:"9.7",q:"Is firefighting equipment sited in accessible, visible locations with clear identification signage?",t:"yn",required:true},
     {ref:"9.8",q:"Are portable extinguishers checked visually each month by a responsible person?",t:"yn",required:true},
     {ref:"9.9",q:"Is all firefighting equipment serviced at the required intervals by a competent contractor?",t:"yn",required:true},
     {ref:"9.10",q:"Identify the contractor responsible for maintenance and servicing of firefighting equipment.",t:"text",required:true},
-    {ref:"9.11",q:"Is a wet or dry riser system installed within the building?",t:"ynna",required:true,g:"Wet and dry risers allow the fire service to deploy hoses at upper floors. Confirm location of all inlets and outlets, signage and last test date."},
-    {ref:"9.12",q:"If a riser system is installed — is it serviced and pressure tested at the required intervals (dry riser: annual; wet riser: 6-monthly visual + annual pressure test)?",t:"ynna",required:false,g:"Under BS 9990, dry risers require an annual 10-bar pressure test. Wet risers require a 6-monthly visual inspection and annual pressure test."},
-    {ref:"9.13",q:"Is an automatic sprinkler or other fixed suppression system installed? If yes, state the type, coverage and standard (e.g. BS EN 12845).",t:"ynna",required:false,g:"Where sprinklers are present they represent a significant risk control measure. Confirm last service date and any areas not covered by the system."},
-    {ref:"9.14",q:"Where kitchen or catering facilities are present — are fire blankets provided in accessible locations and correctly maintained?",t:"ynna",required:false,g:"Fire blankets should be sited within 1.5 metres of the hazard but not directly above it. Check for damage and confirm occupants know how to use them."},
+    {ref:"9.11",q:"Is a wet or dry riser system installed within the building?",t:"ynna",required:true},
+    {ref:"9.12",q:"If a riser system is installed - is it serviced and pressure tested at the required intervals?",t:"ynna",required:false},
+    {ref:"9.13",q:"Is an automatic sprinkler or other fixed suppression system installed?",t:"ynna",required:false},
+    {ref:"9.14",q:"Where kitchen facilities are present - are fire blankets provided in accessible locations?",t:"ynna",required:false},
   ]},
-  { id:11, title:"Fire Safety Management & Training", short:"Management", questions:[
-    {ref:"6.1",q:"Is a written fire safety policy document in place and made available to all relevant persons?",t:"yn",required:true,g:"A fire safety policy document is distinct from the evacuation procedure — it sets out management responsibilities, arrangements and commitments to fire safety."},
+  {id:11,title:"Fire Safety Management and Training",short:"Management",questions:[
+    {ref:"6.1",q:"Is a written fire safety policy document in place and available to all relevant persons?",t:"yn",required:true},
     {ref:"6.2",q:"Have all staff received fire safety awareness information appropriate to their role and the premises?",t:"yn",required:true},
     {ref:"6.3",q:"Has a sufficient number of staff been trained as Fire Wardens, including use of firefighting equipment?",t:"yn",required:true},
     {ref:"6.4",q:"Have relevant staff received instruction in the correct use of any evacuation aids available on site?",t:"ynna",required:false},
-    {ref:"6.5",q:"Are evacuation drills carried out at a frequency appropriate to the risk, covering all occupants?",t:"yn",required:true,g:"Most premises: minimum annually. High-risk or high-occupancy: 6-monthly. Schools: termly. Ask to see drill records including time, date, evacuation time, issues identified and actions taken."},
+    {ref:"6.5",q:"Are evacuation drills carried out at a frequency appropriate to the risk, covering all occupants?",t:"yn",required:true},
     {ref:"6.6",q:"Do drills include scenarios where a primary exit route is unavailable?",t:"ynna",required:false},
     {ref:"6.7",q:"How frequently are evacuation drills currently being undertaken?",t:"select",opts:["Every 6 Months","Annually","Other Frequency","Not currently undertaken"],required:true},
     {ref:"6.8",q:"Is a written fire evacuation procedure in place and displayed clearly at appropriate locations?",t:"yn",required:true},
     {ref:"6.9",q:"Are arrangements in place to meet the fire service on arrival and provide relevant site information?",t:"yn",required:true},
     {ref:"6.10",q:"Does the organisation maintain a fire safety log or record book for the premises?",t:"yn",required:true},
-    {ref:"6.11",q:"Are weekly fire alarm test results, drill records and service records retained and available for inspection?",t:"yn",required:true},
+    {ref:"6.11",q:"Are weekly fire alarm test results, drill records and service records retained and available?",t:"yn",required:true},
     {ref:"6.12",q:"Where contractors work on site, are fire safety conditions included within the scope of engagement?",t:"ynna",required:false},
     {ref:"6.13",q:"Is a permit-to-work or hot works authorisation system operated for activities generating heat or sparks?",t:"ynna",required:false},
   ]},
-  { id:12, title:"Overall Risk Rating & Review", short:"Risk Rating", questions:[
-    {ref:"OR.1",q:"What is the overall likelihood of fire occurring at these premises?",t:"select",opts:["Low — adequate controls in place, minimal hazards","Medium — some concerns identified, general controls adequate","High — significant deficiencies noted, inadequate controls"],required:true,g:"Base this on the totality of findings — ignition sources, fuel loads, controls in place and quality of management. Low requires positive evidence of control, not an absence of obvious hazards."},
-    {ref:"OR.2",q:"What is the potential consequence of a fire at these premises?",t:"select",opts:["Slight — limited potential for harm","Moderate — some potential for serious harm or injury","Extreme — significant potential for fatalities or mass casualties"],required:true,g:"Consider: number of occupants, sleeping risk, mobility impairment, complexity of evacuation, proximity of fire service, building height and construction."},
-    {ref:"OR.3",q:"State the overall fire risk rating for these premises.",t:"select",opts:["Low — no further action required beyond routine management","Medium — improvements required within a defined period","High — urgent action required, allocate considerable resources","Critical — immediate action required, consider restricting use of premises"],required:true},
-    {ref:"OR.4",q:"State the recommended date for the next review of this fire risk assessment.",t:"text",required:true,g:"Low risk: 24 months. Medium risk: 12 months. High risk: 6 months. Critical: immediate review after remediation. Also review following any material change, fire incident or significant change in occupancy."},
+  {id:12,title:"Overall Risk Rating and Review",short:"Risk Rating",questions:[
+    {ref:"OR.1",q:"What is the overall likelihood of fire occurring at these premises?",t:"select",opts:["Low - adequate controls in place, minimal hazards","Medium - some concerns identified, general controls adequate","High - significant deficiencies noted, inadequate controls"],required:true},
+    {ref:"OR.2",q:"What is the potential consequence of a fire at these premises?",t:"select",opts:["Slight - limited potential for harm","Moderate - some potential for serious harm or injury","Extreme - significant potential for fatalities or mass casualties"],required:true},
+    {ref:"OR.3",q:"State the overall fire risk rating for these premises.",t:"select",opts:["Low - no further action required beyond routine management","Medium - improvements required within a defined period","High - urgent action required, allocate considerable resources","Critical - immediate action required, consider restricting use of premises"],required:true},
+    {ref:"OR.4",q:"State the recommended date for the next review of this fire risk assessment.",t:"text",required:true},
     {ref:"OR.5",q:"Provide any additional observations, recommendations or notes for this assessment.",t:"text",required:false},
   ]},
 ];
@@ -976,6 +1003,51 @@ const OCC_TYPES=[
   {cat:"Mixed Use",icon:"🏗",sub:"Multiple uses within building"},
   {cat:"Other",icon:"📋",sub:"Describe below"},
 ];
+function PostcodeLookup({state={},onChange}) {
+  const [pc,setPc]=React.useState("");
+  const [results,setResults]=React.useState([]);
+  const [loading,setLoading]=React.useState(false);
+  const [err,setErr]=React.useState("");
+  const lookup=()=>{
+    const clean=pc.replace(/\s/g,"").toUpperCase();
+    if(clean.length<3){setErr("Enter a valid UK postcode");return;}
+    setLoading(true);setErr("");setResults([]);
+    fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(clean)).then(r=>r.json()).then(d=>{setLoading(false);if(d.status===200&&d.result){setResults([d.result]);}else{setErr("Not found - enter manually below");}}).catch(()=>{setLoading(false);setErr("Lookup unavailable - enter manually");});
+  };
+  const sel=(r)=>{const addr=(r.postcode||"")+(r.admin_district?", "+r.admin_district:"");onChange({...state,ans:addr,postcode:r.postcode});setResults([]);setPc(r.postcode||"");};
+  return(<div>
+    <div style={{display:"flex",gap:8,marginBottom:8}}>
+      <input style={{flex:1,background:"#21262D",border:"2px solid #30363D",borderRadius:10,padding:"11px 14px",fontSize:14,fontWeight:700,color:"#F0F6FC",outline:"none",letterSpacing:1,textTransform:"uppercase"}} placeholder="Postcode" value={pc} onChange={e=>{setPc(e.target.value.toUpperCase());setErr("");}} onKeyDown={e=>e.key==="Enter"&&lookup()}/>
+      <button onClick={lookup} style={{padding:"11px 18px",borderRadius:10,background:"#E8773A",color:"#fff",fontWeight:700,fontSize:13,border:"none",cursor:"pointer",flexShrink:0}}>{loading?"...":"Find"}</button>
+    </div>
+    {err&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8}}>{err}</div>}
+    {results.length>0&&<div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:10,marginBottom:8,overflow:"hidden"}}>
+      {results.map((r,i)=><div key={i} onClick={()=>sel(r)} style={{padding:"10px 14px",cursor:"pointer",color:"#F0F6FC",fontSize:13,display:"flex",gap:8}}><strong>{r.postcode}</strong><span style={{color:"#8B949E"}}>{r.admin_district||""}</span></div>)}
+    </div>}
+    <textarea className="obs-box" style={{minHeight:90,marginBottom:0}} placeholder="Full address including postcode..." value={state.ans||""} onChange={e=>onChange({...state,ans:e.target.value||null})}/>
+  </div>);
+}
+function VoiceNoteBtn({voiceNote,onSave}) {
+  const [rec,setRec]=React.useState(false);
+  const [mr,setMr]=React.useState(null);
+  const start=()=>{navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{const c=[];const m=new MediaRecorder(stream);m.ondataavailable=e=>c.push(e.data);m.onstop=()=>{const b=new Blob(c,{type:"audio/webm"});const reader=new FileReader();reader.onload=ev=>onSave(ev.target.result);reader.readAsDataURL(b);stream.getTracks().forEach(t=>t.stop());};m.start();setMr(m);setRec(true);}).catch(()=>alert("Microphone access required for voice notes"));};
+  const stop=()=>{if(mr){mr.stop();setRec(false);}};
+  return(<div style={{marginTop:8}}>
+    {!voiceNote&&!rec&&<button onClick={start} style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",borderRadius:9,border:"1px dashed #30363D",background:"none",color:"#8B949E",fontSize:12,cursor:"pointer",width:"100%"}}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{width:14,height:14}}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      Add voice note
+    </button>}
+    {rec&&<button onClick={stop} style={{display:"flex",alignItems:"center",gap:8,padding:"9px 14px",borderRadius:9,border:"1px solid #ef4444",background:"rgba(239,68,68,.1)",color:"#ef4444",fontSize:12,cursor:"pointer",width:"100%"}}>
+      <svg viewBox="0 0 24 24" fill="#ef4444" style={{width:12,height:12}}><circle cx="12" cy="12" r="8"/></svg>
+      Recording... tap to stop
+    </button>}
+    {voiceNote&&!rec&&<div style={{display:"flex",alignItems:"center",gap:8,padding:"8px 12px",borderRadius:9,background:"rgba(34,197,94,.08)",border:"1px solid rgba(34,197,94,.2)"}}>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" style={{width:14,height:14,flexShrink:0}}><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      <audio controls src={voiceNote} style={{flex:1,height:28}}/>
+      <button onClick={()=>onSave(null)} style={{background:"none",border:"none",color:"#8B949E",cursor:"pointer",fontSize:14}}>x</button>
+    </div>}
+  </div>);
+}
 function OccupancyPicker({state={},onChange}) {
   const cat=state.occupancyCat||"";
   const upd=p=>onChange({...state,...p});
@@ -1080,13 +1152,9 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
   // Smart No
   const handleAns = v => {
     const newAns = ans===v ? null : v;
-    if (newAns==="n" && SMART_ACTIONS[q.ref]) {
-      upd({ans:newAns, flagged:true,
-        action: action||SMART_ACTIONS[q.ref].action,
-        priority: SMART_ACTIONS[q.ref].priority});
-    } else {
-      upd({ans:newAns});
-    }
+    const sa=SMART_ACTIONS[q.ref];
+    const sf=sa&&newAns&&((sa.on==="y"&&newAns==="y")||(sa.on==="n"&&newAns==="n")||(sa.on==="Not conducted"&&newAns===sa.on));
+    if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});}else{upd({ans:newAns});}
     // Auto-advance after 350ms — only if no note/flag panel open
     if (newAns && !note && !flagged) {
       setTimeout(() => onNext(), 350);
@@ -1160,7 +1228,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         )}
 
         {/* Auto-flag banner */}
-        {ans==="n" && SMART_ACTIONS[q.ref] && !flagged && (
+        {SMART_ACTIONS[q.ref]&&!flagged&&ans&&((SMART_ACTIONS[q.ref].on==="y"&&ans==="y")||(SMART_ACTIONS[q.ref].on==="n"&&ans==="n"))&&(
           <div className="autoflag">
             <span style={{fontSize:15,flexShrink:0}}>⚑</span>
             <div><strong>Action suggested</strong> — this finding has been flagged automatically with a pre-written action. Review below.</div>
@@ -1177,10 +1245,8 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           <input className="qc-inp" placeholder="Enter details…" value={ans||""}
             onChange={e=>upd({ans:e.target.value||null})}/>
         )}
-        {(q.t==="address"||q.t==="occupancy") && (
-          <textarea className="obs-box" style={{minHeight:90,marginBottom:14}} placeholder={q.t==="address"?"Full address including postcode…":"e.g. Office / Retail / Residential — mixed use if applicable…"} value={ans||""}
-            onChange={e=>upd({ans:e.target.value||null})}/>
-        )}
+        {q.t==="address"&&(<PostcodeLookup state={state} onChange={s=>upd({...s})}/>)}
+        {q.t==="occupancy"&&(<textarea className="obs-box" style={{minHeight:90,marginBottom:14}} placeholder="e.g. Office / Retail / Residential — mixed use if applicable…" value={ans||""} onChange={e=>upd({ans:e.target.value||null})}/>)}
         {q.t==="floorarea" && (
           <textarea className="obs-box" style={{minHeight:70,marginBottom:14}} placeholder="e.g. 3 floors, approx 1,200 m² GIA — ground, first and second floors" value={ans||""}
             onChange={e=>upd({ans:e.target.value||null})}/>
@@ -1193,7 +1259,10 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         )}
 
-        {/* Assessor comments — collapsed by default */}
+        {/* Voice note */}
+        <VoiceNoteBtn voiceNote={state.voiceNote||null} onSave={v=>upd({voiceNote:v})}/>
+
+        {/* Assessor's comments */}
         <div className={`obs-row ${note?"has":""}`} onClick={()=>setShowNote(s=>!s)}>
           <span style={{fontSize:12,color:"#6E7681"}}>{showNote?"▴":"▾"}</span>
           <span className={`obs-row-label ${note?"has":""}`}>
@@ -1220,7 +1289,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           <input key={p.id} className="photo-cap" placeholder="Caption…"
             value={p.caption} onChange={e=>updPhotos(photosArr.map(x=>x.id===p.id?{...x,caption:e.target.value}:x))}/>
         ))}
-        {!["address","occupancy","floorarea","text","number","date"].includes(q.t) && (<div className="photo-btns">
+        {!["address","occupancy","floorarea","text","number","date"].includes(q.t)&&!q.noCamera&&(<div className="photo-btns">
           <div className="photo-btn">
             <input ref={camRef} type="file" accept="image/*" capture="environment"
               onChange={e=>handleFiles(e.target.files)}/>
@@ -2214,6 +2283,10 @@ function Assessment({state, dispatch}) {
             </div>
           </div>
         </div>
+
+
+        {q.sub&&ans===q.sub.on&&(<div style={{marginTop:14,padding:14,background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.2)"}}><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>{q.sub.fields.map(sf=>(<div key={sf.ref} style={{marginBottom:12}}><div style={{fontSize:12,fontWeight:600,color:"#F0F6FC",marginBottom:6}}>{sf.q}</div>{sf.t==="text"&&<input className="qc-inp" placeholder={sf.ph||"Enter details..."} value={state[sf.ref+"_ans"]||""} onChange={e=>upd({[sf.ref+"_ans"]:e.target.value})}/>}{sf.t==="textarea"&&<textarea className="obs-box" style={{minHeight:60}} placeholder={sf.ph||"Enter details..."} value={state[sf.ref+"_ans"]||""} onChange={e=>upd({[sf.ref+"_ans"]:e.target.value})}/>}{sf.t==="yn"&&(<div style={{display:"flex",gap:8}}>{[{v:"y",l:"Yes"},{v:"n",l:"No"}].map(o=>(<button key={o.v} onClick={()=>upd({[sf.ref+"_ans"]:state[sf.ref+"_ans"]===o.v?null:o.v})} style={{flex:1,padding:9,borderRadius:8,border:state[sf.ref+"_ans"]===o.v?"2px solid #E8773A":"2px solid #30363D",background:state[sf.ref+"_ans"]===o.v?"rgba(232,119,58,.15)":"#1C2128",color:state[sf.ref+"_ans"]===o.v?"#E8773A":"#8B949E",fontWeight:600,cursor:"pointer",fontSize:13}}>{o.l}</button>))}</div>)}{sf.t==="multi"&&(<div className="mc-wrap">{(sf.opts||[]).map(o=>(<span key={o} className={"mc-c "+((state[sf.ref+"_sel"]||[]).includes(o)?"on":"")} onClick={()=>{const c=state[sf.ref+"_sel"]||[];upd({[sf.ref+"_sel"]:c.includes(o)?c.filter(x=>x!==o):[...c,o]});}}>{o}</span>))}</div>)}</div>))}</div>)}
+        {q.widthCheck&&(<div style={{marginTop:14,padding:14,background:"rgba(255,255,255,.03)",borderRadius:10,border:"1px solid #30363D"}}><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#8B949E",marginBottom:6}}>Measure widths</div><div style={{fontSize:11,color:"#8B949E",marginBottom:10}}>Enter clear width in mm. ADB: 750mm (60p), 850mm (110p), 1050mm (220p).</div>{(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}]).map((w,wi)=>(<div key={w.id} style={{display:"flex",gap:8,marginBottom:8,alignItems:"center"}}><input style={{flex:2,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:12,color:"#F0F6FC",outline:"none"}} placeholder="Location" value={w.loc} onChange={e=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}])];ws[wi]={...ws[wi],loc:e.target.value};upd({[q.ref+"_widths"]:ws});}}/><input type="number" style={{flex:1,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:13,fontWeight:700,color:"#F0F6FC",outline:"none",textAlign:"center"}} placeholder="mm" value={w.mm} onChange={e=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}])];ws[wi]={...ws[wi],mm:e.target.value};upd({[q.ref+"_widths"]:ws});}}/><span style={{fontSize:11,fontWeight:700,minWidth:52,textAlign:"right",color:Number(w.mm)>=1050?"#22c55e":Number(w.mm)>=750?"#f59e0b":w.mm?"#ef4444":"#8B949E"}}>{w.mm?(Number(w.mm)>=1050?"OK":Number(w.mm)>=850?"Check":Number(w.mm)>=750?"Max 60p":"NARROW"):"--"}</span></div>))}<button onClick={()=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}]),{id:Date.now(),loc:"",mm:""}];upd({[q.ref+"_widths"]:ws});}} style={{fontSize:11,color:"#E8773A",background:"none",border:"1px dashed #E8773A",borderRadius:7,padding:"5px 12px",cursor:"pointer"}}>+ Add measurement</button></div>)}
       )}
     </div>
   );
