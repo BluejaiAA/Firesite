@@ -224,6 +224,15 @@ img{max-width:100%;display:block;}
 /* SCROLL ANIMATIONS */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
+
+.demo-screen{position:relative;overflow:hidden;}
+.demo-slide{display:flex;flex-direction:column;animation:dSlideIn .35s ease;}
+@keyframes dSlideIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.ds-nav{display:flex;align-items:center;gap:6px;padding:6px 8px;background:#161B22;border-bottom:1px solid #30363D;flex-shrink:0;}
+.demo-caption{position:absolute;bottom:0;left:0;right:0;background:rgba(13,17,23,.93);backdrop-filter:blur(4px);padding:5px 8px;font-size:7px;font-weight:700;color:#F0F6FC;text-align:center;border-top:1px solid #30363D;}
+.demo-dots{display:flex;justify-content:center;gap:5px;margin-top:10px;}
+.demo-dot{width:6px;height:6px;border-radius:50%;background:#30363D;transition:all .3s;cursor:pointer;}
+.demo-dot.active{width:18px;border-radius:3px;background:#C0392B;}
 </style>
 </head>
 <body>
@@ -273,30 +282,98 @@ img{max-width:100%;display:block;}
         <div class="phone-glow"></div>
         <div class="phone-frame">
           <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="ps-nav">
-              <div class="ps-nav-logo"><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" alt=""/></div>
-              <span class="ps-nav-title">Fire<span>site</span></span>
-            </div>
-            <div class="ps-progress">
-              <div class="ps-prog-label">SECTION 3 OF 12 — COMPARTMENTATION</div>
-              <div class="ps-prog-bar"><div class="ps-prog-fill"></div></div>
-              <div class="ps-prog-dots">
-                <div class="ps-dot done"></div><div class="ps-dot done"></div>
-                <div class="ps-dot active"></div><div class="ps-dot"></div>
-                <div class="ps-dot"></div>
+          <div class="phone-screen demo-screen">
+            <div class="demo-slide" id="ds1">
+              <div class="ds-nav"><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style="width:16px;height:16px;object-fit:contain;" alt=""/><span style="font-size:9px;font-weight:800;color:#F0F6FC;margin-left:2px;">Fire<em style="color:#E74C3C;font-style:normal;">site</em></span><span style="margin-left:auto;font-size:7px;background:#C0392B;color:#fff;padding:1px 6px;border-radius:8px;">Free ↑</span></div>
+              <div style="padding:8px 8px 24px;flex:1;">
+                <div style="font-size:11px;font-weight:900;color:#F0F6FC;margin-bottom:2px;">Your assessments.</div>
+                <div style="font-size:7px;color:#8B949E;margin-bottom:6px;">1 in progress · 0 complete</div>
+                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:7px;">
+                  <div style="background:#C0392B22;border:1px solid #C0392B55;border-radius:4px;padding:4px 2px;text-align:center;"><div style="font-size:9px;font-weight:900;color:#E74C3C;">1</div><div style="font-size:5px;color:#8B949E;">Premises</div></div>
+                  <div style="background:#1C2128;border:1px solid #30363D;border-radius:4px;padding:4px 2px;text-align:center;"><div style="font-size:9px;color:#6E7681;">2</div><div style="font-size:5px;color:#6E7681;">RP</div></div>
+                  <div style="background:#1C2128;border:1px solid #30363D;border-radius:4px;padding:4px 2px;text-align:center;"><div style="font-size:9px;color:#6E7681;">3</div><div style="font-size:5px;color:#6E7681;">Ignition</div></div>
+                  <div style="background:#C0392B22;border:1px solid #C0392B55;border-radius:4px;padding:4px 2px;text-align:center;"><div style="font-size:9px;font-weight:900;color:#E74C3C;">4</div><div style="font-size:5px;color:#8B949E;">Electrical</div></div>
+                </div>
+                <div style="background:#161B22;border:1px solid #30363D;border-radius:6px;padding:7px;">
+                  <div style="font-size:6px;color:#8B949E;margin-bottom:1px;">FRA-2026-001</div>
+                  <div style="font-size:9px;font-weight:800;color:#F0F6FC;margin-bottom:1px;">Office Block — London EC2</div>
+                  <div style="font-size:6px;color:#8B949E;margin-bottom:4px;">47% complete · ⚑ 3 flagged</div>
+                  <div style="background:#C0392B;color:#fff;border-radius:4px;padding:3px 8px;font-size:7px;font-weight:700;display:inline-block;">Continue →</div>
+                </div>
               </div>
+              <div class="demo-caption">📋 All your assessments at a glance</div>
             </div>
-            <div class="ps-question">
-              <div class="ps-q-sect">3.3 · Fire Doors</div>
-              <div class="ps-q-text">Are fire doors fitted with the correct grade of intumescent strip and smoke seal?</div>
-              <div class="ps-q-btns">
-                <div class="ps-q-btn yes">✓ Yes</div>
-                <div class="ps-q-btn no">✕ No</div>
+            <div class="demo-slide" id="ds2" style="display:none;">
+              <div class="ds-nav"><span style="font-size:7px;color:#8B949E;">← Back</span><span style="font-size:8px;font-weight:800;color:#F0F6FC;margin:0 auto;">Section 4 · Electrical</span><span style="font-size:7px;background:#C0392B;color:#fff;padding:1px 5px;border-radius:6px;">⚑3</span></div>
+              <div style="padding:8px 8px 24px;flex:1;">
+                <div style="display:flex;gap:2px;margin-bottom:6px;"><div style="height:2px;flex:1;border-radius:1px;background:#C0392B;"></div><div style="height:2px;flex:1;border-radius:1px;background:#C0392B;"></div><div style="height:2px;flex:1;border-radius:1px;background:#C0392B;"></div><div style="height:2px;flex:1;border-radius:1px;background:#C0392B;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div><div style="height:2px;flex:1;border-radius:1px;background:#30363D;"></div></div>
+                <div style="font-size:7px;color:#C0392B;font-weight:700;margin-bottom:3px;">E4.3 · BS 7671:2018 · RRO Art.17</div>
+                <div style="font-size:10px;font-weight:800;color:#F0F6FC;line-height:1.3;margin-bottom:6px;">Is a current EICR in place for the fixed electrical installation?</div>
+                <div style="font-size:6.5px;color:#8B949E;background:#161B22;border-left:2px solid #C0392B;border-radius:0 4px 4px 0;padding:3px 6px;margin-bottom:7px;line-height:1.4;">BS 7671:2018+A2 / PAS 79-1 §8.4 / DCLG §2.2 — Industrial: 3-yr interval</div>
+                <div style="background:#0D3321;border:1.5px solid #6EE7B7;border-radius:6px;padding:6px 8px;margin-bottom:4px;display:flex;align-items:center;gap:5px;"><span style="color:#6EE7B7;">✓</span><span style="font-size:9px;font-weight:700;color:#F0F6FC;">Yes</span></div>
+                <div style="background:#1C2128;border:1px solid #30363D;border-radius:6px;padding:6px 8px;margin-bottom:8px;display:flex;align-items:center;gap:5px;"><span style="color:#6E7681;">✗</span><span style="font-size:9px;color:#8B949E;">No</span></div>
+                <div style="background:#C0392B;color:#fff;border-radius:6px;padding:6px;text-align:center;font-size:8px;font-weight:800;">Next →</div>
               </div>
-              <div class="ps-question-num">Question 6 / 13</div>
+              <div class="demo-caption">✅ Guided questions · standards-referenced</div>
+            </div>
+            <div class="demo-slide" id="ds3" style="display:none;">
+              <div class="ds-nav"><span style="font-size:7px;color:#8B949E;">← Back</span><span style="font-size:8px;font-weight:800;color:#F0F6FC;margin:0 auto;">Section 4 · Electrical</span><span style="font-size:7px;background:#C0392B;color:#fff;padding:1px 5px;border-radius:6px;">⚑4</span></div>
+              <div style="padding:8px 8px 24px;flex:1;">
+                <div style="font-size:7px;color:#C0392B;font-weight:700;margin-bottom:3px;">E4.3 · FLAGGED</div>
+                <div style="font-size:9px;font-weight:800;color:#F0F6FC;line-height:1.3;margin-bottom:5px;">Is a current EICR in place?</div>
+                <div style="background:#1C2128;border:1.5px solid #F87171;border-radius:5px;padding:5px 7px;margin-bottom:5px;display:flex;align-items:center;gap:4px;"><span style="color:#F87171;">✗</span><span style="font-size:8px;font-weight:700;color:#F0F6FC;">No — flagged</span></div>
+                <div style="background:#161B22;border:1.5px solid #C0392B55;border-radius:6px;padding:6px 7px;">
+                  <div style="font-size:6px;font-weight:800;text-transform:uppercase;color:#C0392B;margin-bottom:2px;">🚩 Auto-generated action</div>
+                  <div style="font-size:6.5px;color:#E6EDF3;line-height:1.45;margin-bottom:3px;">Commission EICR from NICEIC/NAPIT engineer. 3-year interval per BS 7671:2018+A2. Remedy all C1/C2 items. Retain certificate in fire safety log.</div>
+                  <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap;">
+                    <div style="background:#FEE2E2;color:#991B1B;border-radius:3px;padding:1px 5px;font-size:5.5px;font-weight:800;">P2 — 1 Month</div>
+                    <div style="font-size:5px;color:#6E7681;">PAS 79-1 §8.4 / BS 7671 / DCLG §2.2</div>
+                  </div>
+                </div>
+              </div>
+              <div class="demo-caption">⚡ Smart actions · PAS 79 · BS standards</div>
+            </div>
+            <div class="demo-slide" id="ds4" style="display:none;">
+              <div class="ds-nav"><span style="font-size:7px;color:#8B949E;">← Back</span><span style="font-size:8px;font-weight:800;color:#F0F6FC;margin:0 auto;">Report Preview</span></div>
+              <div style="padding:6px;flex:1;">
+                <div style="background:#fff;border-radius:5px;padding:6px;margin-bottom:4px;color:#111827;">
+                  <div style="display:flex;gap:3px;align-items:center;border-bottom:1px solid #E5E7EB;padding-bottom:3px;margin-bottom:3px;">
+                    <div style="width:5px;height:24px;background:linear-gradient(180deg,#C0392B,#E8773A);border-radius:1px;flex-shrink:0;"></div>
+                    <div style="flex:1;"><div style="font-size:7px;font-weight:900;color:#111827;">Fire<span style="color:#C0392B;">site</span> Report</div><div style="font-size:5px;color:#9CA3AF;">FSA-2026-001 · J. Davies MIFPO</div></div>
+                    <div style="background:#FEF3C7;border:1px solid #FCD34D;color:#92400E;font-size:5px;font-weight:800;padding:1px 4px;border-radius:3px;">MEDIUM</div>
+                  </div>
+                  <div style="font-size:5.5px;background:#FEF2F2;border-left:2px solid #C0392B;padding:2px 4px;color:#374151;line-height:1.4;border-radius:0 2px 2px 0;margin-bottom:3px;">4 actions · P1: Fire door self-closer · P2: EICR, PAT testing, escape route · PAS 79-1:2020 compliant</div>
+                  <div style="display:grid;grid-template-columns:auto 1fr;gap:1px 6px;font-size:5.5px;">
+                    <span style="color:#9CA3AF;font-weight:800;">STANDARDS</span><span style="color:#374151;">RRO 2005 · PAS 79-1 · ADB · BS 9999</span>
+                    <span style="color:#9CA3AF;font-weight:800;">DCLG GUIDE</span><span style="color:#374151;">Offices and Shops</span>
+                    <span style="color:#9CA3AF;font-weight:800;">NEXT REVIEW</span><span style="color:#374151;">May 2027</span>
+                  </div>
+                </div>
+                <div style="display:flex;gap:3px;">
+                  <div style="flex:1;background:#C0392B;color:#fff;border-radius:5px;padding:5px;text-align:center;font-size:7px;font-weight:800;">🖨 Save PDF</div>
+                  <div style="flex:1;background:#161B22;border:1px solid #30363D;color:#8B949E;border-radius:5px;padding:5px;text-align:center;font-size:7px;">Share ↗</div>
+                </div>
+              </div>
+              <div class="demo-caption">📄 PAS 79 report · instant PDF</div>
+            </div>
+            <div class="demo-slide" id="ds5" style="display:none;">
+              <div style="padding:18px 12px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+                <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style="width:44px;height:44px;object-fit:contain;margin-bottom:7px;" alt=""/>
+                <div style="font-size:13px;font-weight:900;color:#F0F6FC;margin-bottom:2px;">Fire<em style="color:#E74C3C;font-style:normal;">site</em></div>
+                <div style="font-size:7.5px;color:#8B949E;margin-bottom:10px;line-height:1.5;">Professional assessments<br>in your pocket</div>
+                <div style="background:linear-gradient(135deg,#C0392B,#E8773A);color:#fff;border-radius:7px;padding:8px 14px;font-size:8px;font-weight:800;margin-bottom:8px;width:100%;">Start Free Today →</div>
+                <div style="font-size:5.5px;color:#6E7681;line-height:1.7;">PAS 79 · ADB · BS 9999 · BS 5839<br>DCLG Guides · RRO 2005 · BSA 2022</div>
+              </div>
+              <div class="demo-caption">🚀 Free to start · upgrade anytime</div>
             </div>
           </div>
+        </div>
+        <div class="demo-dots">
+          <div class="demo-dot active" id="dd1"></div>
+          <div class="demo-dot" id="dd2"></div>
+          <div class="demo-dot" id="dd3"></div>
+          <div class="demo-dot" id="dd4"></div>
+          <div class="demo-dot" id="dd5"></div>
         </div>
       </div>
     </div>
@@ -700,5 +777,6 @@ window.addEventListener('scroll', function(){
   }
 });
 </script>
+<script>(function(){var slides=['ds1','ds2','ds3','ds4','ds5'],dots=['dd1','dd2','dd3','dd4','dd5'],cur=0;function show(n){slides.forEach(function(id,i){var el=document.getElementById(id);if(el)el.style.display=i===n?'flex':'none';});dots.forEach(function(id,i){var el=document.getElementById(id);if(el)el.className='demo-dot'+(i===n?' active':'');});cur=n;}dots.forEach(function(id,i){var el=document.getElementById(id);if(el)el.addEventListener('click',function(){show(i);clearInterval(t);t=setInterval(next,3200);});});function next(){show((cur+1)%slides.length);}var t=setInterval(next,3200);show(0);}());</script>
 </body>
 </html>
