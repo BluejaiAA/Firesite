@@ -69,7 +69,7 @@ img{max-width:100%;display:block;}
 .hero-trust-dots{display:flex;gap:-4px;}
 .hero-trust-dot{width:28px;height:28px;border-radius:50%;background:var(--dark3);border:2px solid var(--dark);display:flex;align-items:center;justify-content:center;font-size:12px;margin-left:-6px;}
 .hero-mockup{position:relative;display:flex;justify-content:center;}
-.phone-frame{width:260px;height:520px;background:var(--dark2);border-radius:36px;border:2px solid var(--dark4);box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;position:relative;}
+.phone-frame{width:260px;height:520px;background:var(--dark2);border-radius:48px;border:2px solid var(--dark4);box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;position:relative;}
 .phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:var(--dark);border-radius:12px;z-index:2;}
 .phone-screen{width:100%;height:100%;background:linear-gradient(180deg,var(--dark) 0%,var(--dark2) 100%);padding:48px 14px 14px;display:flex;flex-direction:column;gap:8px;overflow:hidden;}
 .ps-nav{background:var(--dark3);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;border:1px solid var(--dark4);}
@@ -116,7 +116,7 @@ img{max-width:100%;display:block;}
 .how{padding:100px 0;}
 .how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:60px;position:relative;}
 .how-steps::before{content:'';position:absolute;top:40px;left:calc(16.66% + 40px);right:calc(16.66% + 40px);height:2px;background:linear-gradient(90deg,var(--dark4),rgba(192,57,43,0.3),var(--dark4));z-index:0;}
-.step-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:16px;padding:32px 24px;text-align:center;position:relative;transition:border-color .2s;}
+.step-card{border-radius:20px;background:var(--dark2);border:1px solid var(--dark4);border-radius:16px;padding:32px 24px;text-align:center;position:relative;transition:border-color .2s;}
 .step-card:hover{border-color:rgba(192,57,43,0.3);}
 .step-num{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--orange));display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;font-weight:900;font-size:20px;color:#fff;margin:0 auto 20px;box-shadow:0 4px 16px rgba(192,57,43,0.35);}
 .step-icon{font-size:28px;margin-bottom:12px;}
@@ -233,6 +233,11 @@ img{max-width:100%;display:block;}
 .demo-dots{display:flex;justify-content:center;gap:5px;margin-top:10px;}
 .demo-dot{width:6px;height:6px;border-radius:50%;background:#30363D;transition:all .3s;cursor:pointer;}
 .demo-dot.active{width:18px;border-radius:3px;background:#C0392B;}
+
+.af-icon svg{color:var(--orange2);width:22px;height:22px;display:block;}
+.feat-icon svg{color:var(--orange2);display:block;}
+.step-icon svg{color:var(--orange2);display:block;}
+.hero-trust-dot svg{color:var(--orange2);width:14px;height:14px;display:block;}
 </style>
 </head>
 <body>
@@ -275,7 +280,7 @@ img{max-width:100%;display:block;}
             <div class="hero-trust-dot">🏥</div>
             <div class="hero-trust-dot">🏭</div>
           </div>
-          <span>Used by assessors across commercial, residential &amp; care sectors</span>
+          <span>Built for professional fire risk assessors — offices, hotels, care homes and beyond</span>
         </div>
       </div>
       <div class="hero-mockup">
@@ -388,31 +393,45 @@ img{max-width:100%;display:block;}
     <div class="about-grid">
       <div class="about-features">
         <div class="about-feature">
-          <div class="af-icon">📋</div>
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
           <div class="af-text">
             <h4>163 Guided Questions</h4>
             <p>Built by fire engineers — covers all 12 key sections from premises info to firefighting equipment, aligned with PAS 79:2020 and the Regulatory Reform (Fire Safety) Order 2005.</p>
           </div>
         </div>
         <div class="about-feature">
-          <div class="af-icon">☁️</div>
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div>
           <div class="af-text">
             <h4>Cloud Sync &amp; Offline Mode</h4>
             <p>Start assessments without signal. Your data syncs automatically when you're back online. Never lose work on site again.</p>
           </div>
         </div>
         <div class="about-feature">
-          <div class="af-icon">📄</div>
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
           <div class="af-text">
             <h4>Instant Report Generation</h4>
             <p>Generate a professional, branded PDF fire risk assessment report the moment you complete the assessment. Share it instantly via email or your device's share sheet.</p>
           </div>
         </div>
         <div class="about-feature">
-          <div class="af-icon">🏆</div>
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
           <div class="af-text">
             <h4>Risk Scoring &amp; Prioritisation</h4>
             <p>Automatic risk ratings highlight critical findings. Flagged items are collated into a prioritised action plan so clients know exactly what to fix first.</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+          <div class="af-text">
+            <h4>Fully Brandable &mdash; Your Identity</h4>
+            <p>Set your company logo, accent colour and details once. Every PDF report you generate carries your branding. FireSite works behind the scenes so clients see your name, not ours.</p>
+          </div>
+        </div>
+        <div class="about-feature">
+          <div class="af-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:22px;height:22px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+          <div class="af-text">
+            <h4>Customisable Recommendations</h4>
+            <p>Auto-generated action plan entries are a starting point. Edit any recommendation, adjust timescales or add site-specific detail before the report is generated &mdash; your professional judgement, always.</p>
           </div>
         </div>
       </div>
@@ -436,19 +455,19 @@ img{max-width:100%;display:block;}
     <div class="how-steps">
       <div class="step-card">
         <div class="step-num">1</div>
-        <div class="step-icon">🏢</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:28px;height:28px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
         <div class="step-title">Set Up Your Site</div>
         <div class="step-desc">Enter the building name, address, occupancy type and responsible person. FireSite automatically configures the assessment for your premises type.</div>
       </div>
       <div class="step-card">
         <div class="step-num">2</div>
-        <div class="step-icon">✅</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:28px;height:28px"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
         <div class="step-title">Complete the Assessment</div>
         <div class="step-desc">Work through 163 guided Yes/No questions with on-screen guidance for each. Flag issues, add notes, and track your progress as you go.</div>
       </div>
       <div class="step-card">
         <div class="step-num">3</div>
-        <div class="step-icon">📤</div>
+        <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:28px;height:28px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg></div>
         <div class="step-title">Generate &amp; Share Report</div>
         <div class="step-desc">Get a full PDF fire risk assessment report with risk ratings, flagged actions and recommendations. Share it directly from your phone.</div>
       </div>
@@ -513,22 +532,22 @@ img{max-width:100%;display:block;}
         <div class="feat-desc">Full functionality without internet. Works in basements, plant rooms, anywhere.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">🎤</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
         <div class="feat-title">Voice Notes</div>
         <div class="feat-desc">Attach audio notes to questions for quick observations while keeping your eyes on site.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">📄</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
         <div class="feat-title">PDF Export</div>
         <div class="feat-desc">Professional, branded PDF reports generated instantly and shared via native share sheet.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">🤖</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
         <div class="feat-title">Auto Recommendations</div>
         <div class="feat-desc">Smart suggestions populate your action plan based on deficiencies identified during the assessment.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">📊</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
         <div class="feat-title">Risk Scoring</div>
         <div class="feat-desc">Automatic risk ratings — Low, Medium, High, Critical — based on findings. Prioritised action plan included.</div>
       </div>
@@ -538,12 +557,12 @@ img{max-width:100%;display:block;}
         <div class="feat-desc">Log fire doors, extinguishers, detection devices and emergency lighting with location references.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">👥</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="feat-title">Team Collaboration</div>
         <div class="feat-desc">Multiple assessors can work on the same account. Assign sites, review reports, manage the team.</div>
       </div>
       <div class="feat-card">
-        <div class="feat-icon">🔔</div>
+        <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:26px;height:26px"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
         <div class="feat-title">Compliance Reminders</div>
         <div class="feat-desc">Set review dates. Get notified when assessments are due for re-inspection or annual review.</div>
       </div>
