@@ -190,6 +190,17 @@ const SMART_ACTIONS = {
   "2.6":   {action:"Manage trailing lead risks: cable management, no daisy-chaining, replace with fixed sockets.",priority:"P3 — Within 3 months",on:"y"},
   "4.6":   {action:"Relocate combustible items stored within 10 metres of the building.",priority:"P3 — Within 3 months",on:"n"},
   "5.6":   {action:"Implement visitor management: fire safety briefing on arrival, sign-in register, evacuation person.",priority:"P3 — Within 3 months",on:"y"},
+  "7.6":   {action:"Install compliant fire exit signs and directional arrows per BS ISO 7010:2019. Photoluminescent signs recommended for escape routes.",priority:"P2 — Within 1 month",on:"n"},
+  "6.1":   {action:"Prepare a written fire safety policy statement signed by the Responsible Person. Review annually and after any material change to the building or use.",priority:"P2 — Within 1 month",on:"n"},
+  "6.8":   {action:"Display the fire evacuation procedure prominently at all exits, staff rooms and the alarm panel. Produce translated versions for non-English speaking staff.",priority:"P2 — Within 1 month",on:"n"},
+  "6.10":  {action:"Establish and maintain a fire safety log book. Record all tests, drills, maintenance and inspections. Must be available for inspection by the fire authority.",priority:"P3 — Within 3 months",on:"n"},
+  "3.11":  {action:"Commission a fire-stopping contractor to seal all cable, pipe and duct penetrations through compartment walls and floors. Photograph and document all works.",priority:"P2 — Within 1 month",on:"n"},
+  "3.12":  {action:"Commission a specialist survey of cavity barriers within roof spaces and concealed voids. Install or replace as required. Document with drawn survey.",priority:"P2 — Within 1 month",on:"n"},
+  "8.1":   {action:"Commission a fire alarm design review to BS 5839-1:2017. Upgrade detection category to ensure fire is detected early enough for safe escape across all areas.",priority:"P1 — Immediate",on:"n"},
+  "9.6":   {action:"Commission a portable extinguisher siting survey. Ensure CO2 provided for electrical risks; ABF foam for liquid fuel. Placement per BS 5306-8:2012.",priority:"P2 — Within 1 month",on:"n"},
+  "P1.3a": {action:"Engage with the Building Safety Regulator. Register the building and appoint an Accountable Person as required by the Building Safety Act 2022.",priority:"P1 — Immediate",on:"y"},
+  "P1.5":  {action:"Review automatic detection coverage against BS 5839-1 LD1 or LD2. Install interlinked detection in all sleeping areas and circulation routes per RRO 2005 Article 13.",priority:"P1 — Immediate",on:"y"},
+  "7.14":  {action:"Commission a structural survey of all external metal escape staircases by a chartered structural engineer. Implement all remedial works identified.",priority:"P2 — Within 1 month",on:"n"},
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
@@ -1107,6 +1118,108 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
 }
 
 
+// ─── SUB-QUESTIONS COMPONENT ─────────────────────────────────────────────
+function SubQuestions({q, state, upd}) {
+  var ans = state.ans || null;
+  if (!q.sub || ans !== q.sub.on) return null;
+  return (
+    <div style={{marginTop:14,padding:14,background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.2)"}}>
+      <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>
+      {q.sub.fields.map(function(sf) { return (
+        <div key={sf.ref} style={{marginBottom:12}}>
+          <div style={{fontSize:12,fontWeight:600,color:"#F0F6FC",marginBottom:6}}>{sf.q}</div>
+          {sf.t==="text" && (
+            <input className="qc-inp" placeholder={sf.ph||"Enter details..."}
+              value={state[sf.ref+"_ans"]||""}
+              onChange={function(e){var p={};p[sf.ref+"_ans"]=e.target.value;upd(p);}}/>
+          )}
+          {sf.t==="textarea" && (
+            <textarea className="obs-box" style={{minHeight:60}} placeholder={sf.ph||"Enter details..."}
+              value={state[sf.ref+"_ans"]||""}
+              onChange={function(e){var p={};p[sf.ref+"_ans"]=e.target.value;upd(p);}}/>
+          )}
+          {sf.t==="yn" && (
+            <div style={{display:"flex",gap:8}}>
+              {[{v:"y",l:"Yes"},{v:"n",l:"No"}].map(function(o){ return (
+                <button key={o.v}
+                  onClick={function(){var p={};p[sf.ref+"_ans"]=state[sf.ref+"_ans"]===o.v?null:o.v;upd(p);}}
+                  style={{flex:1,padding:9,borderRadius:8,cursor:"pointer",fontSize:13,fontWeight:600,
+                    border:state[sf.ref+"_ans"]===o.v?"2px solid #E8773A":"2px solid #30363D",
+                    background:state[sf.ref+"_ans"]===o.v?"rgba(232,119,58,.15)":"#1C2128",
+                    color:state[sf.ref+"_ans"]===o.v?"#E8773A":"#8B949E"}}>
+                  {o.l}
+                </button>
+              );})}
+            </div>
+          )}
+          {sf.t==="multi" && (
+            <div className="mc-wrap">
+              {(sf.opts||[]).map(function(o){ return (
+                <span key={o}
+                  className={"mc-c "+((state[sf.ref+"_sel"]||[]).includes(o)?"on":"")}
+                  onClick={function(){
+                    var c=state[sf.ref+"_sel"]||[];
+                    var p={};
+                    p[sf.ref+"_sel"]=c.includes(o)?c.filter(function(x){return x!==o;}):[...c,o];
+                    upd(p);
+                  }}>
+                  {o}
+                </span>
+              );})}
+            </div>
+          )}
+        </div>
+      );})}
+    </div>
+  );
+}
+
+// ─── WIDTH CHECK COMPONENT ────────────────────────────────────────────────
+function WidthTool({q, state, upd}) {
+  if (!q.widthCheck) return null;
+  var widths = state[q.ref+"_widths"] || [{id:1,loc:"",mm:""}];
+  function wColor(mm) {
+    if (!mm) return "#8B949E";
+    var n = Number(mm);
+    if (n >= 1050) return "#22c55e";
+    if (n >= 750) return "#f59e0b";
+    return "#ef4444";
+  }
+  function wLabel(mm) {
+    if (!mm) return "--";
+    var n = Number(mm);
+    if (n >= 1050) return "OK";
+    if (n >= 850) return "Check";
+    if (n >= 750) return "Max 60p";
+    return "NARROW";
+  }
+  return (
+    <div style={{marginTop:14,padding:14,background:"rgba(255,255,255,.03)",borderRadius:10,border:"1px solid #30363D"}}>
+      <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#8B949E",marginBottom:6}}>Measure widths</div>
+      <div style={{fontSize:11,color:"#8B949E",marginBottom:10}}>Enter clear width in mm. ADB: 750mm (up to 60p), 850mm (up to 110p), 1050mm (up to 220p).</div>
+      {widths.map(function(w,wi){ return (
+        <div key={w.id} style={{display:"flex",gap:8,marginBottom:8,alignItems:"center"}}>
+          <input style={{flex:2,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:12,color:"#F0F6FC",outline:"none"}}
+            placeholder="Location (e.g. Main entrance)"
+            value={w.loc}
+            onChange={function(e){var ws=[...widths];ws[wi]={...ws[wi],loc:e.target.value};var p={};p[q.ref+"_widths"]=ws;upd(p);}}/>
+          <input type="number"
+            style={{flex:1,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:13,fontWeight:700,color:"#F0F6FC",outline:"none",textAlign:"center"}}
+            placeholder="mm"
+            value={w.mm}
+            onChange={function(e){var ws=[...widths];ws[wi]={...ws[wi],mm:e.target.value};var p={};p[q.ref+"_widths"]=ws;upd(p);}}/>
+          <span style={{fontSize:11,fontWeight:700,minWidth:54,textAlign:"right",color:wColor(w.mm)}}>{wLabel(w.mm)}</span>
+        </div>
+      );})}
+      <button
+        onClick={function(){var ws=[...widths,{id:Date.now(),loc:"",mm:""}];var p={};p[q.ref+"_widths"]=ws;upd(p);}}
+        style={{fontSize:11,color:"#E8773A",background:"none",border:"1px dashed #E8773A",borderRadius:7,padding:"5px 12px",cursor:"pointer"}}>
+        + Add measurement
+      </button>
+    </div>
+  );
+}
+
 function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev, showMissed, sectionId, recentPersons=[], onRememberPerson}) {
   const {ans=null, note="", flagged=false, sel=[], photos=[],
          action="", priority="P3 — Within 3 months",
@@ -1258,6 +1371,12 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
             ))}
           </div>
         )}
+
+        {/* Sub-questions (conditional follow-ups) */}
+        <SubQuestions q={q} state={state} upd={upd}/>
+
+        {/* Width measurement tool */}
+        <WidthTool q={q} state={state} upd={upd}/>
 
         {/* Voice note */}
         <VoiceNoteBtn voiceNote={state.voiceNote||null} onSave={v=>upd({voiceNote:v})}/>
@@ -2283,10 +2402,6 @@ function Assessment({state, dispatch}) {
             </div>
           </div>
         </div>
-
-
-        {q.sub&&ans===q.sub.on&&(<div style={{marginTop:14,padding:14,background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.2)"}}><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>{q.sub.fields.map(sf=>(<div key={sf.ref} style={{marginBottom:12}}><div style={{fontSize:12,fontWeight:600,color:"#F0F6FC",marginBottom:6}}>{sf.q}</div>{sf.t==="text"&&<input className="qc-inp" placeholder={sf.ph||"Enter details..."} value={state[sf.ref+"_ans"]||""} onChange={e=>upd({[sf.ref+"_ans"]:e.target.value})}/>}{sf.t==="textarea"&&<textarea className="obs-box" style={{minHeight:60}} placeholder={sf.ph||"Enter details..."} value={state[sf.ref+"_ans"]||""} onChange={e=>upd({[sf.ref+"_ans"]:e.target.value})}/>}{sf.t==="yn"&&(<div style={{display:"flex",gap:8}}>{[{v:"y",l:"Yes"},{v:"n",l:"No"}].map(o=>(<button key={o.v} onClick={()=>upd({[sf.ref+"_ans"]:state[sf.ref+"_ans"]===o.v?null:o.v})} style={{flex:1,padding:9,borderRadius:8,border:state[sf.ref+"_ans"]===o.v?"2px solid #E8773A":"2px solid #30363D",background:state[sf.ref+"_ans"]===o.v?"rgba(232,119,58,.15)":"#1C2128",color:state[sf.ref+"_ans"]===o.v?"#E8773A":"#8B949E",fontWeight:600,cursor:"pointer",fontSize:13}}>{o.l}</button>))}</div>)}{sf.t==="multi"&&(<div className="mc-wrap">{(sf.opts||[]).map(o=>(<span key={o} className={"mc-c "+((state[sf.ref+"_sel"]||[]).includes(o)?"on":"")} onClick={()=>{const c=state[sf.ref+"_sel"]||[];upd({[sf.ref+"_sel"]:c.includes(o)?c.filter(x=>x!==o):[...c,o]});}}>{o}</span>))}</div>)}</div>))}</div>)}
-        {q.widthCheck&&(<div style={{marginTop:14,padding:14,background:"rgba(255,255,255,.03)",borderRadius:10,border:"1px solid #30363D"}}><div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#8B949E",marginBottom:6}}>Measure widths</div><div style={{fontSize:11,color:"#8B949E",marginBottom:10}}>Enter clear width in mm. ADB: 750mm (60p), 850mm (110p), 1050mm (220p).</div>{(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}]).map((w,wi)=>(<div key={w.id} style={{display:"flex",gap:8,marginBottom:8,alignItems:"center"}}><input style={{flex:2,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:12,color:"#F0F6FC",outline:"none"}} placeholder="Location" value={w.loc} onChange={e=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}])];ws[wi]={...ws[wi],loc:e.target.value};upd({[q.ref+"_widths"]:ws});}}/><input type="number" style={{flex:1,background:"#21262D",border:"1px solid #30363D",borderRadius:8,padding:"9px 10px",fontSize:13,fontWeight:700,color:"#F0F6FC",outline:"none",textAlign:"center"}} placeholder="mm" value={w.mm} onChange={e=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}])];ws[wi]={...ws[wi],mm:e.target.value};upd({[q.ref+"_widths"]:ws});}}/><span style={{fontSize:11,fontWeight:700,minWidth:52,textAlign:"right",color:Number(w.mm)>=1050?"#22c55e":Number(w.mm)>=750?"#f59e0b":w.mm?"#ef4444":"#8B949E"}}>{w.mm?(Number(w.mm)>=1050?"OK":Number(w.mm)>=850?"Check":Number(w.mm)>=750?"Max 60p":"NARROW"):"--"}</span></div>))}<button onClick={()=>{const ws=[...(state[q.ref+"_widths"]||[{id:1,loc:"",mm:""}]),{id:Date.now(),loc:"",mm:""}];upd({[q.ref+"_widths"]:ws});}} style={{fontSize:11,color:"#E8773A",background:"none",border:"1px dashed #E8773A",borderRadius:7,padding:"5px 12px",cursor:"pointer"}}>+ Add measurement</button></div>)}
       )}
     </div>
   );
