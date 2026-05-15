@@ -318,6 +318,9 @@ const FINDINGS_SECTION = {id:12.5,title:"Significant Findings & Conclusions",sho
   {ref:"SF.4",q:"State the assessor's overall professional judgement on whether existing fire precautions are adequate.",t:"select",opts:["Adequate — premises are reasonably safe. No immediate action required beyond routine maintenance.","Generally adequate — some improvements required but overall precautions are satisfactory.","Inadequate — significant improvements required. Risk is not adequately controlled.","Seriously inadequate — immediate action required. The Responsible Person must act without delay."],required:true,g:"Must be consistent with the overall risk rating in Section 12 and defensible under challenge."},
   {ref:"SF.5",q:"Are there any matters requiring urgent notification to the Responsible Person outside the formal action plan?",t:"yn",required:true,g:"Examples: immediate life safety risk, obstructed fire exit, fire alarm found inoperable. Must be communicated verbally and in writing without delay.",sub:{on:"y",fields:[{ref:"SF.5a",q:"Describe the matter(s) requiring urgent notification",t:"textarea",ph:"e.g. Final exit door found padlocked during inspection — lock removed during visit. RP notified verbally."}]}},
   {ref:"SF.6",q:"State the basis and recommended frequency for review of this assessment.",t:"textarea",required:true,g:"PAS 79-1:2020: annually for high/critical risk; every 2 years for medium; every 3-5 years for low risk; immediately after fire, significant change, enforcement notice or material alteration."},
+  {ref:"SF.8",q:"Describe the risk assessment methodology used, including the risk evaluation criteria applied (e.g. BS 9999:2017 risk matrix, qualitative likelihood/consequence assessment, numerical scoring).",t:"text",required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.4 — the methodology used to evaluate risk and reach conclusions must be documented.",guidance:"State the systematic approach used: e.g. Likelihood (1-5) x Consequence (1-5) matrix per BS 9999:2017 Annex B, or narrative risk evaluation per PAS 79-1:2020. Reference any specialist guidance applied (HTM 05-02, BS 9991, LACORS)."},
+  {ref:"SF.9",q:"What is the overall fire risk rating for this premises?",t:"select",opts:["Negligible — no action required","Low — satisfactory with minor improvements","Medium — improvements required within a defined period","High — urgent action required, allocate considerable resources","Critical — immediate action required, consider restricting use of premises"],required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.3, RRO 2005 Art.9 — the overall risk rating must be documented."},
+  {ref:"SF.10",q:"Provide the basis for the overall risk rating, including the most significant hazards and deficiencies that determined it.",t:"text",required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.3 — the assessor must justify the risk rating with reference to the specific findings."},
   {ref:"SF.7",q:"Assessor declaration: I confirm this assessment has been conducted in accordance with the RRO 2005, PAS 79-1:2020 and BS 8674:2025, to the best of my knowledge and competence.",t:"yn",required:true,g:"By selecting Yes, the assessor accepts professional responsibility for the findings and conclusions. This declaration must be completed before sign-off."},
  ]};
 
@@ -492,6 +495,9 @@ const FRA_SECTIONS = [
   ]},
 ];
 
+// Global combined sections for PDF generation (includes Declaration, Scope, FRA, Findings)
+const ALL_PDF_SECTIONS_BASE = [ASSESSOR_SECTION, SCOPE_SECTION].concat(FRA_SECTIONS).concat([FINDINGS_SECTION]);
+
 const TOTAL_Q = FRA_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
 
 // ─── STATE ────────────────────────────────────────────────────────
@@ -520,7 +526,10 @@ const makeAssessment = (n) => ({
   significantFindings:"", overallJudgement:"",
   buildingPreset:"standard",
   previousAssessmentDate:"", previousAssessmentRef:"", previousAssessor:"",
-  reviewType:"new"
+  reviewType:"new",
+  previousActionsStatus:[],
+  overallRating:"",
+  ratingMethodology:""
 });
 
 const INIT = {
@@ -1363,7 +1372,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
       const r = new FileReader();
       r.onload = e => {
         const words = q.q.split(" ").slice(0,5).join(" ");
-        updPhotos(prev=>[...prev,{id:Date.now()+Math.random(),src:e.target.result,caption:words+"…"}]);
+        updPhotos(prev=>[...prev,{id:Date.now()+Math.random(),ref:q.ref,src:e.target.result,caption:words+"…"}]);
       };
       r.readAsDataURL(f);
     });
@@ -1508,6 +1517,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
             {photosArr.map((p,i)=>(
               <div key={p.id} className="photo-thumb">
                 <img src={p.src} alt={p.caption}/>
+                  {p.ref&&<span style={{position:"absolute",top:2,left:2,background:"rgba(0,0,0,.65)",color:"#fff",fontSize:9,padding:"1px 4px",borderRadius:3}}>{p.ref}</span>}
                 <button className="photo-del" onClick={()=>updPhotos(photosArr.filter(x=>x.id!==p.id))}>✕</button>
               </div>
             ))}
@@ -1519,7 +1529,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         ))}
         {!["address","occupancy","floorarea","text","number","date"].includes(q.t)&&!q.noCamera&&(<div className="photo-btns">
           <div className="photo-btn">
-            <input ref={camRef} type="file" accept="image/*" capture="environment"
+            <input ref={camRef} type="file" accept="image/*" capture={/Mobi|Android/i.test(navigator.userAgent)?"environment":undefined}
               onChange={e=>handleFiles(e.target.files)}/>
             📷 Camera
           </div>
@@ -2042,6 +2052,23 @@ function ClientSetup({state, dispatch}) {
                 <div className="fg span2"><label className="fl">Previous assessor</label>
                   <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>}          </div>
             </div>
+            {(a.reviewType||"new")!=="new" && <div style={{marginTop:14,padding:"14px 0 0",borderTop:"1px solid #374151"}}>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:13,fontWeight:700,marginBottom:8,color:"#9CA3AF"}}>Previous Action Plan Status</div>
+              <p style={{fontSize:11,color:"#6B7280",marginBottom:8}}>Record the status of actions from the previous assessment (PAS 79-1:2020 Cl.6.5).</p>
+              {(a.previousActionsStatus||[]).map((item,i)=>(
+                <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 120px 28px",gap:6,marginBottom:6,alignItems:"center"}}>
+                  <input className="fi" style={{fontSize:11}} placeholder="Action description" value={item.description||""} onChange={e=>{const arr=[...(a.previousActionsStatus||[])];arr[i]={...arr[i],description:e.target.value};upd({previousActionsStatus:arr});}}/>
+                  <select className="fs" style={{fontSize:11}} value={item.status||"outstanding"} onChange={e=>{const arr=[...(a.previousActionsStatus||[])];arr[i]={...arr[i],status:e.target.value};upd({previousActionsStatus:arr});}}>
+                    <option value="completed">Completed</option>
+                    <option value="outstanding">Outstanding</option>
+                    <option value="deferred">Deferred</option>
+                    <option value="superseded">Superseded</option>
+                  </select>
+                  <button onClick={()=>{const arr=(a.previousActionsStatus||[]).filter((_,j)=>j!==i);upd({previousActionsStatus:arr});}} style={{background:"none",border:"none",color:"#EF4444",cursor:"pointer",fontSize:16}}>✕</button>
+                </div>
+              ))}
+              <button className="btn btn-ghost btn-sm" style={{marginTop:4,fontSize:11}} onClick={()=>upd({previousActionsStatus:[...(a.previousActionsStatus||[]),{description:"",status:"outstanding"}]})}>+ Add previous action</button>
+            </div>}
 <div className="fcf">
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Cancel</button>
               <button className="btn btn-teal" onClick={()=>dispatch({type:"GO",screen:"assessment"})}>Start Assessment →</button>
@@ -2595,7 +2622,7 @@ function generatePDF(a, org) {
   const actionItems = Object.entries(answers)
     .filter(([,v]) => v?.flagged)
     .map(([ref,v]) => {
-      const q = FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
+      const q = ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref);
       return {
         ref, text:q?.q||"",
         action:    v.action||"",
@@ -2611,7 +2638,7 @@ function generatePDF(a, org) {
   const allPhotos = Object.entries(answers).flatMap(([ref,v]) =>
     (v?.photos||[]).map(p => ({
       ...p, ref,
-      questionText: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      questionText: ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
   );
 
@@ -2620,7 +2647,7 @@ function generatePDF(a, org) {
     .map(([ref,v]) => ({
       ref,
       note: v.note,
-      text: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      text: ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
     .slice(0, 10);
 
@@ -2824,6 +2851,43 @@ function generatePDF(a, org) {
   <div class="pg-hdr">
     <div><span class="pg-hdr-brand">${org.name||"Assessor"}</span><span class="pg-hdr-doc">Fire Risk Assessment</span></div>
     <span class="pg-hdr-ref">${a.ref} · ${a.premisesName||""}</span>
+    <div class="section" style="margin-top:20px">
+      <h2 style="font-size:13px;font-weight:700;color:#1C2128;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">Risk Rating</h2>
+      ${answers["SF.9"]&&answers["SF.9"].sel&&answers["SF.9"].sel[0] ? `<p style="font-size:13px;font-weight:700;padding:8px 12px;border-radius:6px;display:inline-block;background:${answers["SF.9"].sel[0].startsWith("Critical")?'#FEE2E2':answers["SF.9"].sel[0].startsWith("High")?'#FEF3C7':answers["SF.9"].sel[0].startsWith("Medium")?'#FEF9C3':answers["SF.9"].sel[0].startsWith("Low")?'#DCFCE7':'#F1F5F9'}">${answers["SF.9"].sel[0]}</p>` : '<p style="color:#9CA3AF;font-size:12px">Risk rating not recorded</p>'}
+      ${answers["SF.10"]&&answers["SF.10"].text ? `<p style="font-size:12px;margin-top:8px;color:#374151">${answers["SF.10"].text}</p>` : ""}
+      ${answers["SF.8"]&&answers["SF.8"].text ? `<p style="font-size:11px;margin-top:6px;color:#6B7280;font-style:italic">Methodology: ${answers["SF.8"].text}</p>` : ""}
+    </div>
+    ${Object.values(answers).some(v=>v.photos&&v.photos.length>0) ? `
+    <div class="section" style="margin-top:20px;page-break-before:always">
+      <h2 style="font-size:13px;font-weight:700;color:#1C2128;margin:0 0 12px;text-transform:uppercase;letter-spacing:.5px">Photographic Evidence</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        ${Object.entries(answers).filter(([,v])=>v.photos&&v.photos.length>0).flatMap(([ref,v])=>v.photos.map(p=>({ref,photo:p}))).map(({ref,photo})=>{
+          const q = ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref);
+          return `<div style="border:1px solid #E5E7EB;border-radius:6px;overflow:hidden"><img src="${photo.src}" style="width:100%;height:140px;object-fit:cover" alt="${photo.caption}"/><div style="padding:6px;background:#F9FAFB"><p style="font-size:9px;font-weight:700;color:#E55B2D;margin:0">${photo.ref||ref}</p><p style="font-size:9px;color:#374151;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${photo.caption}</p></div></div>`;
+        }).join("")}
+      </div>
+    </div>` : ""}
+    <div class="section" style="margin-top:20px;page-break-before:always">
+      <h2 style="font-size:13px;font-weight:700;color:#1C2128;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">Legislative &amp; Standards Compliance Reference</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead><tr style="background:#1C2128;color:#fff"><th style="padding:6px 8px;text-align:left">Reference</th><th style="padding:6px 8px;text-align:left">Legislation / Standard</th><th style="padding:6px 8px;text-align:left">Requirement</th><th style="padding:6px 8px;text-align:center">Status</th></tr></thead>
+        <tbody>
+          ${[
+            {ref:"RRO 2005",std:"Regulatory Reform (Fire Safety) Order 2005",req:"Suitable and sufficient fire risk assessment",status:actionItems.length>=0?"Assessed":"N/A"},
+            {ref:"FSA 2021",std:"Fire Safety Act 2021",req:"Structure, external walls and flat entrance doors included in scope",status:"Assessed"},
+            {ref:"BSA 2022",std:"Building Safety Act 2022",req:"Higher-risk building management obligations (18m+/7 storeys+)",status:a.buildingPreset==="higher_risk"?"Assessed":"N/A — not HRB"},
+            {ref:"PAS 79-1:2020",std:"PAS 79-1:2020",req:"Fire risk assessment format and methodology compliance",status:"Assessed"},
+            {ref:"ADB 2019",std:"Approved Document B (Vol 1 & 2) 2019",req:"Means of escape, structural fire protection, fire detection",status:"Assessed"},
+            {ref:"BS 9999",std:"BS 9999:2017",req:"Fire safety in design, management and use of buildings",status:"Referenced"},
+            {ref:"BS 5839-1",std:"BS 5839-1:2017",req:"Fire detection and alarm systems — design, installation, commissioning",status:"Assessed"},
+            {ref:"BS 5839-6",std:"BS 5839-6:2019",req:"Fire detection in domestic premises",status:"Assessed"},
+            {ref:"BS 5266-1",std:"BS 5266-1:2016",req:"Emergency escape lighting",status:"Assessed"},
+            {ref:"BS 9991",std:"BS 9991:2015+A1:2021",req:"Fire safety in residential buildings",status:["hmo","care_home","hotel"].includes(a.buildingPreset)?"Assessed":"Noted"},
+            {ref:"LACORS",std:"LACORS Housing Fire Safety Guidance 2008",req:"Fire safety in houses in multiple occupation",status:a.buildingPreset==="hmo"?"Assessed":"N/A"},
+          ].map(r=>`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 8px;font-weight:600;white-space:nowrap">${r.ref}</td><td style="padding:5px 8px;color:#374151">${r.std}</td><td style="padding:5px 8px;color:#374151">${r.req}</td><td style="padding:5px 8px;text-align:center;color:${r.status.startsWith("Assessed")?"#16A34A":r.status.startsWith("N/A")?"#9CA3AF":"#D97706"};font-weight:600">${r.status}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="pg-body" style="padding-bottom:48px;">
     <div class="sec-h"><div class="sec-n">A</div><div><div class="sec-l">Section A</div><div class="sec-t">Premises & General Information</div></div></div>
@@ -2900,7 +2964,16 @@ function generatePDF(a, org) {
   <div class="pg-body" style="padding-bottom:48px;">
     <div class="sec-h"><div class="sec-n">F</div><div><div class="sec-l">Section F</div><div class="sec-t">Significant Findings</div></div></div>
     <p class="body">The following significant findings were identified during the assessment. Each finding is cross-referenced to the Action Plan in Section G. Photographic evidence is shown where recorded.</p>
-    ${actionItems.length > 0 ? actionItems.map(item => `
+    ${a.previousActionsStatus&&a.previousActionsStatus.length>0 ? `
+    <div class="section" style="margin-bottom:20px">
+      <h2 style="font-size:13px;font-weight:700;color:#1C2128;margin:0 0 8px;text-transform:uppercase;letter-spacing:.5px">Previous Assessment — Action Plan Status</h2>
+      <p style="font-size:11px;color:#6B7280;margin-bottom:8px">Status of actions carried forward from the previous assessment dated ${a.previousAssessmentDate||"N/A"} (Ref: ${a.previousAssessmentRef||"N/A"}) — PAS 79-1:2020 Cl.6.5</p>
+      <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead><tr style="background:#374151;color:#fff"><th style="padding:5px 8px;text-align:left">Previous Action</th><th style="padding:5px 8px;text-align:center;width:120px">Status</th></tr></thead>
+        <tbody>${a.previousActionsStatus.map(item=>`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 8px;color:#374151">${item.description||""}</td><td style="padding:5px 8px;text-align:center;font-weight:600;color:${item.status==="completed"?"#16A34A":item.status==="deferred"?"#D97706":item.status==="superseded"?"#9CA3AF":"#DC2626"}">${(item.status||"outstanding").charAt(0).toUpperCase()+(item.status||"outstanding").slice(1)}</td></tr>`).join("")}</tbody>
+      </table>
+    </div>` : ""}
+${actionItems.length > 0 ? actionItems.map(item => `
     <div class="finding no-break">
       <div class="finding-head">
         <span class="finding-ref">${item.ref}</span>
@@ -3066,7 +3139,7 @@ function CompleteScreen({state, dispatch}) {
   const actionItems = Object.entries(answers)
     .filter(([,v])=>v?.flagged)
     .map(([ref,v])=>{
-      const q = FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
+      const q = ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref);
       return {ref, text:q?.q, action:v.action, priority:v.priority||"P3 — Within 3 months",
               responsible:v.responsible, targetDate:v.targetDate,
               actionStatus:v.actionStatus||"pending", photos:v.photos||[], note:v.note||""};
@@ -3074,7 +3147,7 @@ function CompleteScreen({state, dispatch}) {
 
   // All photos across the whole assessment
   const allPhotos = Object.entries(answers).flatMap(([ref,v])=>
-    (v?.photos||[]).map(p=>({...p, ref, questionText:FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""}))
+    (v?.photos||[]).map(p=>({...p, ref, questionText:ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""}))
   );
 
   // Report header component
