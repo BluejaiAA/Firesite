@@ -2032,15 +2032,15 @@ function ClientSetup({state, dispatch}) {
                     <option value="enforcement">Reassessment — enforcement notice</option>
                     <option value="incident">Reassessment following fire/incident</option>
                   </select></div>
-                {(a.reviewType||"new")!=="new" && <>
+                {(a.reviewType||"new")!=="new" &&
                 <div className="fg"><label className="fl">Previous assessment date</label>
-                  <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>
+                  <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>}
+                {(a.reviewType||"new")!=="new" &&
                 <div className="fg"><label className="fl">Previous assessment ref.</label>
-                  <input className="fi" placeholder="e.g. FRA-2024-001" value={a.previousAssessmentRef||""} onChange={e=>upd({previousAssessmentRef:e.target.value})}/></div>
+                  <input className="fi" placeholder="e.g. FRA-2024-001" value={a.previousAssessmentRef||""} onChange={e=>upd({previousAssessmentRef:e.target.value})}/></div>}
+                {(a.reviewType||"new")!=="new" &&
                 <div className="fg span2"><label className="fl">Previous assessor</label>
-                  <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>
-                </>)}
-              </div>
+                  <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>}          </div>
             </div>
 <div className="fcf">
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Cancel</button>
