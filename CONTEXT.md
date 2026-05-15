@@ -14,7 +14,7 @@
 
 ## REPO STRUCTURE
 - index.html — marketing landing page (homepage at root URL)
-- app.html — the full assessment application (~223KB)
+- app.html — the full assessment application (~295KB)
 - sw.js — service worker
 - firesite_logo.png — phoenix bird logo (red/orange gradient)
 - CONTEXT.md — this file
@@ -51,7 +51,40 @@
 - 12-section fire risk assessment, 163+ questions, covers PAS 79 standard
 - Camera + Library hidden on factual question types (address, occupancy, floorarea, text, number, date, select)
 - Flag for Action Plan hidden on same factual types
-- Question text colour: #F0F6FC (fixed — was invisible #0D1117 on dark bg)
+- Question text colour: #F0F6FC
+
+## ADVANCED MODE (IMPLEMENTED)
+- advancedMode and advancedDismissed flags on each assessment object
+- ADVANCED_QUESTIONS object keyed by section id — 35 extra questions across 9 sections
+- checkAdvancedTriggers(answers) — returns array of trigger reasons:
+  - P1.3a=y (18m+ building / BSA 2022)
+  - P1.5=y (sleeping accommodation)
+  - P1.4 = 251+ occupancy
+  - High-risk occupancy type (care, hospital, hotel, HMO, school, sheltered)
+  - 1.2=y (explosive/flammable atmosphere / DSEAR)
+  - 4.1=y + 4.2=n (arson risk with inadequate controls)
+  - Basements present (P1.3b answered)
+- Soft-prompt modal fires when trigger first detected — shows specific triggers in red
+- "Switch to Advanced" / "Keep Standard" buttons — keep is a soft dismiss (advancedDismissed=true)
+- Mode badge in top nav — "Standard" or "🔥 Advanced" — clickable to toggle
+- visibleQs(section, answers, advMode) — third param controls whether advanced Qs included
+- Advanced questions cover: BSA 2022 Golden Thread, Building Safety Case, Accountable Person,
+  external wall surveys (PAS 9980:2022), EWS1, ATEX zone classification, PTW hot works,
+  fire door 3rd-party certification (FSA 2021), fire stopping certification (BS EN 1366-3),
+  smoke control O&M, alarm cause-and-effect documentation, formal travel distance surveys,
+  occupant capacity calculations, management system auditing
+
+## CARD TOOLBAR (IMPLEMENTED)
+- CardToolbar component replaces old scattered Voice / Camera / Library / Flag / Comments items
+- Renders as a horizontal pill-icon row below each question's answer area
+- Items shown conditionally by question type:
+  - Voice: always shown (mic SVG icon)
+  - Camera: hidden on factual types (address, occupancy, floorarea, text, number, date) + noCamera:true
+  - Library: same as Camera
+  - Notes: always shown (document SVG icon) — opens/closes assessor comments textarea
+  - Flag: hidden on factual types + select
+- State: recording pulse animation, active state (red border), ✓ indicator when content present
+- Old .flag-btn, .obs-row, .photo-btns CSS hidden (display:none) — replaced by .ctb-btn / .card-toolbar
 
 ## QUESTION TYPES
 - address, occupancy, floorarea, text, number, date, select = NO camera, NO flag
@@ -75,7 +108,6 @@
 - Tagline: Professional fire risk assessments, in your pocket
 - Target users: fire risk assessors, H&S consultants, facilities managers, landlords
 
-
 ## STANDARDS COMPLIANCE (MANDATORY — apply to ALL recommendations)
 Every autofill recommendation, guidance text and action plan entry MUST reference applicable standards:
 - RRO 2005 (as amended by Fire Safety Act 2021) — PRIMARY legal duty
@@ -91,8 +123,8 @@ Every autofill recommendation, guidance text and action plan entry MUST referenc
 - BS 7671:2018+A2 IET Wiring Regulations 18th Edition
 - Building Safety Act 2022 (18m+ / 7+ storeys higher-risk regime)
 - Fire Safety Act 2021 (external walls, flat entrance doors)
-- DCLG Guides (all at gov.uk/government/collections/fire-safety-law-and-guidance-documents-for-business):
-  Offices/shops · Factories/warehouses · Sleeping accommodation · Residential care · Educational · Places of assembly (small + large) · Theatres/cinemas · Open air events · Healthcare · Transport · Animal premises
+- BS 8674:2025 — assessor competency
+- FRACC — national register of competent fire risk assessors
 
 UI TERMINOLOGY: Always use "Assessor's Comments" (not "Observations") throughout the app.
 
@@ -117,13 +149,24 @@ UI TERMINOLOGY: Always use "Assessor's Comments" (not "Observations") throughout
 10. Firefighting
 11. Management
 12. Risk Rating
+Plus: Declaration (pre-section 1), Scope (pre-section 1), Findings (post-section 12)
 
 ## LAST THINGS DONE
 1. Full dark theme applied throughout all screens
 2. Section hm-cell tiles darkened
-3. Question text made visible
+3. Question text made visible (#F0F6FC)
 4. Camera and Library hidden on factual question types
 5. Flag for Action Plan hidden on factual question types
+6. ASSESSOR_SECTION with BS 8674:2025 / FRACC competency levels added
+7. SCOPE_SECTION added (methodology, limitations, inaccessible areas)
+8. FINDINGS_SECTION added (SF.1–SF.10 professional narrative and risk matrix)
+9. Building presets (HMO, Care Home, School etc.) with extra questions
+10. Advanced Mode implemented — soft-prompt, 35 Level 3-4 questions, auto-trigger detection, mode badge
+11. Visual refresh — unified CardToolbar with SVG icons (Voice/Camera/Library/Notes/Flag pill row), SVG yes/no buttons, cleaner guide button (ⓘ), SVG nav arrows
 
 ## NEXT SESSION STARTING POINT
-Continue refining the assessment content — walk through each section checking question wording, order, logic, and completeness against PAS 79. Then implement Firebase Auth when owner provides Firebase config.
+App is working well visually. Likely next priorities:
+- Test and polish the CardToolbar on mobile (ensure camera capture works on iOS/Android)
+- PDF report export (major feature — needs jsPDF or similar)
+- Dashboard improvements (assessment list, search, status filters)
+- Real Firebase Auth integration (owner to provide Firebase config)
