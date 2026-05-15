@@ -495,6 +495,76 @@ const FRA_SECTIONS = [
   ]},
 ];
 
+
+// ─── ADVANCED QUESTIONS (Level 3-4 assessors) ────────────────────────────────
+const ADVANCED_QUESTIONS = {
+  1:[
+    {ref:"ADV.P1.A",q:"Has a formal structural fire survey (Type 2 or Type 3 intrusive inspection) been commissioned for this building?",t:"ynna",required:false,adv:true,g:"Type 2 (sampling) or Type 3 (destructive opening up) surveys are required where external wall systems or compartmentation integrity cannot be confirmed by visual inspection alone. BSA 2022 and FSA 2021 obligations may require this."},
+    {ref:"ADV.P1.B",q:"Is this building subject to the Building Safety Act 2022 higher-risk regime? If yes, has an Accountable Person been formally designated?",t:"yn",required:false,adv:true,g:"Buildings over 18m (approx 7 storeys+) with 2+ residential units are higher-risk under BSA 2022. The Accountable Person has statutory duties including a Building Safety Case and Resident Engagement Strategy."},
+    {ref:"ADV.P1.C",q:"Has a Building Safety Case been prepared and submitted to the Building Safety Regulator?",t:"ynna",required:false,adv:true,g:"BSA 2022 s.88: the Accountable Person must prepare and maintain a Building Safety Case including a fire and structural safety case report."},
+    {ref:"ADV.P1.D",q:"Is a Golden Thread of information maintained for this building covering all design, construction and safety decisions?",t:"ynna",required:false,adv:true,g:"BSA 2022 requires a digital Golden Thread for all higher-risk buildings, accessible to residents and the Building Safety Regulator."},
+    {ref:"ADV.P1.E",q:"Has a Resident Engagement Strategy (RES) been prepared and implemented in accordance with BSA 2022?",t:"ynna",required:false,adv:true,g:"BSA 2022 s.91: the Accountable Person must establish a Resident Engagement Strategy to keep residents informed and involved in building safety decisions."},
+  ],
+  3:[
+    {ref:"ADV.1.A",q:"Have all areas with potential for explosive atmosphere (ATEX zones) been formally defined, classified and mapped?",t:"ynna",required:false,adv:true,g:"ATEX Directive (2014/34/EU) and DSEAR 2002: zone classification drawings are required. These must be reviewed following any process or layout change."},
+    {ref:"ADV.1.B",q:"Are hot work activities controlled by a formal Permit to Work (PTW) system specifying fire watch, suppression measures and post-work clearance?",t:"ynna",required:false,adv:true,g:"PTW must specify: fire watch (min 1 hour), suppression measures, alarm notification, scope of work, authorising signature and post-work clearance certificate."},
+    {ref:"ADV.1.C",q:"Is a formal written fire loading assessment in place identifying combustible materials by type, quantity and location?",t:"ynna",required:false,adv:true,g:"PAS 79-1:2020 Cl.7.4 requires hazard identification to include the nature, type and quantity of combustible materials. A fire loading schedule supports compartmentation sizing and insurance requirements."},
+  ],
+  4:[
+    {ref:"ADV.2.A",q:"For buildings over 18m, has the electrical installation been reviewed against the requirements of BS 9991:2015 for fire safety in residential buildings?",t:"ynna",required:false,adv:true,g:"BS 9991:2015 contains specific requirements for electrical safety, alarm systems and suppression in purpose-built blocks of flats."},
+    {ref:"ADV.2.B",q:"Is the electrical infrastructure capacity adequate for current and planned fire safety systems (detection, suppression, smoke control) without risk of overloading?",t:"ynna",required:false,adv:true,g:"Growing loads from EV charging, BEMS, security and safety systems must be assessed. Overloaded circuits are a significant and growing fire cause."},
+  ],
+  7:[
+    {ref:"ADV.7.A",q:"Has a formal travel distance survey been carried out using scaled floor plans? State the longest measured travel distance in metres.",t:"text",required:false,adv:true,g:"ADB Vol 2 Table 3: max 18m single direction, 45m multi-direction (non-sprinklered). BS 9999 offers alternative distances for enhanced detection. Actual measurements must be recorded, not estimated."},
+    {ref:"ADV.7.B",q:"Has a formal occupant capacity assessment been carried out for each floor and staircase in accordance with ADB/BS 9999?",t:"ynna",required:false,adv:true,g:"BS 9999:2017 Section 7: stair capacity must be calculated based on floors served and expected occupant load. Phased evacuation buildings require particular attention."},
+    {ref:"ADV.7.C",q:"Where phased or zoned evacuation applies, has a cause-and-effect matrix been prepared, tested and approved by the fire alarm designer?",t:"ynna",required:false,adv:true,g:"BS 5839-1:2017 and PAS 79-1:2020 require the evacuation strategy and fire alarm cause-and-effect to be formally aligned. The document should be held on site and reviewed after any alarm system change."},
+    {ref:"ADV.7.D",q:"Have external escape routes and assembly areas been assessed for vehicle conflict, lighting adequacy and adverse weather conditions?",t:"ynna",required:false,adv:true,g:"External risks including flooding, ice, vehicle movements and sight lines from the assembly point must be considered."},
+    {ref:"ADV.7.E",q:"Where a stay-put strategy applies, has it been formally reviewed following any changes to building materials, occupancy or compartmentation since the strategy was adopted?",t:"ynna",required:false,adv:true,g:"FSA 2021 and RRO 2005 require the RP to keep the strategy under review. Following Grenfell, stay-put strategies must be re-evaluated following any change to cladding, compartmentation or occupancy profile."},
+  ],
+  8:[
+    {ref:"ADV.3.A",q:"Has a formal fire door inspection been carried out by a third-party certified inspector (FDIS, BM Trada Q-Mark or equivalent) within the last 12 months?",t:"ynna",required:false,adv:true,g:"FSA 2021 requires quarterly checks of flat entrance fire doors and annual checks of common area fire doors in multi-occupied residential buildings."},
+    {ref:"ADV.3.B",q:"Are door leaf and frame certification labels (CE/UKCA, fire rating, manufacturer's label) legible and consistent with the required fire resistance period on all inspected doors?",t:"ynna",required:false,adv:true,g:"Third-party certified fire doors must bear a label confirming specification. Doors without traceable certification cannot be assumed to be compliant."},
+    {ref:"ADV.3.C",q:"Has the external wall system (cladding, render, insulation, rainscreen) been formally assessed under PAS 9980:2022? Is an EWS1 form available if applicable?",t:"ynna",required:false,adv:true,g:"FSA 2021 s.1: the RP must include external walls within the FRA scope. For buildings over 11m, a Fire Risk Appraisal of External Walls (FRAEW) per PAS 9980:2022 is strongly recommended."},
+    {ref:"ADV.3.D",q:"Are all service penetrations through fire-rated walls and floors fitted with third-party certified fire stopping products installed in accordance with the manufacturer's ETA?",t:"ynna",required:false,adv:true,g:"Fire stopping products must be tested to BS EN 1366-3. Installation must follow manufacturer's European Technical Assessment. Uncertified or incorrectly installed fire stopping is a critical and extremely common deficiency."},
+    {ref:"ADV.3.E",q:"Are acoustic insulation materials within party walls or floor voids confirmed as non-combustible or of limited combustibility (Class A2-s3,d2 or better)?",t:"ynna",required:false,adv:true,g:"Some acoustic products are combustible. Where materials are unknown, intrusive investigation should be recommended. ADB 2019 and BS 9999 require materials forming part of a fire-resisting structure to meet minimum reaction-to-fire classification."},
+  ],
+  9:[
+    {ref:"ADV.8.A",q:"Has the fire alarm system been designed by a competent fire alarm design engineer with a documented design pack (specification, cause-and-effect, commissioning certificate) held on site?",t:"ynna",required:false,adv:true,g:"BS 5839-1:2017 Cl.14 requires a full design documentation pack on site. Absence of this is a significant finding indicating the system may not have been properly designed or commissioned."},
+    {ref:"ADV.8.B",q:"Is the fire alarm category appropriate for the occupancy, building geometry and evacuation strategy? State recommended category if an upgrade is required.",t:"text",required:false,adv:true,g:"BS 5839-1: L1 (full detection) for high-risk; L2 (escape routes + high-risk areas); L3 (escape routes only); M (manual). Life-risk buildings generally require L1 or L2."},
+    {ref:"ADV.8.C",q:"Is there a formal false alarm management procedure reviewed against BS 5839-1:2017 Clause 39 recommendations?",t:"ynna",required:false,adv:true,g:"Excessive false alarms degrade occupant response. BS 5839-1 Cl.39 provides a framework including investigation, log keeping and escalation procedures."},
+    {ref:"ADV.8.D",q:"Where aspirating smoke detection, video flame detection or other specialist technologies are installed, have they been commissioned and serviced per manufacturer requirements and BS 5839-1?",t:"ynna",required:false,adv:true,g:"Specialist technologies require specialist commissioning and maintenance. Standard alarm contractors may not be competent. Verify service certificates carefully."},
+    {ref:"ADV.8.E",q:"Where a smoke control system (AOV, pressurisation, mechanical extract) is present, is there a current O&M manual and has the system been tested annually by a specialist contractor?",t:"ynna",required:false,adv:true,g:"BS EN 12101 governs smoke and heat control systems. Annual testing by a smoke control specialist is required. Untested systems cannot be relied upon in an emergency."},
+  ],
+  10:[
+    {ref:"ADV.9.A",q:"If a sprinkler system is installed, state the design standard (BS EN 12845, LPC Rules, NFPA 13) and most recent acceptance test date.",t:"text",required:false,adv:true,g:"BS EN 12845: 6-monthly inspection and annual acceptance test by specialist. System must be integrated with the fire alarm and consistent with current building layout."},
+    {ref:"ADV.9.B",q:"If a sprinkler system is installed, has it been reviewed following any building alterations to confirm coverage remains adequate for the current layout and fire load?",t:"ynna",required:false,adv:true,g:"Partitioning changes, ceiling modifications or increased fire loading may require design review by a fire sprinkler engineer (BAFSA/FIA accredited contractor)."},
+    {ref:"ADV.9.C",q:"Where gaseous or specialist suppression systems are installed, are they maintained under specialist contract and tested at required intervals?",t:"ynna",required:false,adv:true,g:"Gaseous systems must be maintained by a specialist. Agent weight/pressure must be checked at least annually. Discharge tests at manufacturer-specified intervals are required."},
+  ],
+  11:[
+    {ref:"ADV.6.A",q:"Is a formally appointed competent person documented in writing for fire safety management, with clear responsibilities and authority?",t:"ynna",required:false,adv:true,g:"RRO 2005 Art.18: the RP must appoint one or more competent persons to assist with fire safety measures. The appointment should be documented."},
+    {ref:"ADV.6.B",q:"Is the fire safety management system subject to periodic formal audit by an independent competent person?",t:"ynna",required:false,adv:true,g:"PAS 79-1:2020 recommends periodic audit. For higher-risk buildings, annual independent audits are best practice and may be required by insurers or the Building Safety Regulator."},
+    {ref:"ADV.6.C",q:"Are fire safety KPIs monitored and formally reported to senior management at least quarterly?",t:"ynna",required:false,adv:true,g:"KPIs should include: alarm tests completed, drill frequency, training compliance, outstanding action plan items, near-miss incidents. Formal reporting demonstrates duty of care."},
+    {ref:"ADV.6.D",q:"Is there a documented contractor induction and control procedure specifically addressing fire safety, hot work PTW and emergency arrangements?",t:"ynna",required:false,adv:true,g:"Contractors are responsible for a significant proportion of building fires. A formal fire safety induction is essential and should be evidenced by signed records."},
+    {ref:"ADV.6.E",q:"Does the organisation have a documented business continuity plan addressing fire events and loss of premises?",t:"ynna",required:false,adv:true,g:"ISO 22301 and BS 9999:2017 both recommend planning for fire events as part of business continuity. Particularly important for complex or high-risk premises."},
+  ],
+};
+
+// Advanced mode trigger check — returns array of trigger reasons
+const checkAdvancedTriggers = (answers) => {
+  const triggers = [];
+  if (answers["P1.3a"]?.ans==="y") triggers.push("Building exceeds 18m — Building Safety Act 2022 higher-risk regime applies");
+  if (answers["P1.5"]?.ans==="y") triggers.push("Sleeping accommodation present — significantly elevated life safety risk");
+  const occ4 = answers["P1.4"]?.ans||"";
+  if (occ4.startsWith("251")||occ4.startsWith("500")) triggers.push("Large occupancy (251+ persons) — complex evacuation strategy required");
+  const occAns = (answers["P1.2"]?.occupancyCat||answers["P1.2"]?.ans||"").toLowerCase();
+  if (["care","hospital","hotel","hmo","school","sheltered","hostel","sleeping"].some(t=>occAns.includes(t))) triggers.push("High-risk occupancy type detected — enhanced assessment strongly recommended");
+  if (answers["1.2"]?.ans==="y") triggers.push("Potential explosive/flammable atmosphere — DSEAR and ATEX zone classification required");
+  if (answers["4.1"]?.ans==="y"&&answers["4.2"]?.ans==="n") triggers.push("Credible arson risk with inadequate controls identified");
+  const basementAns = (answers["P1.3b"]?.ans||"").trim();
+  if (basementAns.length>4&&basementAns.toLowerCase()!=="no"&&basementAns.toLowerCase()!=="n/a") triggers.push("Basement or sub-ground levels present — complex escape and compartmentation strategy required");
+  return triggers;
+};
+
 // Global combined sections for PDF generation (includes Declaration, Scope, FRA, Findings)
 const ALL_PDF_SECTIONS_BASE = [ASSESSOR_SECTION, SCOPE_SECTION].concat(FRA_SECTIONS).concat([FINDINGS_SECTION]);
 
@@ -529,7 +599,9 @@ const makeAssessment = (n) => ({
   reviewType:"new",
   previousActionsStatus:[],
   overallRating:"",
-  ratingMethodology:""
+  ratingMethodology:"",
+  advancedMode:false,
+  advancedDismissed:false
 });
 
 const INIT = {
@@ -605,6 +677,14 @@ function reducer(state, action) {
       const updated = [action.name,...persons.filter(p=>p!==action.name)].slice(0,6);
       return {...state, org:{...state.org, recentPersons:updated}};
     }
+    case "SET_ADVANCED": return {
+      ...state,
+      assessments:state.assessments.map(a=>a.id===state.activeId?{...a,advancedMode:action.v,advancedDismissed:action.v?false:a.advancedDismissed}:a)
+    };
+    case "DISMISS_ADVANCED": return {
+      ...state,
+      assessments:state.assessments.map(a=>a.id===state.activeId?{...a,advancedDismissed:true}:a)
+    };
     case "GO": return {...state, screen:action.screen, showMissed:false, showValidation:false};
     default:   return state;
   }
@@ -640,9 +720,13 @@ const shouldShow = (q, answers) => {
   return answers[rule.parent]?.ans === rule.showWhen;
 };
 
-// Get visible questions for a section
-const visibleQs = (section, answers) =>
-  section.questions.filter(q => shouldShow(q, answers));
+// Get visible questions for a section (optionally include advanced questions)
+const visibleQs = (section, answers, advMode=false) => {
+  const base = section.questions.filter(q => shouldShow(q, answers));
+  if (!advMode) return base;
+  const adv = (ADVANCED_QUESTIONS[section.id]||[]).filter(q => shouldShow(q, answers));
+  return [...base, ...adv];
+};
 
 // Count answered in visible questions only
 const countAnswered = (section, answers) =>
@@ -2272,20 +2356,33 @@ function Assessment({state, dispatch}) {
 
   const curSec  = ALL_SECTIONS[secIdx];
   const intro   = SECTION_INTROS[curSec.id];
-  const vqs     = visibleQs(curSec, answers);  // skip-logic filtered
+  const advMode = a.advancedMode||false;
+  const advDismissed = a.advancedDismissed||false;
+  const vqs     = visibleQs(curSec, answers, advMode);  // skip-logic filtered
 
-  const totalAnswered = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).filter(q=>isAnswered(q,answers[q.ref]||{})).length,0);
-  const totalVisible  = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).length,0);
+  const totalAnswered = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers,advMode).filter(q=>isAnswered(q,answers[q.ref]||{})).length,0);
+  const totalVisible  = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers,advMode).length,0);
   const pct           = Math.round((totalAnswered/totalVisible)*100);
   const flagged       = Object.values(answers).filter(v=>v?.flagged).length;
 
   const allMissed = ALL_SECTIONS.flatMap(s=>
-    visibleQs(s,answers).filter(q=>isMissed(q,answers[q.ref])).map(q=>({...q,secId:s.id}))
+    visibleQs(s,answers,advMode).filter(q=>isMissed(q,answers[q.ref])).map(q=>({...q,secId:s.id}))
   );
 
-  const secDone = s => visibleQs(s,answers).filter(q=>q.required).every(q=>isAnswered(q,answers[q.ref]||{}));
-  const secMiss = s => visibleQs(s,answers).some(q=>isMissed(q,answers[q.ref]));
-  const secAns  = s => visibleQs(s,answers).filter(q=>isAnswered(q,answers[q.ref]||{})).length;
+  // Advanced mode trigger check
+  const advTriggers = React.useMemo(()=>checkAdvancedTriggers(answers),[answers]);
+  const [showAdvModal, setShowAdvModal] = React.useState(false);
+  const prevTriggersRef = React.useRef(0);
+  React.useEffect(()=>{
+    if (advTriggers.length>0 && !advMode && !advDismissed && advTriggers.length > prevTriggersRef.current) {
+      setShowAdvModal(true);
+    }
+    prevTriggersRef.current = advTriggers.length;
+  },[advTriggers.length, advMode, advDismissed]);
+
+  const secDone = s => visibleQs(s,answers,advMode).filter(q=>q.required).every(q=>isAnswered(q,answers[q.ref]||{}));
+  const secMiss = s => visibleQs(s,answers,advMode).some(q=>isMissed(q,answers[q.ref]));
+  const secAns  = s => visibleQs(s,answers,advMode).filter(q=>isAnswered(q,answers[q.ref]||{})).length;
   const secFlag = s => s.questions.filter(q=>answers[q.ref]?.flagged).length;
 
   const saveTimer = useRef(null);
@@ -2347,12 +2444,54 @@ function Assessment({state, dispatch}) {
     return {done, total:vq.length};
   };
 
+  // Advanced mode modal
+  const AdvancedModal = showAdvModal && !advMode && (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
+      <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:"16px",maxWidth:"380px",width:"100%",padding:"24px",boxShadow:"0 20px 60px rgba(0,0,0,.5)"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"16px"}}>
+          <span style={{fontSize:"28px"}}>&#x1F525;</span>
+          <div>
+            <div style={{fontSize:"15px",fontWeight:700,color:"#F0F6FC"}}>Advanced Assessment Recommended</div>
+            <div style={{fontSize:"11px",color:"#8B949E",marginTop:"2px"}}>Level 3-4 assessor depth</div>
+          </div>
+        </div>
+        <div style={{fontSize:"12px",color:"#E6EDF3",lineHeight:"1.6",marginBottom:"14px"}}>
+          Based on your answers, this building profile indicates an advanced assessment is appropriate:
+        </div>
+        <div style={{background:"#0D1117",borderRadius:"8px",padding:"10px 12px",marginBottom:"16px"}}>
+          {advTriggers.map((t,i)=>(
+            <div key={i} style={{fontSize:"11px",color:"#C0392B",display:"flex",gap:"6px",alignItems:"flex-start",marginBottom:i<advTriggers.length-1?"6px":0}}>
+              <span style={{marginTop:"1px",flexShrink:0}}>&#x26a0;</span>
+              <span>{t}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{fontSize:"11px",color:"#8B949E",lineHeight:"1.55",marginBottom:"18px"}}>
+          Advanced mode adds specialist questions covering BSA 2022, external wall systems, smoke control, cause-and-effect logic, fire loading and management system audit - matching PAS 79-1:2020 Level 3-4 competency requirements.
+        </div>
+        <div style={{display:"flex",gap:"10px"}}>
+          <button
+            onClick={()=>{dispatch({type:"SET_ADVANCED",v:true});setShowAdvModal(false);}}
+            style={{flex:2,padding:"13px",background:"#C0392B",color:"#fff",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:700,cursor:"pointer",fontFamily:"Nunito,sans-serif"}}>
+            Switch to Advanced
+          </button>
+          <button
+            onClick={()=>{dispatch({type:"DISMISS_ADVANCED"});setShowAdvModal(false);}}
+            style={{flex:1,padding:"13px",background:"#21262D",color:"#8B949E",border:"1px solid #30363D",borderRadius:"10px",fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"Nunito,sans-serif"}}>
+            Keep Standard
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="assess-wrap">
       {/* Section complete flash */}
       {secFlash && <div style={{position:"fixed",inset:0,background:"#059669",opacity:.18,zIndex:999,pointerEvents:"none",animation:"secFlashAnim .7s ease both"}}/>}
 
       {/* Sticky top nav only — no intro banner sticking */}
+      {AdvancedModal}
       <div className="assess-head">
         <div className="tnav dk" style={{background:pr}}>
           <button className="tn-back" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>← Back</button>
@@ -2360,6 +2499,9 @@ function Assessment({state, dispatch}) {
             <div className="tn-title dk" style={{fontSize:12}}>{a.premisesName||"Assessment"}</div>
             <div className="tn-sub">{a.ref}</div>
           </div>
+          <span onClick={()=>{if(advMode){dispatch({type:"SET_ADVANCED",v:false});}else{setShowAdvModal(true);}}} title={advMode?"Click to switch to Standard mode":"Click to switch to Advanced mode"} style={{cursor:"pointer",fontSize:"10px",fontWeight:700,padding:"3px 9px",borderRadius:"20px",border:"1px solid "+(advMode?"#C0392B":"#30363D"),color:advMode?"#C0392B":"#6E7681",background:advMode?"rgba(192,57,43,.1)":"transparent",flexShrink:0,whiteSpace:"nowrap",userSelect:"none"}}>
+            {advMode?"&#x1F525; Advanced":"Standard"}
+          </span>
           <div className="tn-save">
             {saveAnim
               ? <span style={{color:"#34D399",fontSize:9}}>● Saved</span>
