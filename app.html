@@ -2218,7 +2218,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
       <div className="dash-scroll">
         <div className="dash-body">
           <div style={{marginBottom:18}}>
-            <div style={{fontFamily:"'Nunito',sans-serif",fontSize:24,fontWeight:700,color:"#0D1117",lineHeight:1.1,marginBottom:3}}>
+            <div style={{fontFamily:"'Nunito',sans-serif",fontSize:22,fontWeight:700,color:"#F0F6FC",lineHeight:1.1,marginBottom:3}}>
               {firstName?`Morning, ${firstName}.`:"Your assessments."}
             </div>
             <div style={{fontSize:11,color:"#6E7681"}}>
@@ -2231,13 +2231,13 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
           {activeDraft && (
             <div style={{marginBottom:14}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:7}}>
-                <span style={{fontSize:11,fontWeight:600,color:"#374151"}}>📊 {activeDraft.premisesName||"Current draft"}</span>
+                <span style={{fontSize:11,fontWeight:600,color:"#E6EDF3"}}>{activeDraft.premisesName||"Current draft"}</span>
                 <span style={{fontSize:10,color:ac,fontWeight:600,cursor:"pointer"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue →</span>
               </div>
               <div className="heatmap">
                 {sectionStatus.map(({s,reqDone,anyDone},i)=>(
                   <div key={i} className="hm-cell"
-                    style={{background:reqDone?"#0D3321":anyDone?`${ac}0F`:"#1C2128",border:`1px solid ${reqDone?"#6EE7B7":anyDone?ac+"33":"#EAECF0"}`}}
+                    style={{background:reqDone?"#0D3321":anyDone?`${ac}0F`:"#1C2128",border:`1px solid ${reqDone?"#6EE7B7":anyDone?ac+"44":"#30363D"}`}}
                     onClick={()=>{dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"});dispatch({type:"SEC",i});}}>
                     <div className="hm-num" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{reqDone?"✓":i+1}</div>
                     <div className="hm-lbl" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{s.short||s.title.split(" ")[0]}</div>
@@ -2271,7 +2271,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
           {assessments.length>0 && (
             <div style={{marginBottom:18}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#0D1117"}}>Assessments</div>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,color:"#F0F6FC",letterSpacing:".3px",textTransform:"uppercase"}}>Assessments</div>
                 <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>＋ New</button>
               </div>
               {assessments.slice().reverse().map(a=>{
@@ -2295,8 +2295,8 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                       }}>{a.status==="complete"?"✓ Complete":"In Progress"}</span>
                     </div>
                     <div className="at-meta">
-                      {a.premisesType&&<span className="abadge" style={{background:"#F3F4F6",color:"#6B7280"}}>{a.premisesType}</span>}
-                      {a.clientName&&<span className="abadge" style={{background:"#F3F4F6",color:"#6B7280"}}>{a.clientName}</span>}
+                      {a.premisesType&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.premisesType}</span>}
+                      {a.clientName&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.clientName}</span>}
                       {a.riskRating&&<span className="abadge" style={{background:riskBg(a.riskRating),color:riskCol(a.riskRating),border:`1px solid ${riskCol(a.riskRating)}33`}}>{a.riskRating.split("—")[0].trim()}</span>}
                       {flagCount>0&&<span className="abadge" style={{background:"#FDF3EE",color:ac}}>⚑ {flagCount}</span>}
                       {a.savedAt&&<span style={{fontSize:9,color:"#6E7681"}}>Saved {a.savedAt}</span>}
@@ -2311,8 +2311,8 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                       </div>
                     )}
                     <div style={{display:"flex",gap:7}}>
-                      <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:a.status==="complete"?"complete":"assessment"})}>
-                        {a.status==="complete"?"📄 Report":"Continue →"}
+                      <button style={{padding:"7px 14px",background:a.status==="complete"?"#C0392B":"#21262D",color:"#fff",border:a.status==="complete"?"none":"1px solid #30363D",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:a.status==="complete"?"complete":"assessment"})}>
+                        {a.status==="complete"?"View Report →":"Continue →"}
                       </button>
                       {a.status==="complete"&&<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>Edit</button>}
                     </div>
@@ -2322,30 +2322,19 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
             </div>
           )}
 
-          {/* Tool cards */}
-          <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#0D1117",marginBottom:3}}>Assessment Types</div>
-          <div style={{fontSize:10,color:"#6E7681",marginBottom:10}}>Professional forms for every fire safety assessment</div>
-          <div className="tool-grid">
-            {tools.map(t=>(
-              <div key={t.key} className="tcrd" onClick={()=>t.key==="fra"&&dispatch({type:"NEW_ASSESSMENT"})}>
-                <div className="tcrd-top">
-                  <div className="tcrd-ic">{t.icon}</div>
-                  <div className="tcrd-tag" style={{color:t.accent}}>{t.tag}</div>
-                  <div className="tcrd-name">{t.name}</div>
-                  <div className="tcrd-desc">{t.desc}</div>
-                </div>
-                <div className="tcrd-ft">
-                  <button className="tcrd-btn" style={{borderColor:t.accent,color:t.accent}}
-                    onMouseEnter={e=>{e.currentTarget.style.background=t.accent;e.currentTarget.style.color="#fff";}}
-                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color=t.accent;}}
-                    onClick={e=>{e.stopPropagation();t.key==="fra"&&dispatch({type:"NEW_ASSESSMENT"});}}>
-                    {t.key==="fra"?"Start New →":"Coming Soon"}
-                  </button>
-                </div>
+          {/* New assessment prompt */}
+          {assessments.length===0&&(
+            <div style={{textAlign:"center",padding:"32px 16px",borderRadius:14,border:"1.5px dashed #30363D",background:"#161B22"}}>
+              <div style={{fontSize:32,marginBottom:12,opacity:.5}}>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
               </div>
-            ))}
-          </div>
-        </div>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#E6EDF3",marginBottom:6}}>No assessments yet</div>
+              <div style={{fontSize:12,color:"#8B949E",marginBottom:20}}>Start your first fire risk assessment. It takes about 45 minutes on site.</div>
+              <button style={{padding:"12px 28px",background:"#C0392B",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>
+                Start New Assessment
+              </button>
+            </div>
+          )}        </div>
       </div>
     </div>
   );
