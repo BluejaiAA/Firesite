@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <title>Firesite by Bluejai</title>
 <meta name="theme-color" content="#0D1117"/>
-<meta name="apple-mobile-web-app-title" content="Firesite"/>
+<meta name="apple-mobile-web-app-title" content="Firehsite"/>
 <meta name="application-name" content="Firesite"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -492,7 +492,7 @@ const FRA_SECTIONS = [
   ]},
 ];
 
-const TOTAL_Q = ALL_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
+const TOTAL_Q = FRA_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
 
 // ─── STATE ────────────────────────────────────────────────────────
 // ─── STATE ────────────────────────────────────────────────────────
@@ -2564,7 +2564,7 @@ function generatePDF(a, org) {
   const actionItems = Object.entries(answers)
     .filter(([,v]) => v?.flagged)
     .map(([ref,v]) => {
-      const q = ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
+      const q = FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
       return {
         ref, text:q?.q||"",
         action:    v.action||"",
@@ -2580,7 +2580,7 @@ function generatePDF(a, org) {
   const allPhotos = Object.entries(answers).flatMap(([ref,v]) =>
     (v?.photos||[]).map(p => ({
       ...p, ref,
-      questionText: ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      questionText: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
   );
 
@@ -2589,7 +2589,7 @@ function generatePDF(a, org) {
     .map(([ref,v]) => ({
       ref,
       note: v.note,
-      text: ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      text: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
     .slice(0, 10);
 
@@ -2603,7 +2603,7 @@ function generatePDF(a, org) {
     r?.startsWith("High")     ? "#D97706" :
     r?.startsWith("Medium")   ? "#D97706" : "#059669";
 
-  const secsDone = ALL_SECTIONS.filter(s =>
+  const secsDone = FRA_SECTIONS.filter(s =>
     s.questions.filter(q=>q.required).every(q=>isAnswered(q,(answers)[q.ref]||{}))
   ).length;
 
@@ -2611,7 +2611,7 @@ function generatePDF(a, org) {
     "This fire risk assessment was carried out at " +
     (a.premisesName||"the premises") + " on " + fmtDate(a.assessmentDate) +
     " by " + (org.assessor||"the assessor") + (org.quals ? " (" + org.quals + ")" : "") +
-    ". The assessment covered " + secsDone + " of " + ALL_SECTIONS.length +
+    ". The assessment covered " + secsDone + " of " + FRA_SECTIONS.length +
     " sections in accordance with the Regulatory Reform (Fire Safety) Order 2005." +
     " The overall fire risk rating assigned to these premises is " +
     (risk ? risk.split("—")[0].trim() : "not yet set") + "." +
