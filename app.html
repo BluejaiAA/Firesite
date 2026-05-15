@@ -2449,7 +2449,7 @@ function Assessment({state, dispatch}) {
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.75)",zIndex:999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}}>
       <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:"16px",maxWidth:"380px",width:"100%",padding:"24px",boxShadow:"0 20px 60px rgba(0,0,0,.5)"}}>
         <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"16px"}}>
-          <span style={{fontSize:"28px"}}>&#x1F525;</span>
+          <span style={{fontSize:"28px"}}>🔥</span>
           <div>
             <div style={{fontSize:"15px",fontWeight:700,color:"#F0F6FC"}}>Advanced Assessment Recommended</div>
             <div style={{fontSize:"11px",color:"#8B949E",marginTop:"2px"}}>Level 3-4 assessor depth</div>
@@ -2461,7 +2461,7 @@ function Assessment({state, dispatch}) {
         <div style={{background:"#0D1117",borderRadius:"8px",padding:"10px 12px",marginBottom:"16px"}}>
           {advTriggers.map((t,i)=>(
             <div key={i} style={{fontSize:"11px",color:"#C0392B",display:"flex",gap:"6px",alignItems:"flex-start",marginBottom:i<advTriggers.length-1?"6px":0}}>
-              <span style={{marginTop:"1px",flexShrink:0}}>&#x26a0;</span>
+              <span style={{marginTop:"1px",flexShrink:0}}>⚠</span>
               <span>{t}</span>
             </div>
           ))}
@@ -2500,7 +2500,7 @@ function Assessment({state, dispatch}) {
             <div className="tn-sub">{a.ref}</div>
           </div>
           <span onClick={()=>{if(advMode){dispatch({type:"SET_ADVANCED",v:false});}else{setShowAdvModal(true);}}} title={advMode?"Click to switch to Standard mode":"Click to switch to Advanced mode"} style={{cursor:"pointer",fontSize:"10px",fontWeight:700,padding:"3px 9px",borderRadius:"20px",border:"1px solid "+(advMode?"#C0392B":"#30363D"),color:advMode?"#C0392B":"#6E7681",background:advMode?"rgba(192,57,43,.1)":"transparent",flexShrink:0,whiteSpace:"nowrap",userSelect:"none"}}>
-            {advMode?"&#x1F525; Advanced":"Standard"}
+            {advMode?"🔥 Advanced":"Standard"}
           </span>
           <div className="tn-save">
             {saveAnim
