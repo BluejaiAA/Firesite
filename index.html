@@ -65,9 +65,10 @@ img{max-width:100%;display:block;}
 .hero-title{font-family:'Nunito',sans-serif;font-size:clamp(34px,5vw,58px);font-weight:900;line-height:1.1;margin-bottom:20px;}
 .hero-sub{font-size:18px;color:var(--gray);margin-bottom:36px;max-width:480px;line-height:1.7;}
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
-.hero-trust{margin-top:32px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--gray);}
-.hero-trust-dots{display:flex;gap:-4px;}
-.hero-trust-dot{width:28px;height:28px;border-radius:50%;background:var(--dark3);border:2px solid var(--dark);display:flex;align-items:center;justify-content:center;font-size:12px;margin-left:-6px;}
+.hero-trust{margin-top:28px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--gray);}
+.hero-trust-creds{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.hero-cred{font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.35);padding:4px 10px;border:1px solid rgba(255,255,255,.1);border-radius:4px;white-space:nowrap;}
+.hero-cred-sep{width:1px;height:14px;background:rgba(255,255,255,.1);}
 .hero-mockup{position:relative;display:flex;justify-content:center;}
 .phone-frame{width:260px;height:520px;background:var(--dark2);border-radius:48px;border:2px solid var(--dark4);box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.04);overflow:hidden;position:relative;}
 .phone-notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:90px;height:22px;background:var(--dark);border-radius:12px;z-index:2;}
@@ -203,6 +204,23 @@ img{max-width:100%;display:block;}
 .cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
 .cta-note{margin-top:20px;font-size:13px;color:var(--gray);}
 
+/* LOGIN SECTION */
+.login-section{padding:100px 0;}
+.login-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+.login-features{list-style:none;margin-top:24px;display:flex;flex-direction:column;gap:12px;}
+.login-features li{font-size:14px;color:var(--gray);display:flex;align-items:center;gap:10px;}
+.login-features li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.login-card{background:var(--dark2);border:1px solid var(--dark4);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:16px;}
+.login-card-header{display:flex;align-items:center;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--dark4);margin-bottom:4px;}
+.login-card-btn{display:block;text-align:center;padding:15px 24px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;border-radius:10px;font-family:'Nunito',sans-serif;font-weight:700;font-size:15px;transition:all .2s;}
+.login-card-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(192,57,43,.4);}
+.login-card-divider{display:flex;align-items:center;gap:12px;color:var(--gray);font-size:12px;}
+.login-card-divider::before,.login-card-divider::after{content:'';flex:1;height:1px;background:var(--dark4);}
+.login-card-trial{display:block;text-align:center;padding:13px 24px;background:transparent;color:var(--white);border:1.5px solid var(--dark4);border-radius:10px;font-family:'Nunito',sans-serif;font-weight:600;font-size:14px;transition:all .2s;}
+.login-card-trial:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.04);}
+.login-card-note{font-size:11px;color:var(--gray);text-align:center;}
+@media(max-width:768px){.login-inner{grid-template-columns:1fr;gap:32px;}}
+
 /* FOOTER */
 .footer{background:var(--dark2);border-top:1px solid var(--border);padding:48px 0 32px;}
 .footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px;}
@@ -237,7 +255,7 @@ img{max-width:100%;display:block;}
 .af-icon svg{color:var(--orange2);width:22px;height:22px;display:block;}
 .feat-icon svg{color:var(--orange2);display:block;}
 .step-icon svg{color:var(--orange2);display:block;}
-.hero-trust-dot svg{color:var(--orange2);width:14px;height:14px;display:block;}
+.hero-trust-dot-legacy{display:none;px;display:block;}
 </style>
 </head>
 <body>
@@ -254,6 +272,7 @@ img{max-width:100%;display:block;}
     <a href="#features">Features</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
+      <a href="#login">Sign In</a>
   </div>
   <div class="nav-cta">
     <a href="/app.html" class="btn btn-outline">Log In</a>
@@ -266,21 +285,23 @@ img{max-width:100%;display:block;}
   <div class="container">
     <div class="hero-inner">
       <div class="hero-content">
-        <div class="hero-tag">🔥 For Fire Safety Professionals</div>
+        <div class="hero-tag">For Fire Safety Professionals</div>
         <h1 class="hero-title">Fire Risk Assessments.<br/><span class="gradient-text">Done Right. On Site.</span></h1>
         <p class="hero-sub">FireSite guides you through every question, auto-generates compliant reports, and syncs everything to the cloud — all from your phone.</p>
         <div class="hero-btns">
-          <a href="/app.html" class="btn btn-primary btn-lg">🚀 Start Free Trial</a>
-          <a href="#how" class="btn btn-outline btn-lg">▶ See How It Works</a>
+          <a href="/app.html" class="btn btn-primary btn-lg">Start Free Trial &rarr;</a>
+          <a href="#how" class="btn btn-outline btn-lg">How It Works</a>
         </div>
         <div class="hero-trust">
-          <div class="hero-trust-dots">
-            <div class="hero-trust-dot">🏢</div>
-            <div class="hero-trust-dot">🏨</div>
-            <div class="hero-trust-dot">🏥</div>
-            <div class="hero-trust-dot">🏭</div>
+          <div class="hero-trust-creds">
+            <span class="hero-cred">RRO 2005</span>
+            <span class="hero-cred-sep"></span>
+            <span class="hero-cred">PAS 79:2020</span>
+            <span class="hero-cred-sep"></span>
+            <span class="hero-cred">BS 9999</span>
+            <span class="hero-cred-sep"></span>
+            <span class="hero-cred">BS 8674:2025</span>
           </div>
-          <span>Built for professional fire risk assessors — offices, hotels, care homes and beyond</span>
         </div>
       </div>
       <div class="hero-mockup">
@@ -369,7 +390,7 @@ img{max-width:100%;display:block;}
                 <div style="background:linear-gradient(135deg,#C0392B,#E8773A);color:#fff;border-radius:7px;padding:8px 14px;font-size:8px;font-weight:800;margin-bottom:8px;width:100%;">Start Free Today →</div>
                 <div style="font-size:5.5px;color:#6E7681;line-height:1.7;">PAS 79 · ADB · BS 9999 · BS 5839<br>DCLG Guides · RRO 2005 · BSA 2022</div>
               </div>
-              <div class="demo-caption">🚀 Free to start · upgrade anytime</div>
+              <div class="demo-caption">Free to start · upgrade anytime</div>
             </div>
           </div>
         </div>
@@ -484,32 +505,32 @@ img{max-width:100%;display:block;}
     </div>
     <div class="who-grid">
       <div class="who-card">
-        <div class="who-icon">🔍</div>
+        <div class="who-icon-text">FRA</div>
         <div class="who-title">Fire Risk Assessors</div>
         <div class="who-desc">Carry out structured, defensible assessments faster. Spend less time on paperwork, more time on the job.</div>
       </div>
       <div class="who-card">
-        <div class="who-icon">🦺</div>
-        <div class="who-title">H&amp;S Consultants</div>
+        <div class="who-icon-text">H&S</div>
+        <div class="who-title">H&S Consultants</div>
         <div class="who-desc">Add fire risk assessments to your service offering with a professional, white-label-ready tool.</div>
       </div>
       <div class="who-card">
-        <div class="who-icon">🏢</div>
+        <div class="who-icon-text">FM</div>
         <div class="who-title">Facilities Managers</div>
         <div class="who-desc">Manage multi-site compliance. Track outstanding actions across your entire portfolio from one dashboard.</div>
       </div>
       <div class="who-card">
-        <div class="who-icon">🏠</div>
+        <div class="who-icon-text">LL</div>
         <div class="who-title">Landlords &amp; Property Managers</div>
         <div class="who-desc">Stay compliant with your legal duty under the RRO. Generate reports for HMOs, blocks and commercial lets.</div>
       </div>
       <div class="who-card">
-        <div class="who-icon">🏥</div>
+        <div class="who-icon-text">CH</div>
         <div class="who-title">Care Homes</div>
         <div class="who-desc">Address the heightened fire safety requirements for sleeping premises and vulnerable occupants.</div>
       </div>
       <div class="who-card">
-        <div class="who-icon">🏨</div>
+        <div class="who-icon-text">HH</div>
         <div class="who-title">Hotels &amp; Hospitality</div>
         <div class="who-desc">Carry out thorough assessments for guest accommodation — from guestrooms to kitchens to means of escape.</div>
       </div>
@@ -716,7 +737,7 @@ img{max-width:100%;display:block;}
     <h2 class="cta-title">Ready to transform your<br/><span class="gradient-text">fire risk assessments?</span></h2>
     <p class="cta-sub">Join fire safety professionals across the UK. Start your free assessment today — no card required.</p>
     <div class="cta-btns">
-      <a href="/app.html" class="btn btn-primary btn-lg">🚀 Start Free Trial</a>
+      <a href="/app.html" class="btn btn-primary btn-lg">Start Free Trial</a>
       <a href="mailto:hello@bluejai.co.uk" class="btn btn-outline btn-lg">💬 Talk to Us</a>
     </div>
     <p class="cta-note">Free plan available. Upgrade when you're ready.</p>
@@ -724,6 +745,38 @@ img{max-width:100%;display:block;}
 </section>
 
 <!-- FOOTER -->
+
+<!-- LOGIN LANDING SECTION -->
+<section class="login-section reveal" id="login">
+  <div class="container">
+    <div class="login-inner">
+      <div class="login-content">
+        <div class="section-tag">Existing Users</div>
+        <h2 class="section-title">Sign in to<br/><span class="gradient-text">your workspace</span></h2>
+        <p class="section-sub">Access your assessments, reports and action plans. All your work, wherever you are.</p>
+        <ul class="login-features">
+          <li>All assessments saved to your account</li>
+          <li>Pick up mid-assessment from any device</li>
+          <li>Generate reports at any time</li>
+        </ul>
+      </div>
+      <div class="login-card">
+        <div class="login-card-header">
+          <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style="width:32px;height:32px;object-fit:contain;" alt="Firesite"/>
+          <div>
+            <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;">Firesite</div>
+            <div style="font-size:11px;color:var(--gray);">Professional Assessment Platform</div>
+          </div>
+        </div>
+        <a href="/app.html" class="login-card-btn">Sign In to Your Account &rarr;</a>
+        <div class="login-card-divider"><span>New to Firesite?</span></div>
+        <a href="/app.html" class="login-card-trial">Start your free trial</a>
+        <p class="login-card-note">No credit card required &middot; Free forever on your first assessment</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer class="footer">
   <div class="container">
     <div class="footer-inner">
