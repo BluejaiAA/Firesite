@@ -218,7 +218,110 @@ const SECTION_INTROS = {
   11: {icon:"📋", colour:"#374151", text:"Ask to see the fire safety log book and training evidence. Good management significantly reduces risk.", mins:4},
   12: {icon:"⚖️", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
 };
-const FRA_SECTIONS = [
+const BUILDING_PRESETS = {
+ standard:{label:"Standard Commercial / Office",mandatoryRefs:[],extraQuestions:[],note:""},
+ hmo:{label:"HMO / Houses in Multiple Occupation",
+  mandatoryRefs:["P1.5","5.3","7.17","3.4","3.5","3.9","3.10","8.4","8.5"],
+  note:"LACORS Housing Fire Safety Guide and HMO Licensing Regulations 2018 apply. FD30S fire doors mandatory to all habitable rooms. Automatic detection to BS 5839-6 LD2 minimum.",
+  extraQuestions:[
+   {ref:"HMO.1",q:"Does the HMO have a valid licence issued by the Local Housing Authority?",t:"yn",required:true,g:"Mandatory for HMOs of 3+ storeys with 5+ occupants. Check licence conditions carefully."},
+   {ref:"HMO.2",q:"Are FD30S fire doors provided to all habitable rooms and kitchens?",t:"yn",required:true,g:"LACORS requires FD30S fire doors to all rooms opening onto escape routes."},
+   {ref:"HMO.3",q:"Is automatic fire detection installed to at least LD2 standard throughout common areas and each unit?",t:"yn",required:true,g:"BS 5839-6:2019 Grade D, Category LD2 is the minimum for most HMOs."},
+   {ref:"HMO.4",q:"Are all escape routes kept clear and free from stored items at all times?",t:"yn",required:true},
+   {ref:"HMO.5",q:"Are cooking appliances within bedrooms risk assessed and controlled?",t:"yn",required:true,g:"Uncontrolled cooking in bedrooms is a leading cause of HMO fires."},
+  ]},
+ care_home:{label:"Care Home / Residential Care",
+  mandatoryRefs:["P1.5","5.3","5.4","5.5","7.17","3.4","3.5","8.4","8.5","6.3","6.5"],
+  note:"CQC registration requires compliance with BS 9999:2017. All residents require individual PEEPs. Phased or progressive horizontal evacuation recommended over simultaneous evacuation.",
+  extraQuestions:[
+   {ref:"CARE.1",q:"Has the dependency level of all residents been formally assessed in relation to evacuation capability?",t:"yn",required:true,g:"Resident dependency must be formally assessed. High-dependency residents may require horizontal evacuation without descent."},
+   {ref:"CARE.2",q:"Is a current individual PEEP held for every resident who cannot self-evacuate?",t:"yn",required:true,g:"Individual PEEPs are a legal and CQC requirement. GEEPs alone are not acceptable."},
+   {ref:"CARE.3",q:"What is the adopted evacuation strategy? Is it formally documented and tested?",t:"select",opts:["Progressive Horizontal Evacuation","Simultaneous Total Evacuation","Phased Horizontal then Vertical","Stay Put with Assisted Escape","Other"],required:true,g:"BS 9999 recommends progressive horizontal evacuation for care homes to avoid lifting residents on stairs."},
+   {ref:"CARE.4",q:"Are sufficient trained staff available to execute the evacuation strategy on all shifts including nights?",t:"yn",required:true,g:"Night staffing levels must match the demands of the evacuation strategy."},
+   {ref:"CARE.5",q:"Is a fire suppression system installed or being considered for this premises?",t:"yn",required:false,g:"HSE and Department of Health strongly recommend sprinkler systems in new and significantly refurbished care homes."},
+   {ref:"CARE.6",q:"Have all residents and their families been briefed on the fire evacuation procedure?",t:"yn",required:true},
+  ]},
+ hotel:{label:"Hotel / Guest Accommodation",
+  mandatoryRefs:["P1.5","8.4","8.5","7.17","3.4","3.5","6.8","6.5"],
+  note:"DCLG Do you have paying guests? guide applies. All sleeping floors require automatic detection. Bedroom doors must be FD30S minimum. Mandatory fire action notice in every bedroom.",
+  extraQuestions:[
+   {ref:"HTL.1",q:"Is a fire action notice prominently displayed in every guest bedroom?",t:"yn",required:true,g:"The DCLG guide for guest accommodation requires fire action notices in all bedrooms."},
+   {ref:"HTL.2",q:"Are all guest bedroom doors of at least FD30S standard?",t:"yn",required:true,g:"FD30S doors provide 30-minute fire and smoke resistance protecting sleeping guests."},
+   {ref:"HTL.3",q:"Is a fully addressable automatic fire detection system installed to BS 5839-1 Category L1?",t:"yn",required:true,g:"Hotels require full Category L1 coverage including roof voids and service ducts."},
+   {ref:"HTL.4",q:"Are all escape route corridors free from stored items and combustible materials?",t:"yn",required:true},
+   {ref:"HTL.5",q:"Does a keysafe or concierge system allow fire service immediate access on arrival?",t:"yn",required:false},
+   {ref:"HTL.6",q:"Are visual alarm devices and vibrating pads provided for deaf and hard-of-hearing guests?",t:"yn",required:true,g:"Equality Act 2010 and BS 5839-1 require appropriate alerting for guests with sensory impairments."},
+  ]},
+ higher_risk:{label:"Higher-Risk Building (18m+ / Building Safety Act 2022)",
+  mandatoryRefs:["P1.3a","P1.5","3.1","3.2","3.11","3.12","7.5","8.4","8.7","9.1"],
+  note:"Building Safety Act 2022 Sections 65-125 apply. Building must be registered with the Building Safety Regulator. Accountable Person and Principal Accountable Person must be appointed. Building Safety Case required.",
+  extraQuestions:[
+   {ref:"BSA.1",q:"Is the building registered with the Building Safety Regulator (BSR) under the Building Safety Act 2022?",t:"yn",required:true,g:"Registration was mandatory for occupied higher-risk buildings in England from 6 April 2024."},
+   {ref:"BSA.2",q:"Have an Accountable Person and Principal Accountable Person been formally appointed?",t:"yn",required:true,g:"Section 72 of the Building Safety Act 2022 requires formal appointment of Accountable Persons."},
+   {ref:"BSA.3",q:"Is a Building Safety Case in place and up to date?",t:"yn",required:true,g:"The Building Safety Case is a live document demonstrating the building is managed safely. Must be reviewed on any material change."},
+   {ref:"BSA.4",q:"Is there an up-to-date digital or drawn golden thread record of the building structure, fire strategy and compartmentation?",t:"yn",required:true,g:"The golden thread must be maintained digitally for all higher-risk buildings under Schedule 6 of the BSA 2022."},
+   {ref:"BSA.5",q:"Is there a current Fire Safety Strategy document for the building?",t:"yn",required:true,g:"A Fire Safety Strategy is distinct from the FRA and sets out how fire safety is managed throughout the building lifecycle."},
+   {ref:"BSA.6",q:"Is there a Residents Engagement Strategy in place?",t:"yn",required:true,g:"Section 91 of the Building Safety Act 2022 requires Accountable Persons to maintain a residents engagement strategy."},
+   {ref:"BSA.7",q:"Has simultaneous evacuation capability been tested within the last 12 months?",t:"yn",required:true},
+   {ref:"BSA.8",q:"Are dry or wet rising mains installed on all stairways used for fire service access?",t:"yn",required:true},
+  ]},
+ warehouse:{label:"Warehouse / Industrial / Storage",
+  mandatoryRefs:["1.2","1.3","1.5","1.6","4.1"],
+  note:"HSE guidance on fire in warehouses and DSEAR Regulations 2002 may apply. Consider racking stability, forklift charging and goods-in fire risk.",
+  extraQuestions:[
+   {ref:"WH.1",q:"Is rack storage present? Are rack inspection records maintained per SEMA guidelines?",t:"yn",required:false,g:"Collapsed racking can trap occupants. SEMA guidelines require regular structural inspection."},
+   {ref:"WH.2",q:"Is a sprinkler system installed with a design specification appropriate for the stored goods and height?",t:"yn",required:false,g:"High-racked storage typically requires in-rack sprinklers. Check design certification."},
+   {ref:"WH.3",q:"Are loading dock areas assessed for vehicle fire risk and arson vulnerability?",t:"yn",required:true},
+   {ref:"WH.4",q:"Are all hazardous goods stored in compliance with DSEAR 2002 and applicable ACOP?",t:"yn",required:false,g:"Flammable liquids and gases require classified zone storage, ventilation and compatible suppression."},
+  ]},
+ school:{label:"School / Educational Premises",
+  mandatoryRefs:["5.2","5.3","6.2","6.3","6.5","7.17","8.4"],
+  note:"DfE Building Bulletin 100 and Local Authority requirements apply. Evacuation drills must be held at least twice per academic year.",
+  extraQuestions:[
+   {ref:"SCH.1",q:"Are evacuation drills carried out at least twice per academic year, with at least one unannounced?",t:"yn",required:true,g:"DfE and LFC guidance requires a minimum of two drills per year. Records must be maintained."},
+   {ref:"SCH.2",q:"Are all after-hours groups, breakfast clubs and hirers briefed on the evacuation procedure?",t:"yn",required:true},
+   {ref:"SCH.3",q:"Are fire safety arrangements reviewed after significant changes to pupil numbers, activities or layout?",t:"yn",required:true},
+  ]},
+};
+
+const ASSESSOR_SECTION = {id:0,title:"Assessor Declaration",short:"Declaration",
+ intro:"Complete before commencing. Satisfies PAS 79-1:2020 Section 5 — assessor competence, conflicts of interest and assessment type. Required under BS 8674:2025.",
+ questions:[
+  {ref:"AD.1",q:"State the full name of the fire risk assessor conducting this assessment.",t:"text",required:true},
+  {ref:"AD.2",q:"State the assessor's current professional qualifications (e.g. NEBOSH NFQ Fire, Level 4 Diploma, IFE MIFireE, FIRSC).",t:"text",required:true,g:"PAS 79-1:2020 Clause 5 requires qualifications commensurate with the level of risk."},
+  {ref:"AD.3",q:"State the assessor's professional body membership number and grade (e.g. IFE 123456 MIFireE, IFPO, IFSM).",t:"text",required:false},
+  {ref:"AD.4",q:"State the assessor's FRACC registration or BS 8674:2025 competency level.",t:"select",opts:["Level 1 — Low complexity","Level 2 — Medium complexity","Level 3 — High complexity (care homes, HMOs, higher-risk)","Level 4 — Specialist / Expert Witness","Not registered with FRACC","Not applicable"],required:true,g:"BS 8674:2025 defines competency levels. FRACC provides a national register of competent assessors."},
+  {ref:"AD.5",q:"Name and company registration number of the organisation conducting this assessment.",t:"text",required:false},
+  {ref:"AD.6",q:"Does the assessor hold professional indemnity insurance? State insurer and policy reference if known.",t:"text",required:false},
+  {ref:"AD.7",q:"Does the assessor have any conflict of interest in conducting this assessment?",t:"yn",required:true,g:"PAS 79 requires declaration of any actual or perceived conflict of interest.",sub:{on:"y",fields:[{ref:"AD.7a",q:"Describe the nature of the conflict of interest",t:"textarea",ph:"e.g. Previously involved in installation of fire alarm system at these premises."}]}},
+  {ref:"AD.8",q:"Is this a new assessment or a review of a previous assessment?",t:"select",opts:["New assessment — no previous FRA exists","Review of a previous assessment","Review following a material change","Reassessment following enforcement notice","Reassessment following fire or near-miss incident"],required:true},
+  {ref:"AD.9",q:"If this is a review, state the date and reference number of the previous fire risk assessment.",t:"text",required:false,g:"Linking to the previous assessment creates an audit trail for comparison of findings over time."},
+ ]};
+
+const SCOPE_SECTION = {id:0.5,title:"Scope of Assessment",short:"Scope",
+ intro:"Define the scope and limitations before proceeding. Satisfies PAS 79-1:2020 Section 6. Recording what could not be assessed protects the assessor and the Responsible Person.",
+ questions:[
+  {ref:"SC.1",q:"Describe all areas of the premises included within the scope of this fire risk assessment.",t:"textarea",required:true,g:"List all buildings, floors, zones and external areas covered. If only part of a building is covered, state precisely what is excluded and why."},
+  {ref:"SC.2",q:"Were there any areas that could not be inspected?",t:"yn",required:true,g:"Common examples: locked plant rooms, occupied residential units, inaccessible roof spaces, areas under construction.",sub:{on:"y",fields:[{ref:"SC.2a",q:"List the areas not inspected and the reason for each",t:"textarea",ph:"e.g. Roof void — hatch locked, no access available. Basement plant room — key unavailable. To be reviewed on next visit."}]}},
+  {ref:"SC.3",q:"Were any documents or records requested but not made available?",t:"yn",required:true,g:"Documents that should be requested: EICR, gas safety certificate, alarm service records, PAT records, fire door inspection report, previous FRA.",sub:{on:"y",fields:[{ref:"SC.3a",q:"List documents requested but not provided",t:"textarea",ph:"e.g. EICR — stated unavailable. Fire alarm service record — last certificate not produced."}]}},
+  {ref:"SC.4",q:"Are there specialist matters beyond this assessor's competence that require referral?",t:"yn",required:false,g:"Examples: complex smoke control engineering, structural compartmentation issues, DSEAR explosion risk assessment.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the specialist matter and recommended referral",t:"textarea",ph:"e.g. Complex smoke ventilation system — refer to specialist smoke control engineer."}]}},
+  {ref:"SC.5",q:"Describe the methodology used to conduct this assessment.",t:"textarea",required:true,g:"PAS 79-1:2020 Clause 6.3 requires methodology to be described. At minimum: physical walk-through of all accessible areas, document review, interview with Responsible Person."},
+  {ref:"SC.6",q:"State any assumptions made in reaching the conclusions of this assessment.",t:"textarea",required:false,g:"Example: it is assumed structural integrity of compartment walls is as-built and has not been compromised by subsequent works."},
+ ]};
+
+const FINDINGS_SECTION = {id:12.5,title:"Significant Findings & Conclusions",short:"Findings",
+ intro:"Satisfies PAS 79-1:2020 Section 8. The assessor must provide a narrative going beyond the action plan — explaining the overall risk picture and providing a defensible professional conclusion.",
+ questions:[
+  {ref:"SF.1",q:"Describe the overall fire hazard profile of this building — main ignition sources and fuel loads identified.",t:"textarea",required:true,g:"Describe the character of the hazard: e.g. high combustible load in storerooms, uncontrolled electrical appliance use, no hot works system."},
+  {ref:"SF.2",q:"Describe the key findings relating to means of escape and fire protection measures.",t:"textarea",required:true,g:"Summarise significant positive and negative findings in escape routes, detection, suppression, fire doors and compartmentation."},
+  {ref:"SF.3",q:"Describe the adequacy of fire safety management at the time of this assessment.",t:"textarea",required:true,g:"Comment on fire safety culture, training records, drill records, log book maintenance and the Responsible Person's engagement."},
+  {ref:"SF.4",q:"State the assessor's overall professional judgement on whether existing fire precautions are adequate.",t:"select",opts:["Adequate — premises are reasonably safe. No immediate action required beyond routine maintenance.","Generally adequate — some improvements required but overall precautions are satisfactory.","Inadequate — significant improvements required. Risk is not adequately controlled.","Seriously inadequate — immediate action required. The Responsible Person must act without delay."],required:true,g:"Must be consistent with the overall risk rating in Section 12 and defensible under challenge."},
+  {ref:"SF.5",q:"Are there any matters requiring urgent notification to the Responsible Person outside the formal action plan?",t:"yn",required:true,g:"Examples: immediate life safety risk, obstructed fire exit, fire alarm found inoperable. Must be communicated verbally and in writing without delay.",sub:{on:"y",fields:[{ref:"SF.5a",q:"Describe the matter(s) requiring urgent notification",t:"textarea",ph:"e.g. Final exit door found padlocked during inspection — lock removed during visit. RP notified verbally."}]}},
+  {ref:"SF.6",q:"State the basis and recommended frequency for review of this assessment.",t:"textarea",required:true,g:"PAS 79-1:2020: annually for high/critical risk; every 2 years for medium; every 3-5 years for low risk; immediately after fire, significant change, enforcement notice or material alteration."},
+  {ref:"SF.7",q:"Assessor declaration: I confirm this assessment has been conducted in accordance with the RRO 2005, PAS 79-1:2020 and BS 8674:2025, to the best of my knowledge and competence.",t:"yn",required:true,g:"By selecting Yes, the assessor accepts professional responsibility for the findings and conclusions. This declaration must be completed before sign-off."},
+ ]};
+
+const ALL_SECTIONS = [
   {id:1,title:"Premises Details",short:"Premises",questions:[
     {ref:"P1.1",q:"State the full address of the premises under assessment.",t:"address",required:true,postcodeLookup:true},
     {ref:"P1.2",q:"What is the primary use and occupancy of the premises?",t:"occupancy",required:true},
@@ -389,7 +492,7 @@ const FRA_SECTIONS = [
   ]},
 ];
 
-const TOTAL_Q = FRA_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
+const TOTAL_Q = ALL_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
 
 // ─── STATE ────────────────────────────────────────────────────────
 // ─── STATE ────────────────────────────────────────────────────────
@@ -412,6 +515,12 @@ const makeAssessment = (n) => ({
   completedAt:null, savedAt:null, riskRating:null, nextReview:null,
   secIdx:0, qIdx:0,   // which section, which question within section
   mode:"card",        // "card" | "review"
+  assessorName:"", assessorQuals:"", assessorMembership:"", assessorFRACCLevel:"",
+  scopeStatement:"", scopeLimitations:"",
+  significantFindings:"", overallJudgement:"",
+  buildingPreset:"standard",
+  previousAssessmentDate:"", previousAssessmentRef:"", previousAssessor:"",
+  reviewType:"new"
 });
 
 const INIT = {
@@ -1804,6 +1913,38 @@ function Setup({state, dispatch}) {
             <p style={{fontSize:12,color:"#6B7280",lineHeight:1.6,paddingBottom:14,borderBottom:"1px solid #F3F4F6"}}>{STEPS[step].sub}</p>
           </div>
           <div className="fcb">{pages[step]}</div>
+            <div style={{marginTop:14,padding:"14px 0 0",borderTop:"1px solid #F3F4F6"}}>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:13,fontWeight:700,marginBottom:10,color:"#374151"}}>Assessment Configuration</div>
+              <div className="g2">
+                <div className="fg span2"><label className="fl">Building type preset</label>
+                  <select className="fs" value={a.buildingPreset||"standard"} onChange={e=>upd({buildingPreset:e.target.value})}>
+                    <option value="standard">Standard Commercial / Office</option>
+                    <option value="hmo">HMO / Houses in Multiple Occupation</option>
+                    <option value="care_home">Care Home / Residential Care</option>
+                    <option value="hotel">Hotel / Guest Accommodation</option>
+                    <option value="higher_risk">Higher-Risk Building (BSA 2022, 18m+)</option>
+                    <option value="warehouse">Warehouse / Industrial</option>
+                    <option value="school">School / Educational</option>
+                  </select></div>
+                <div className="fg span2"><label className="fl">Assessment type</label>
+                  <select className="fs" value={a.reviewType||"new"} onChange={e=>upd({reviewType:e.target.value})}>
+                    <option value="new">New assessment</option>
+                    <option value="review">Review of previous assessment</option>
+                    <option value="material_change">Review following material change</option>
+                    <option value="enforcement">Reassessment — enforcement notice</option>
+                    <option value="incident">Reassessment — fire or near-miss incident</option>
+                  </select></div>
+                {(a.reviewType||"new")!=="new"&&(<>
+                <div className="fg"><label className="fl">Previous assessment date</label>
+                  <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>
+                <div className="fg"><label className="fl">Previous assessment ref.</label>
+                  <input className="fi" placeholder="e.g. FRA-2024-001" value={a.previousAssessmentRef||""} onChange={e=>upd({previousAssessmentRef:e.target.value})}/></div>
+                <div className="fg span2"><label className="fl">Previous assessor</label>
+                  <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>
+                </>)}
+              </div>
+            </div>
+
           <div className="fcf">
             {step>0?<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step-1})}>← Back</button>:
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"landing"})}>← Home</button>}
@@ -2067,16 +2208,20 @@ function Assessment({state, dispatch}) {
   const qIdx    = a.qIdx||0;
   const mode    = a.mode||"card";   // "start" | "card" | "end" | "review"
 
-  const curSec  = FRA_SECTIONS[secIdx];
+  var preset = BUILDING_PRESETS[a.buildingPreset||"standard"]||BUILDING_PRESETS.standard;
+  var presetSec = (preset.extraQuestions&&preset.extraQuestions.length>0) ? [{id:1.5,title:preset.label+" Requirements",short:"Preset",questions:preset.extraQuestions}] : [];
+  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([FINDINGS_SECTION]);
+
+  const curSec  = ALL_SECTIONS[secIdx];
   const intro   = SECTION_INTROS[curSec.id];
   const vqs     = visibleQs(curSec, answers);  // skip-logic filtered
 
-  const totalAnswered = FRA_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).filter(q=>isAnswered(q,answers[q.ref]||{})).length,0);
-  const totalVisible  = FRA_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).length,0);
+  const totalAnswered = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).filter(q=>isAnswered(q,answers[q.ref]||{})).length,0);
+  const totalVisible  = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers).length,0);
   const pct           = Math.round((totalAnswered/totalVisible)*100);
   const flagged       = Object.values(answers).filter(v=>v?.flagged).length;
 
-  const allMissed = FRA_SECTIONS.flatMap(s=>
+  const allMissed = ALL_SECTIONS.flatMap(s=>
     visibleQs(s,answers).filter(q=>isMissed(q,answers[q.ref])).map(q=>({...q,secId:s.id}))
   );
 
@@ -2127,7 +2272,7 @@ function Assessment({state, dispatch}) {
   const startSection = () => dispatch({type:"SET_MODE", mode:"card"});
 
   const goNextSec = () => {
-    if (secIdx < FRA_SECTIONS.length-1) {
+    if (secIdx < ALL_SECTIONS.length-1) {
       dispatch({type:"SEC", i:secIdx+1});
       dispatch({type:"SET_MODE", mode:"start"});
     } else {
@@ -2190,7 +2335,7 @@ function Assessment({state, dispatch}) {
         {/* Section dot progress bar */}
         <div className="sec-dots-bar">
           <div className="sec-dot-row">
-            {FRA_SECTIONS.map((s,i)=>{
+            {ALL_SECTIONS.map((s,i)=>{
               const done = secDone(s);
               const any  = secAns(s)>0;
               const active = secIdx===i;
@@ -2211,7 +2356,7 @@ function Assessment({state, dispatch}) {
           </div>
           <div className="sec-label-row">
             <span style={{color:ac,fontWeight:700,fontSize:10}}>{pct}%</span>
-            <span style={{marginLeft:4}}>{secIdx+1}/{FRA_SECTIONS.length}</span>
+            <span style={{marginLeft:4}}>{secIdx+1}/{ALL_SECTIONS.length}</span>
           </div>
         </div>
 
@@ -2220,14 +2365,14 @@ function Assessment({state, dispatch}) {
           <button className="msn-btn" onClick={()=>{if(secIdx>0){dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"start"});}}} disabled={secIdx===0}>‹</button>
           <div className="msn-label">
             <span style={{color:ac,fontWeight:700}}>{curSec.short}</span>
-            <span style={{color:"rgba(255,255,255,.3)",fontSize:9,marginLeft:6}}>{secIdx+1} / {FRA_SECTIONS.length}</span>
+            <span style={{color:"rgba(255,255,255,.3)",fontSize:9,marginLeft:6}}>{secIdx+1} / {ALL_SECTIONS.length}</span>
           </div>
-          <button className="msn-btn" onClick={()=>{if(secIdx<FRA_SECTIONS.length-1){dispatch({type:"SEC",i:secIdx+1});dispatch({type:"SET_MODE",mode:"start"});}}} disabled={secIdx===FRA_SECTIONS.length-1}>›</button>
+          <button className="msn-btn" onClick={()=>{if(secIdx<ALL_SECTIONS.length-1){dispatch({type:"SEC",i:secIdx+1});dispatch({type:"SET_MODE",mode:"start"});}}} disabled={secIdx===ALL_SECTIONS.length-1}>›</button>
         </div>
 
         {/* Section tabs — scroll horizontally, compact (desktop) */}
         <div className="stabs">
-          {FRA_SECTIONS.map((s,i)=>{
+          {ALL_SECTIONS.map((s,i)=>{
             const done  = secDone(s);
             const miss  = secMiss(s)&&showMissed;
             const active= secIdx===i;
@@ -2262,7 +2407,7 @@ function Assessment({state, dispatch}) {
         {mode==="start" && (
           <div className="sec-start fade">
             <div className="ss-icon">{intro?.icon||"📋"}</div>
-            <div className="ss-num" style={{color:intro?.colour||ac}}>Section {curSec.id} of {FRA_SECTIONS.length}</div>
+            <div className="ss-num" style={{color:intro?.colour||ac}}>Section {curSec.id} of {ALL_SECTIONS.length}</div>
             <div className="ss-title">{curSec.title}</div>
             <div className="ss-desc">{intro?.text||""}</div>
             <div className="ss-meta">
@@ -2325,7 +2470,7 @@ function Assessment({state, dispatch}) {
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
             <button className="se-next" onClick={goNextSec}>
-              {secIdx<FRA_SECTIONS.length-1?`${FRA_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
+              {secIdx<ALL_SECTIONS.length-1?`${ALL_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
             </button>
             <button className="se-review" onClick={()=>dispatch({type:"SET_MODE",mode:"review"})}>
               Review this section
@@ -2419,7 +2564,7 @@ function generatePDF(a, org) {
   const actionItems = Object.entries(answers)
     .filter(([,v]) => v?.flagged)
     .map(([ref,v]) => {
-      const q = FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
+      const q = ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref);
       return {
         ref, text:q?.q||"",
         action:    v.action||"",
@@ -2435,7 +2580,7 @@ function generatePDF(a, org) {
   const allPhotos = Object.entries(answers).flatMap(([ref,v]) =>
     (v?.photos||[]).map(p => ({
       ...p, ref,
-      questionText: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      questionText: ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
   );
 
@@ -2444,7 +2589,7 @@ function generatePDF(a, org) {
     .map(([ref,v]) => ({
       ref,
       note: v.note,
-      text: FRA_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
+      text: ALL_SECTIONS.flatMap(s=>s.questions).find(q=>q.ref===ref)?.q||""
     }))
     .slice(0, 10);
 
@@ -2458,7 +2603,7 @@ function generatePDF(a, org) {
     r?.startsWith("High")     ? "#D97706" :
     r?.startsWith("Medium")   ? "#D97706" : "#059669";
 
-  const secsDone = FRA_SECTIONS.filter(s =>
+  const secsDone = ALL_SECTIONS.filter(s =>
     s.questions.filter(q=>q.required).every(q=>isAnswered(q,(answers)[q.ref]||{}))
   ).length;
 
@@ -2466,7 +2611,7 @@ function generatePDF(a, org) {
     "This fire risk assessment was carried out at " +
     (a.premisesName||"the premises") + " on " + fmtDate(a.assessmentDate) +
     " by " + (org.assessor||"the assessor") + (org.quals ? " (" + org.quals + ")" : "") +
-    ". The assessment covered " + secsDone + " of " + FRA_SECTIONS.length +
+    ". The assessment covered " + secsDone + " of " + ALL_SECTIONS.length +
     " sections in accordance with the Regulatory Reform (Fire Safety) Order 2005." +
     " The overall fire risk rating assigned to these premises is " +
     (risk ? risk.split("—")[0].trim() : "not yet set") + "." +
@@ -2784,7 +2929,31 @@ function generatePDF(a, org) {
   </div>
   <div class="pg-body" style="padding-bottom:48px;">
     <div class="sec-h"><div class="sec-n">H</div><div><div class="sec-l">Section H</div><div class="sec-t">Assessor Declaration</div></div></div>
-    <p class="body">I confirm that this fire risk assessment has been carried out to the best of my ability and professional competence, in accordance with the Regulatory Reform (Fire Safety) Order 2005, the Fire Safety Act 2021 and relevant British Standards and guidance documents. This assessment does not guarantee that the premises are entirely free from fire risk and should be reviewed regularly or following any material change to the premises, its use or occupancy.</p>
+    ${answers["AD.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Assessor Declaration — PAS 79-1:2020 Section 5 / BS 8674:2025</div><div class="sig-body">
+      <div class="sig-f"><div class="sig-l">Assessor Name</div><div class="sig-v">${answers["AD.1"]?.ans||org.assessor||"—"}</div></div>
+      <div class="sig-f"><div class="sig-l">Qualifications</div><div class="sig-v">${answers["AD.2"]?.ans||org.quals||"—"}</div></div>
+      ${answers["AD.3"]?.ans?`<div class="sig-f"><div class="sig-l">Membership No.</div><div class="sig-v">${answers["AD.3"].ans}</div></div>`:""}
+      ${answers["AD.4"]?.ans?`<div class="sig-f"><div class="sig-l">FRACC Level</div><div class="sig-v">${answers["AD.4"].ans}</div></div>`:""}
+      ${answers["AD.5"]?.ans?`<div class="sig-f"><div class="sig-l">Organisation</div><div class="sig-v">${answers["AD.5"].ans}</div></div>`:""}
+      <div class="sig-f"><div class="sig-l">Assessment Type</div><div class="sig-v">${answers["AD.8"]?.ans||"New assessment"}</div></div>
+      ${answers["AD.9"]?.ans?`<div class="sig-f"><div class="sig-l">Previous FRA Reference</div><div class="sig-v">${answers["AD.9"].ans}</div></div>`:""}
+      ${answers["AD.7"]?.ans==="y"?`<div class="sig-f" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;">Conflict of Interest Declared</div><div class="sig-v" style="color:#B91C1C;">${answers["AD.7a"]?.ans||"Conflict noted."}</div></div>`:""}
+    </div></div>`:`<p class="body"><em>Assessor declaration not completed via form — see signature block below.</em></p>}
+    ${answers["SC.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Scope of Assessment — PAS 79-1:2020 Section 6</div><div class="sig-body">
+      <div class="sig-f"><div class="sig-l">Areas Assessed</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SC.1"]?.ans||"—"}</div></div>
+      ${answers["SC.2"]?.ans==="y"?`<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Areas NOT Inspected</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">${answers["SC.2a"]?.ans||"See notes."}</div></div>`:""}
+      ${answers["SC.3"]?.ans==="y"?`<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Documents Not Produced</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">${answers["SC.3a"]?.ans||"See notes."}</div></div>`:""}
+      ${answers["SC.5"]?.ans?`<div class="sig-f"><div class="sig-l">Methodology</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SC.5"].ans}</div></div>`:""}
+    </div></div>`:""}
+    ${answers["SF.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Significant Findings and Conclusions — PAS 79-1:2020 Section 8</div><div class="sig-body">
+      ${answers["SF.1"]?.ans?`<div class="sig-f"><div class="sig-l">Fire Hazard Profile</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.1"].ans}</div></div>`:""}
+      ${answers["SF.2"]?.ans?`<div class="sig-f"><div class="sig-l">Means of Escape and Protection</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.2"].ans}</div></div>`:""}
+      ${answers["SF.3"]?.ans?`<div class="sig-f"><div class="sig-l">Fire Safety Management</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.3"].ans}</div></div>`:""}
+      ${answers["SF.4"]?.ans?`<div class="sig-f" style="background:${answers["SF.4"].ans.startsWith("Adequate")||answers["SF.4"].ans.startsWith("Generally")?"#F0FDF4":"#FEF2F2"};border-radius:6px;padding:8px;"><div class="sig-l">Overall Judgement</div><div class="sig-v" style="font-weight:600;">${answers["SF.4"].ans}</div></div>`:""}
+      ${answers["SF.5"]?.ans==="y"?`<div class="sig-f" style="background:#FEF2F2;border:2px solid #EF4444;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;font-weight:700;">URGENT NOTIFICATION TO RESPONSIBLE PERSON</div><div class="sig-v" style="color:#B91C1C;white-space:pre-wrap;">${answers["SF.5a"]?.ans||"See notes."}</div></div>`:""}
+      ${answers["SF.6"]?.ans?`<div class="sig-f"><div class="sig-l">Review Basis</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.6"].ans}</div></div>`:""}
+    </div></div>`:""}
+
     ${org.disclaimer ? `<p class="body" style="font-style:italic;color:#6B7280;">${org.disclaimer}</p>` : ""}
     ${org.reportFooter ? `<p class="body" style="color:#9CA3AF;font-size:8.5pt;">${org.reportFooter}</p>` : ""}
 
@@ -3477,3 +3646,39 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
 </html>
+  var preset = BUILDING_PRESETS[a.buildingPreset||"standard"]||BUILDING_PRESETS.standard;
+  var presetSec = preset.extraQuestions&&preset.extraQuestions.length>0 ? [{id:1.5,title:preset.label+" Requirements",short:"Preset",questions:preset.extraQuestions}] : [];
+  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([FINDINGS_SECTION]);
+
+            <div style={{marginTop:14,padding:"14px 0 0",borderTop:"1px solid #F3F4F6"}}>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:13,fontWeight:700,marginBottom:10,color:"#374151"}}>Assessment Configuration</div>
+              <div className="g2">
+                <div className="fg span2"><label className="fl">Building type preset</label>
+                  <select className="fs" value={a.buildingPreset||"standard"} onChange={e=>upd({buildingPreset:e.target.value})}>
+                    <option value="standard">Standard Commercial / Office</option>
+                    <option value="hmo">HMO / Houses in Multiple Occupation</option>
+                    <option value="care_home">Care Home / Residential Care</option>
+                    <option value="hotel">Hotel / Guest Accommodation</option>
+                    <option value="higher_risk">Higher-Risk Building (BSA 2022, 18m+)</option>
+                    <option value="warehouse">Warehouse / Industrial</option>
+                    <option value="school">School / Educational</option>
+                  </select></div>
+                <div className="fg span2"><label className="fl">Assessment type</label>
+                  <select className="fs" value={a.reviewType||"new"} onChange={e=>upd({reviewType:e.target.value})}>
+                    <option value="new">New assessment</option>
+                    <option value="review">Review of previous assessment</option>
+                    <option value="material_change">Review following material change</option>
+                    <option value="enforcement">Reassessment — enforcement notice</option>
+                    <option value="incident">Reassessment — fire / near-miss incident</option>
+                  </select></div>
+                {(a.reviewType||"new")!=="new" && <>
+                <div className="fg"><label className="fl">Previous assessment date</label>
+                  <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>
+                <div className="fg"><label className="fl">Previous assessment ref.</label>
+                  <input className="fi" placeholder="e.g. FRA-2024-001" value={a.previousAssessmentRef||""} onChange={e=>upd({previousAssessmentRef:e.target.value})}/></div>
+                <div className="fg span2"><label className="fl">Previous assessor</label>
+                  <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>
+                </>}
+              </div>
+            </div>
+
