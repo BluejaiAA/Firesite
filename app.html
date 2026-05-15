@@ -2555,6 +2555,43 @@ function Assessment({state, dispatch}) {
 // Uses browser print API with dedicated print window
 // Works on all mobile browsers — no external dependencies
 
+function buildDeclHTML(ans, org) {
+ var h="";
+ if(!ans) return h;
+ var adName=(ans["AD.1"]&&ans["AD.1"].ans)||org.assessor||"";
+ if(adName){
+  h+='<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Assessor Declaration &mdash; PAS 79-1:2020 Section 5 / BS 8674:2025</div><div class="sig-body">';
+  h+='<div class="sig-f"><div class="sig-l">Assessor Name</div><div class="sig-v">'+adName+(org.quals?" "+org.quals:"")+'</div></div>';
+  if(ans["AD.2"]&&ans["AD.2"].ans) h+='<div class="sig-f"><div class="sig-l">Qualifications</div><div class="sig-v">'+ans["AD.2"].ans+'</div></div>';
+  if(ans["AD.3"]&&ans["AD.3"].ans) h+='<div class="sig-f"><div class="sig-l">Membership No.</div><div class="sig-v">'+ans["AD.3"].ans+'</div></div>';
+  if(ans["AD.4"]&&ans["AD.4"].ans) h+='<div class="sig-f"><div class="sig-l">FRACC Level</div><div class="sig-v">'+ans["AD.4"].ans+'</div></div>';
+  if(ans["AD.5"]&&ans["AD.5"].ans) h+='<div class="sig-f"><div class="sig-l">Organisation</div><div class="sig-v">'+ans["AD.5"].ans+'</div></div>';
+  if(ans["AD.8"]&&ans["AD.8"].ans) h+='<div class="sig-f"><div class="sig-l">Assessment Type</div><div class="sig-v">'+ans["AD.8"].ans+'</div></div>';
+  if(ans["AD.9"]&&ans["AD.9"].ans) h+='<div class="sig-f"><div class="sig-l">Previous FRA Reference</div><div class="sig-v">'+ans["AD.9"].ans+'</div></div>';
+  if(ans["AD.7"]&&ans["AD.7"].ans==="y"&&ans["AD.7a"]&&ans["AD.7a"].ans) h+='<div class="sig-f" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;">Conflict of Interest Declared</div><div class="sig-v" style="color:#B91C1C;">'+ans["AD.7a"].ans+'</div></div>';
+  h+='</div></div>';
+ }
+ if(ans["SC.1"]&&ans["SC.1"].ans){
+  h+='<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Scope of Assessment &mdash; PAS 79-1:2020 Section 6</div><div class="sig-body">';
+  h+='<div class="sig-f"><div class="sig-l">Areas Assessed</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SC.1"].ans+'</div></div>';
+  if(ans["SC.2"]&&ans["SC.2"].ans==="y"&&ans["SC.2a"]&&ans["SC.2a"].ans) h+='<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Areas NOT Inspected</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">'+ans["SC.2a"].ans+'</div></div>';
+  if(ans["SC.3"]&&ans["SC.3"].ans==="y"&&ans["SC.3a"]&&ans["SC.3a"].ans) h+='<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Documents Not Produced</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">'+ans["SC.3a"].ans+'</div></div>';
+  if(ans["SC.5"]&&ans["SC.5"].ans) h+='<div class="sig-f"><div class="sig-l">Methodology</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SC.5"].ans+'</div></div>';
+  h+='</div></div>';
+ }
+ if(ans["SF.1"]&&ans["SF.1"].ans){
+  h+='<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Significant Findings and Conclusions &mdash; PAS 79-1:2020 Section 8</div><div class="sig-body">';
+  if(ans["SF.1"]&&ans["SF.1"].ans) h+='<div class="sig-f"><div class="sig-l">Fire Hazard Profile</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SF.1"].ans+'</div></div>';
+  if(ans["SF.2"]&&ans["SF.2"].ans) h+='<div class="sig-f"><div class="sig-l">Means of Escape and Protection</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SF.2"].ans+'</div></div>';
+  if(ans["SF.3"]&&ans["SF.3"].ans) h+='<div class="sig-f"><div class="sig-l">Fire Safety Management</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SF.3"].ans+'</div></div>';
+  if(ans["SF.4"]&&ans["SF.4"].ans){var jd=ans["SF.4"].ans;var bg=(jd.indexOf("Adequate")===0||jd.indexOf("Generally")===0)?"#F0FDF4":"#FEF2F2";h+='<div class="sig-f" style="background:'+bg+';border-radius:6px;padding:8px;"><div class="sig-l">Overall Judgement</div><div class="sig-v" style="font-weight:600;">'+jd+'</div></div>';}
+  if(ans["SF.5"]&&ans["SF.5"].ans==="y"&&ans["SF.5a"]&&ans["SF.5a"].ans) h+='<div class="sig-f" style="background:#FEF2F2;border:2px solid #EF4444;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;font-weight:700;">URGENT NOTIFICATION TO RESPONSIBLE PERSON</div><div class="sig-v" style="color:#B91C1C;white-space:pre-wrap;">'+ans["SF.5a"].ans+'</div></div>';
+  if(ans["SF.6"]&&ans["SF.6"].ans) h+='<div class="sig-f"><div class="sig-l">Review Basis</div><div class="sig-v" style="white-space:pre-wrap;">'+ans["SF.6"].ans+'</div></div>';
+  h+='</div></div>';
+ }
+ return h;
+}
+
 function generatePDF(a, org) {
   const answers    = a.answers || {};
   const ac         = org.accentColor  || "#0D7A7A";
@@ -2929,35 +2966,12 @@ function generatePDF(a, org) {
   </div>
   <div class="pg-body" style="padding-bottom:48px;">
     <div class="sec-h"><div class="sec-n">H</div><div><div class="sec-l">Section H</div><div class="sec-t">Assessor Declaration</div></div></div>
-    ${answers["AD.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Assessor Declaration — PAS 79-1:2020 Section 5 / BS 8674:2025</div><div class="sig-body">
-      <div class="sig-f"><div class="sig-l">Assessor Name</div><div class="sig-v">${answers["AD.1"]?.ans||org.assessor||"—"}</div></div>
-      <div class="sig-f"><div class="sig-l">Qualifications</div><div class="sig-v">${answers["AD.2"]?.ans||org.quals||"—"}</div></div>
-      ${answers["AD.3"]?.ans?`<div class="sig-f"><div class="sig-l">Membership No.</div><div class="sig-v">${answers["AD.3"].ans}</div></div>`:""}
-      ${answers["AD.4"]?.ans?`<div class="sig-f"><div class="sig-l">FRACC Level</div><div class="sig-v">${answers["AD.4"].ans}</div></div>`:""}
-      ${answers["AD.5"]?.ans?`<div class="sig-f"><div class="sig-l">Organisation</div><div class="sig-v">${answers["AD.5"].ans}</div></div>`:""}
-      <div class="sig-f"><div class="sig-l">Assessment Type</div><div class="sig-v">${answers["AD.8"]?.ans||"New assessment"}</div></div>
-      ${answers["AD.9"]?.ans?`<div class="sig-f"><div class="sig-l">Previous FRA Reference</div><div class="sig-v">${answers["AD.9"].ans}</div></div>`:""}
-      ${answers["AD.7"]?.ans==="y"?`<div class="sig-f" style="background:#FEF2F2;border:1px solid #FECACA;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;">Conflict of Interest Declared</div><div class="sig-v" style="color:#B91C1C;">${answers["AD.7a"]?.ans||"Conflict noted."}</div></div>`:""}
-    </div></div>`:`<p class="body"><em>Assessor declaration not completed via form — see signature block below.</em></p>}
-    ${answers["SC.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Scope of Assessment — PAS 79-1:2020 Section 6</div><div class="sig-body">
-      <div class="sig-f"><div class="sig-l">Areas Assessed</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SC.1"]?.ans||"—"}</div></div>
-      ${answers["SC.2"]?.ans==="y"?`<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Areas NOT Inspected</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">${answers["SC.2a"]?.ans||"See notes."}</div></div>`:""}
-      ${answers["SC.3"]?.ans==="y"?`<div class="sig-f" style="background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#92400E;">Documents Not Produced</div><div class="sig-v" style="color:#92400E;white-space:pre-wrap;">${answers["SC.3a"]?.ans||"See notes."}</div></div>`:""}
-      ${answers["SC.5"]?.ans?`<div class="sig-f"><div class="sig-l">Methodology</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SC.5"].ans}</div></div>`:""}
-    </div></div>`:""}
-    ${answers["SF.1"]?`<div class="sig-card" style="margin-bottom:16px;"><div class="sig-head">Significant Findings and Conclusions — PAS 79-1:2020 Section 8</div><div class="sig-body">
-      ${answers["SF.1"]?.ans?`<div class="sig-f"><div class="sig-l">Fire Hazard Profile</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.1"].ans}</div></div>`:""}
-      ${answers["SF.2"]?.ans?`<div class="sig-f"><div class="sig-l">Means of Escape and Protection</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.2"].ans}</div></div>`:""}
-      ${answers["SF.3"]?.ans?`<div class="sig-f"><div class="sig-l">Fire Safety Management</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.3"].ans}</div></div>`:""}
-      ${answers["SF.4"]?.ans?`<div class="sig-f" style="background:${answers["SF.4"].ans.startsWith("Adequate")||answers["SF.4"].ans.startsWith("Generally")?"#F0FDF4":"#FEF2F2"};border-radius:6px;padding:8px;"><div class="sig-l">Overall Judgement</div><div class="sig-v" style="font-weight:600;">${answers["SF.4"].ans}</div></div>`:""}
-      ${answers["SF.5"]?.ans==="y"?`<div class="sig-f" style="background:#FEF2F2;border:2px solid #EF4444;border-radius:6px;padding:8px;"><div class="sig-l" style="color:#991B1B;font-weight:700;">URGENT NOTIFICATION TO RESPONSIBLE PERSON</div><div class="sig-v" style="color:#B91C1C;white-space:pre-wrap;">${answers["SF.5a"]?.ans||"See notes."}</div></div>`:""}
-      ${answers["SF.6"]?.ans?`<div class="sig-f"><div class="sig-l">Review Basis</div><div class="sig-v" style="white-space:pre-wrap;">${answers["SF.6"].ans}</div></div>`:""}
-    </div></div>`:""}
 
     ${org.disclaimer ? `<p class="body" style="font-style:italic;color:#6B7280;">${org.disclaimer}</p>` : ""}
     ${org.reportFooter ? `<p class="body" style="color:#9CA3AF;font-size:8.5pt;">${org.reportFooter}</p>` : ""}
 
     <div class="sig-card">
+    ${buildDeclHTML(answers, org)}
       <div class="sig-head">Assessor Signature</div>
       <div class="sig-body">
         <div class="sig-f"><div class="sig-l">Assessor Name</div><div class="sig-v">${org.assessor||"—"}${org.quals?" "+org.quals:""}</div></div>
