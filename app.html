@@ -204,6 +204,63 @@ const SMART_ACTIONS = {
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
+
+// ─── SOUND SYSTEM ─────────────────────────────────────────────────
+const _ac = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
+function playSound(type) {
+  if (!_ac) return;
+  try {
+    if (_ac.state === 'suspended') _ac.resume();
+    const g = _ac.createGain();
+    g.connect(_ac.destination);
+    if (type === 'whoosh') {
+      // Whoosh: filtered noise sweep
+      const buf = _ac.createBuffer(1, _ac.sampleRate * 0.35, _ac.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+      const src2 = _ac.createBufferSource();
+      src2.buffer = buf;
+      const f = _ac.createBiquadFilter();
+      f.type = 'bandpass';
+      f.frequency.setValueAtTime(800, _ac.currentTime);
+      f.frequency.linearRampToValueAtTime(3000, _ac.currentTime + 0.25);
+      f.Q.value = 1.5;
+      src2.connect(f);
+      f.connect(g);
+      g.gain.setValueAtTime(0.18, _ac.currentTime);
+      g.gain.linearRampToValueAtTime(0, _ac.currentTime + 0.35);
+      src2.start();
+      src2.stop(_ac.currentTime + 0.35);
+    } else if (type === 'click') {
+      // Soft click
+      const o = _ac.createOscillator();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(600, _ac.currentTime);
+      o.frequency.linearRampToValueAtTime(300, _ac.currentTime + 0.06);
+      o.connect(g);
+      g.gain.setValueAtTime(0.12, _ac.currentTime);
+      g.gain.linearRampToValueAtTime(0, _ac.currentTime + 0.07);
+      o.start();
+      o.stop(_ac.currentTime + 0.07);
+    } else if (type === 'success') {
+      // Success chime
+      [523, 659, 784].forEach((hz, i) => {
+        const o = _ac.createOscillator();
+        o.type = 'sine';
+        o.frequency.value = hz;
+        const gn = _ac.createGain();
+        gn.gain.setValueAtTime(0, _ac.currentTime + i * 0.1);
+        gn.gain.linearRampToValueAtTime(0.1, _ac.currentTime + i * 0.1 + 0.05);
+        gn.gain.linearRampToValueAtTime(0, _ac.currentTime + i * 0.1 + 0.2);
+        o.connect(gn);
+        gn.connect(_ac.destination);
+        o.start(_ac.currentTime + i * 0.1);
+        o.stop(_ac.currentTime + i * 0.1 + 0.25);
+      });
+    }
+  } catch(e) {}
+}
+
 function SecIcon({name,size=28,color="currentColor"}) {
   var s=size,sw=1.5;
   if(name==="building") return <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={sw}><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 8h.01M15 12h.01M15 16h.01"/></svg>;
@@ -227,7 +284,7 @@ function SecIcon({name,size=28,color="currentColor"}) {
 
 const SECTION_INTROS = {
   0:   {icon:"person", colour:"#C0392B", text:"Complete before commencing. Record assessor competence, qualifications and any conflict of interest. Satisfies PAS 79-1:2020 Section 5.", mins:3},
-  0.25:{icon:"alarm", colour:"#059669", text:"Record independent validation details. Best practice under BS 8674:2025. Recommended for all higher-risk premises.", mins:2},
+  13.5:{icon:"alarm", colour:"#059669", text:"Record independent validation details. Validation should be completed after the assessment findings are known. Best practice under BS 8674:2025.", mins:3},
   0.5: {icon:"clipboard", colour:"#C0392B", text:"Define the scope and limitations of this assessment. Record what was and was not inspected. Satisfies PAS 79-1:2020 Section 6.", mins:2},
   1:  {icon:"building", colour:"#C0392B", text:"Record the address, construction type and occupancy. This determines which standards apply.", mins:2},
   2:  {icon:"person", colour:"#C0392B", text:"Identify the Responsible Person under Article 3 of the RRO 2005 — the person with control of the premises.", mins:2},
@@ -322,7 +379,7 @@ const ASSESSOR_SECTION = {id:0,title:"Assessor Declaration",short:"Declaration",
   {ref:"AD.9",q:"If this is a review, state the date and reference number of the previous fire risk assessment.",t:"text",required:false,g:"Linking to the previous assessment creates an audit trail for comparison of findings over time."},
  ]};
 
-const VALIDATOR_SECTION = {id:0.25,title:"Independent Validation",short:"Validation",
+const VALIDATOR_SECTION = {id:13.5,title:"Independent Validation",short:"Validation",
  intro:"All fire risk assessments should be independently validated by a suitably qualified person. Independent validation provides assurance to the Responsible Person and satisfies best practice under PAS 79-1:2020 and BS 8674:2025.",
  questions:[
   {ref:"VL.1",q:"Is an independent validator being appointed for this fire risk assessment?",t:"yn",required:true,g:"Independent validation by a suitably qualified person is recommended under BS 8674:2025 best practice. It is particularly important for higher-risk premises including care homes, high-rise residential buildings and premises with complex means of escape."},
@@ -331,29 +388,29 @@ const VALIDATOR_SECTION = {id:0.25,title:"Independent Validation",short:"Validat
   {ref:"VL.4",q:"State the validator's Fire Risk Assessors' Competency Council (FRACC) registration number and competency level, if registered.",t:"text",required:false,g:"The FRACC national register provides a publicly searchable record of competent fire risk assessors. An independent validator registered with FRACC gives confidence to the Responsible Person."},
   {ref:"VL.5",q:"State the name and organisation of the validator.",t:"text",required:false},
   {ref:"VL.6",q:"State the date on which independent validation was completed or is due.",t:"date",required:false},
-  {ref:"VL.7",q:"Note any limitations, qualifications or disagreements identified by the independent validator.",t:"textarea",required:false,g:"Any limitations or disagreements identified during validation must be documented and communicated to the Responsible Person."},
+  {ref:"VL.7",q:"Note any limitations, qualifications or disagreements identified by the independent validator.",t:"textarea",required:false,ph:"e.g. The validator noted that two fire doors on the first floor had not been assessed by a competent fire door inspector and recommended this be addressed before sign-off. No substantive disagreements with the assessment findings. / Or: No limitations or disagreements identified.",g:"Any limitations or disagreements identified during validation must be documented and communicated to the Responsible Person."},
  ]};
 
 const SCOPE_SECTION = {id:0.5,title:"Scope of Assessment",short:"Scope",
  intro:"Define the scope and limitations before proceeding. Satisfies PAS 79-1:2020 Section 6. Recording what could not be assessed protects the assessor and the Responsible Person.",
  questions:[
-  {ref:"SC.1",q:"Describe all areas of the premises included within the scope of this fire risk assessment.",t:"textarea",required:true,g:"List all buildings, floors, zones and external areas covered. If only part of a building is covered, state precisely what is excluded and why."},
+  {ref:"SC.1",q:"Describe all areas of the premises included within the scope of this fire risk assessment.",t:"textarea",required:true,ph:"e.g. All accessible areas of the ground, first and second floors of 14 High Street, including the basement plant room and rear service yard. The attached warehouse (Unit 2, under separate ownership) is excluded from this assessment.",g:"List all buildings, floors, zones and external areas covered. If only part of a building is covered, state precisely what is excluded and why. Example: All areas of the ground and first floor were included. The roof void was excluded as access was unavailable. The adjoining unit is excluded as it is occupied by a separate tenant."},
   {ref:"SC.2",q:"Were there any areas that could not be inspected?",t:"yn",required:true,g:"Common examples: locked plant rooms, occupied residential units, inaccessible roof spaces, areas under construction.",sub:{on:"y",fields:[{ref:"SC.2a",q:"List the areas not inspected and the reason for each",t:"textarea",ph:"e.g. Roof void — hatch locked, no access available. Basement plant room — key unavailable. To be reviewed on next visit."}]}},
-  {ref:"SC.3",q:"Were any documents or records requested but not made available?",t:"yn",required:true,g:"Documents that should be requested: EICR, gas safety certificate, alarm service records, PAT records, fire door inspection report, previous FRA.",sub:{on:"y",fields:[{ref:"SC.3a",q:"List documents requested but not provided",t:"textarea",ph:"e.g. EICR — stated unavailable. Fire alarm service record — last certificate not produced."}]}},
-  {ref:"SC.4",q:"Are there specialist matters beyond this assessor's competence that require referral?",t:"yn",required:false,g:"Examples: complex smoke control engineering, structural compartmentation issues, DSEAR explosion risk assessment.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the specialist matter and recommended referral",t:"textarea",ph:"e.g. Complex smoke ventilation system — refer to specialist smoke control engineer."}]}},
-  {ref:"SC.5",q:"Describe the methodology used to conduct this assessment.",t:"textarea",required:true,g:"PAS 79-1:2020 Clause 6.3 requires methodology to be described. At minimum: physical walk-through of all accessible areas, document review, interview with Responsible Person."},
-  {ref:"SC.6",q:"State any assumptions made in reaching the conclusions of this assessment.",t:"textarea",required:false,g:"Example: it is assumed structural integrity of compartment walls is as-built and has not been compromised by subsequent works."},
+  {ref:"SC.3",q:"Were any documents or certificates requested during this assessment but not made available?",t:"yn",required:true,g:"During your visit, you should have asked to see: Electrical Installation Condition Report (EICR), gas safety certificate, fire alarm service record, emergency lighting certificate, Portable Appliance Testing (PAT) log, fire door inspection report, and any previous fire risk assessment. Answer based on what you actually requested and received during the visit.",sub:{on:"y",fields:[{ref:"SC.3a",q:"List the documents requested but not produced, and the explanation given",t:"textarea",ph:"e.g. Electrical Installation Condition Report (EICR) — occupier stated no copy available. Fire alarm service record — last certificate could not be located. Previous fire risk assessment — stated none existed."}]}},
+  {ref:"SC.4",q:"Did you identify any fire safety issues during this assessment that need a specialist to investigate further?",t:"yn",required:false,g:"This means issues you found that are outside the scope of a standard fire risk assessment — for example: a complex smoke control or ventilation system that needs an engineering specialist; structural questions about how fire would spread through the building; an explosion risk from chemicals or flammable gases (assessed under DSEAR regulations); or anything else where you cannot form a confident conclusion without expert input. If in doubt, say yes and explain what needs looking at.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the issue and what type of specialist is recommended",t:"textarea",ph:"e.g. The pressurisation system serving the protected staircase could not be verified as functional — recommend inspection by a specialist smoke control engineer. \n\ne.g. Asbestos-containing materials suspected in roof void — recommend asbestos survey before further work."}]}},
+  {ref:"SC.5",q:"Describe the methodology used to carry out this assessment.",t:"textarea",required:true,ph:"e.g. The assessment was carried out by physical walk-through inspection of all accessible areas of the premises, interview with the Responsible Person, review of relevant documentation including fire safety records and maintenance certificates, and assessment of occupant characteristics.",g:"PAS 79-1:2020 Clause 6.3 requires the methodology to be recorded. A complete methodology should cover:\n\n1. Inspection method — physical walk-through of all accessible areas, noting areas not accessed\n2. Documentation review — which records were examined\n3. Interview — who was spoken to (e.g. Responsible Person, building manager)\n4. Assessment approach — how risk was evaluated (e.g. likelihood × consequence)\n\nExample answer: \'The assessment was conducted by way of a physical walk-through inspection of all areas accessible at the time of the visit, a review of fire safety documentation presented by the client, and an interview with the Responsible Person. Risk was assessed by considering the likelihood of fire occurring and the likely consequences for life safety, informed by the guidance in PAS 79-1:2020.\'"},
+  {ref:"SC.6",q:"State any assumptions made in reaching the conclusions of this assessment.",t:"textarea",required:false,ph:"e.g. It is assumed that compartment walls and floors are structurally sound and have not been compromised by subsequent building works. It is assumed fire-stopping is in place at all penetrations where not visible for inspection. It is assumed that the premises is used as described by the Responsible Person.",g:"Record any assumptions you have had to make because something could not be directly verified. This protects you professionally if the assessment is later challenged. Common assumptions: compartment walls assumed as-built; fire-stopping assumed where not visible; electrical installation assumed compliant where EICR not produced."},
  ]};
 
 const FINDINGS_SECTION = {id:12.5,title:"Significant Findings & Conclusions",short:"Findings",
  intro:"Satisfies PAS 79-1:2020 Section 8. The assessor must provide a narrative going beyond the action plan — explaining the overall risk picture and providing a defensible professional conclusion.",
  questions:[
-  {ref:"SF.1",q:"Describe the overall fire hazard profile of this building — main ignition sources and fuel loads identified.",t:"textarea",required:true,g:"Describe the character of the hazard: e.g. high combustible load in storerooms, uncontrolled electrical appliance use, no hot works system."},
-  {ref:"SF.2",q:"Describe the key findings relating to means of escape and fire protection measures.",t:"textarea",required:true,g:"Summarise significant positive and negative findings in escape routes, detection, suppression, fire doors and compartmentation."},
-  {ref:"SF.3",q:"Describe the adequacy of fire safety management at the time of this assessment.",t:"textarea",required:true,g:"Comment on fire safety culture, training records, drill records, log book maintenance and the Responsible Person's engagement."},
+  {ref:"SF.1",q:"Describe the overall fire hazard profile of this building — main ignition sources and fuel loads identified.",t:"textarea",required:true,ph:"e.g. The principal ignition hazards identified are: (1) electrical distribution equipment in the basement plant room; (2) uncontrolled use of portable electrical appliances in office areas; (3) combustible waste accumulation in the rear yard. The main fuel loads are: office furniture and paper storage throughout the first floor; cellulose ceiling tiles above the ground floor (poorly maintained); gas pipework to catering equipment in the kitchen area.",g:"Describe the character of the hazard: e.g. high combustible load in storerooms, uncontrolled electrical appliance use, no hot works system."},
+  {ref:"SF.2",q:"Describe the key findings relating to means of escape and fire protection measures.",t:"textarea",required:true,ph:"e.g. Two escape staircases serve the upper floors; both discharge to a place of safety. A Grade A Category L2 fire alarm system is installed and recently serviced. However, a number of fire doors on the first floor were found held open by wedges, and signage to the secondary escape route from the rear office was missing. Emergency lighting appeared functional at the time of inspection.",g:"Summarise significant positive and negative findings in escape routes, detection, suppression, fire doors and compartmentation."},
+  {ref:"SF.3",q:"Describe the adequacy of fire safety management at the time of this assessment.",t:"textarea",required:true,ph:"e.g. The Responsible Person was present throughout the assessment and demonstrated good awareness of their obligations. A fire safety log book is maintained and was produced for inspection. Staff training records show all current staff have received fire safety induction; the most recent fire drill was conducted 6 months ago. The fire alarm is tested weekly and recorded. Overall fire safety management is assessed as satisfactory.",g:"Comment on fire safety culture, training records, drill records, log book maintenance and the Responsible Person's engagement."},
   {ref:"SF.4",q:"State the assessor's overall professional judgement on whether existing fire precautions are adequate.",t:"select",opts:["Adequate — premises are reasonably safe. No immediate action required beyond routine maintenance.","Generally adequate — some improvements required but overall precautions are satisfactory.","Inadequate — significant improvements required. Risk is not adequately controlled.","Seriously inadequate — immediate action required. The Responsible Person must act without delay."],required:true,g:"Must be consistent with the overall risk rating in Section 12 and defensible under challenge."},
   {ref:"SF.5",q:"Are there any matters requiring urgent notification to the Responsible Person outside the formal action plan?",t:"yn",required:true,g:"Examples: immediate life safety risk, obstructed fire exit, fire alarm found inoperable. Must be communicated verbally and in writing without delay.",sub:{on:"y",fields:[{ref:"SF.5a",q:"Describe the matter(s) requiring urgent notification",t:"textarea",ph:"e.g. Final exit door found padlocked during inspection — lock removed during visit. RP notified verbally."}]}},
-  {ref:"SF.6",q:"State the basis and recommended frequency for review of this assessment.",t:"textarea",required:true,g:"PAS 79-1:2020: annually for high/critical risk; every 2 years for medium; every 3-5 years for low risk; immediately after fire, significant change, enforcement notice or material alteration."},
+  {ref:"SF.6",q:"State the basis and recommended frequency for review of this assessment.",t:"textarea",required:true,ph:"e.g. This assessment should be reviewed within 12 months or sooner if there is a fire or near-miss incident, a significant change to the building or its use, a change in the number or profile of occupants, following any enforcement action, or if there is reason to believe the assessment is no longer valid.",g:"PAS 79-1:2020: annually for high/critical risk; every 2 years for medium; every 3-5 years for low risk; immediately after fire, significant change, enforcement notice or material alteration."},
   {ref:"SF.8",q:"Describe the risk assessment methodology used, including the risk evaluation criteria applied (e.g. BS 9999:2017 risk matrix, qualitative likelihood/consequence assessment, numerical scoring).",t:"text",required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.4 — the methodology used to evaluate risk and reach conclusions must be documented.",guidance:"State the systematic approach used: e.g. Likelihood (1-5) x Consequence (1-5) matrix per BS 9999:2017 Annex B, or narrative risk evaluation per PAS 79-1:2020. Reference any specialist guidance applied (HTM 05-02, BS 9991, LACORS)."},
   {ref:"SF.9",q:"What is the overall fire risk rating for this premises?",t:"select",opts:["Negligible — no action required","Low — satisfactory with minor improvements","Medium — improvements required within a defined period","High — urgent action required, allocate considerable resources","Critical — immediate action required, consider restricting use of premises"],required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.3, RRO 2005 Art.9 — the overall risk rating must be documented."},
   {ref:"SF.10",q:"Provide the basis for the overall risk rating, including the most significant hazards and deficiencies that determined it.",t:"text",required:true,noCamera:true,g:"PAS 79-1:2020 Cl.8.3 — the assessor must justify the risk rating with reference to the specific findings."},
@@ -366,7 +423,7 @@ const FRA_SECTIONS = [
     {ref:"P1.2",q:"What is the primary use and occupancy of the premises?",t:"occupancy",required:true},
     {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true},
     {ref:"P1.3a",q:"Does the building exceed 18 metres in height? If yes, does it fall under the Building Safety Act 2022 higher-risk regime?",t:"yn",required:true,g:"Buildings over 18m (approx 7 storeys) are subject to additional requirements under the Building Safety Act 2022."},
-    {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels? If yes, state the number and primary use.",t:"textarea",required:true,g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design."},
+    {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels? If yes, state the number and primary use.",t:"textarea",required:true,ph:"e.g. One basement level used as storage. / e.g. Two sub-ground levels: lower ground floor used as restaurant kitchen and dining; basement level used as cold storage and plant room.",g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design."},
     {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"select",opts:["1-10","11-20","21-50","51-100","101-250","251-500","500+"],required:true},
     {ref:"P1.5",q:"Are any parts of the premises used for sleeping accommodation?",t:"yn",required:true,g:"Sleeping risk fundamentally changes fire protection requirements. Automatic detection to BS 5839 is likely required throughout."},
     {ref:"P1.6",q:"Describe the construction type and approximate age of the building.",t:"text",required:false},
@@ -849,6 +906,10 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .ss-begin{width:100%;max-width:280px;padding:15px;background:#0D1117;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.3px;}
 .ss-begin:hover{background:#1F2937;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
 .ss-begin:active{transform:none;box-shadow:none;}
+.ss-prev-btn{display:flex;align-items:center;gap:6px;padding:11px 20px;border-radius:10px;border:1px solid #30363D;background:#161B22;color:#8B949E;font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.ss-prev-btn:hover{border-color:#6E7681;color:#E6EDF3;background:#21262D;}
+.ss-begin{width:auto;min-width:160px;padding:13px 28px;}
+
 
 /* ─ QUESTION CARD ─ */
 .q-card{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 16px 120px;scroll-behavior:smooth;}
@@ -1613,7 +1674,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
               ...(q.t==="ynna"?[{v:"na",label:"N/A",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>}]:[])
             ].map(opt=>(
               <button key={opt.v} className={`big-btn ${ans===opt.v?opt.v:""}`}
-                onClick={()=>handleAns(opt.v)}>
+                onClick={()=>{playSound('click');handleAns(opt.v);}}>
                 <span className="big-btn-icon">{opt.icon}</span>
                 <span className="big-btn-label">{opt.label}</span>
                 {ans===opt.v&&<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft:"auto",opacity:.6}}><polyline points="20 6 9 17 4 12"/></svg>}
@@ -2298,7 +2359,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
                 ))}
               </div>
               {activeDraft.answers&&(
-                <div style={{fontSize:10,color:"#6E7681",textAlign:"right"}}>~{estMins(null,draftAns)} min remaining</div>
+                
               )}
             </div>
           )}
@@ -2408,7 +2469,7 @@ function Assessment({state, dispatch}) {
 
   var preset = BUILDING_PRESETS[a.buildingPreset||"standard"]||BUILDING_PRESETS.standard;
   var presetSec = (preset.extraQuestions&&preset.extraQuestions.length>0) ? [{id:1.5,title:preset.label+" Requirements",short:"Preset",questions:preset.extraQuestions}] : [];
-  var ALL_SECTIONS = [ASSESSOR_SECTION,VALIDATOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([FINDINGS_SECTION]);
+  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([VALIDATOR_SECTION,FINDINGS_SECTION]);
 
   const curSec  = ALL_SECTIONS[secIdx];
   const intro   = SECTION_INTROS[curSec.id];
@@ -2671,13 +2732,22 @@ function Assessment({state, dispatch}) {
             <div className="ss-desc">{intro?.text||""}</div>
             <div className="ss-meta">
               <span className="ss-pill">{vqs.length} question{vqs.length!==1?"s":""}</span>
-              <span className="ss-pill">~{intro?.mins||3} min</span>
+              
               {secAns(curSec)>0&&<span className="ss-pill" style={{background:"#0D3321",color:"#C0392B",borderColor:"#6EE7B744"}}>{secAns(curSec)} done</span>}
             </div>
-            <button className="ss-begin" style={{background:pr}} onClick={startSection}>
-              {secAns(curSec)>0?"Continue section →":"Begin section →"}
-            </button>
-            {secIdx>0&&<button style={{background:"none",border:"none",fontSize:11,color:"#6E7681",cursor:"pointer",marginTop:12}} onClick={()=>{dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>← Previous section</button>}
+            <div style={{display:"flex",alignItems:"center",gap:12,justifyContent:"center",marginTop:8}}>
+              {secIdx>0&&<button className="ss-prev-btn" onClick={()=>{playSound("click");dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                Previous
+              </button>}
+              <button className="ss-begin" style={{background:pr}} onClick={()=>{playSound("whoosh");startSection();}}>
+                {secAns(curSec)>0?"Continue →":"Begin →"}
+              </button>
+              {secIdx<ALL_SECTIONS.length-1&&<button className="ss-prev-btn" onClick={()=>{playSound("click");dispatch({type:"SEC",i:secIdx+1});}}>
+                Skip
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>}
+            </div>
           </div>
         )}
 
@@ -2698,9 +2768,9 @@ function Assessment({state, dispatch}) {
               onRememberPerson={rememberPerson}
             />
             <div className="q-footer">
-              <button className="q-prev" onClick={goPrevQ} disabled={secIdx===0&&qIdx===0} title="Previous"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+              <button className="q-prev" onClick={()=>{playSound("click");goPrevQ();}} disabled={secIdx===0&&qIdx===0} title="Previous"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
               {isAnswered(curQ,answers[curQ.ref]||{}) ? (
-                <button className="q-next" style={{background:ac}} onClick={goNextQ}>
+                <button className="q-next" style={{background:ac}} onClick={()=>{playSound("click");goNextQ();}}>
                   {qIdx<vqs.length-1?<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Next<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg></span>:<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Complete Section ✓</span>}
                 </button>
               ) : (
@@ -2715,8 +2785,7 @@ function Assessment({state, dispatch}) {
         {/* ── SECTION END CARD ── */}
         {mode==="end" && (
           <div className="sec-end fade" style={{position:"relative"}}>
-            <button style={{position:"absolute",top:12,left:12,padding:"6px 12px",borderRadius:8,border:"1px solid #30363D",background:"transparent",color:"#8B949E",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>Dashboard
+            <button style={{position:"absolute",top:12,left:12,padding:"6px 12px",borderRadius:8,border:"1px solid #30363D",background:"transparent",color:"#8B949E",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,fontFamily:"'Nunito',sans-serif"}} onClick={()=>{playSound("click");dispatch({type:"GO",screen:"dashboard"});}}>\n              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>Dashboard
             </button>
             <div className="se-icon" style={{color:secDone(curSec)?"#059669":"#8B949E"}}>{secDone(curSec)?<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>:<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>}</div>
             <div className="se-title" style={{color:secDone(curSec)?"#059669":"#F0F6FC"}}>{secDone(curSec)?`Section ${curSec.id} complete!`:`Section ${curSec.id} done`}</div>
@@ -2731,10 +2800,10 @@ function Assessment({state, dispatch}) {
               {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
-            <button className="se-next" onClick={goNextSec}>
+            <button className="se-next" onClick={()=>{playSound("whoosh");goNextSec();}}
               {secIdx<ALL_SECTIONS.length-1?`${ALL_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
             </button>
-            <button className="se-review" onClick={()=>dispatch({type:"SET_MODE",mode:"review"})}>
+            <button className="se-review" onClick={()=>{playSound("click");dispatch({type:"SET_MODE",mode:"review"});}}
               Review this section
             </button>
           </div>
