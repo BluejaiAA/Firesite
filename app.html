@@ -290,12 +290,24 @@ const ASSESSOR_SECTION = {id:0,title:"Assessor Declaration",short:"Declaration",
   {ref:"AD.1",q:"State the full name of the fire risk assessor conducting this assessment.",t:"text",required:true},
   {ref:"AD.2",q:"State the assessor's current professional qualifications (e.g. NEBOSH NFQ Fire, Level 4 Diploma, IFE MIFireE, FIRSC).",t:"text",required:true,g:"PAS 79-1:2020 Clause 5 requires qualifications commensurate with the level of risk."},
   {ref:"AD.3",q:"State the assessor's professional body membership number and grade (e.g. IFE 123456 MIFireE, IFPO, IFSM).",t:"text",required:false},
-  {ref:"AD.4",q:"State the assessor's FRACC registration or BS 8674:2025 competency level.",t:"select",opts:["Level 1 — Low complexity","Level 2 — Medium complexity","Level 3 — High complexity (care homes, HMOs, higher-risk)","Level 4 — Specialist / Expert Witness","Not registered with FRACC","Not applicable"],required:true,g:"BS 8674:2025 defines competency levels. FRACC provides a national register of competent assessors."},
+  {ref:"AD.4",q:"State the assessor's Fire Risk Assessors' Competency Council (FRACC) registration number and competency level under BS 8674:2025.",t:"select",opts:["Level 1 — Low complexity","Level 2 — Medium complexity","Level 3 — High complexity (care homes, HMOs, higher-risk)","Level 4 — Specialist / Expert Witness","Not registered with FRACC","Not applicable"],required:true,g:"BS 8674:2025 defines competency levels. FRACC provides a national register of competent assessors."},
   {ref:"AD.5",q:"Name and company registration number of the organisation conducting this assessment.",t:"text",required:false},
   {ref:"AD.6",q:"Does the assessor hold professional indemnity insurance? State insurer and policy reference if known.",t:"text",required:false},
   {ref:"AD.7",q:"Does the assessor have any conflict of interest in conducting this assessment?",t:"yn",required:true,g:"PAS 79 requires declaration of any actual or perceived conflict of interest.",sub:{on:"y",fields:[{ref:"AD.7a",q:"Describe the nature of the conflict of interest",t:"textarea",ph:"e.g. Previously involved in installation of fire alarm system at these premises."}]}},
   {ref:"AD.8",q:"Is this a new assessment or a review of a previous assessment?",t:"select",opts:["New assessment — no previous FRA exists","Review of a previous assessment","Review following a material change","Reassessment following enforcement notice","Reassessment following fire or near-miss incident"],required:true},
   {ref:"AD.9",q:"If this is a review, state the date and reference number of the previous fire risk assessment.",t:"text",required:false,g:"Linking to the previous assessment creates an audit trail for comparison of findings over time."},
+ ]};
+
+const VALIDATOR_SECTION = {id:0.25,title:"Independent Validation",short:"Validation",
+ intro:"All fire risk assessments should be independently validated by a suitably qualified person. Independent validation provides assurance to the Responsible Person and satisfies best practice under PAS 79-1:2020 and BS 8674:2025.",
+ questions:[
+  {ref:"VL.1",q:"Is an independent validator being appointed for this fire risk assessment?",t:"yn",required:true,g:"Independent validation by a suitably qualified person is recommended under BS 8674:2025 best practice. It is particularly important for higher-risk premises including care homes, high-rise residential buildings and premises with complex means of escape."},
+  {ref:"VL.2",q:"State the full name of the independent validator.",t:"text",required:false,g:"The validator must be independent of the assessor and hold equivalent or higher qualifications."},
+  {ref:"VL.3",q:"State the validator's professional qualifications (for example NEBOSH National Fire Certificate, Level 4 Diploma in Fire Safety, Institution of Fire Engineers membership grade).",t:"text",required:false,g:"The validator should hold qualifications commensurate with the risk level of the premises. For Level 3 and Level 4 risk premises, validator qualifications should be at least equivalent to the assessor."},
+  {ref:"VL.4",q:"State the validator's Fire Risk Assessors' Competency Council (FRACC) registration number and competency level, if registered.",t:"text",required:false,g:"The FRACC national register provides a publicly searchable record of competent fire risk assessors. An independent validator registered with FRACC gives confidence to the Responsible Person."},
+  {ref:"VL.5",q:"State the name and organisation of the validator.",t:"text",required:false},
+  {ref:"VL.6",q:"State the date on which independent validation was completed or is due.",t:"date",required:false},
+  {ref:"VL.7",q:"Note any limitations, qualifications or disagreements identified by the independent validator.",t:"textarea",required:false,g:"Any limitations or disagreements identified during validation must be documented and communicated to the Responsible Person."},
  ]};
 
 const SCOPE_SECTION = {id:0.5,title:"Scope of Assessment",short:"Scope",
@@ -566,7 +578,7 @@ const checkAdvancedTriggers = (answers) => {
 };
 
 // Global combined sections for PDF generation (includes Declaration, Scope, FRA, Findings)
-const ALL_PDF_SECTIONS_BASE = [ASSESSOR_SECTION, SCOPE_SECTION].concat(FRA_SECTIONS).concat([FINDINGS_SECTION]);
+const ALL_PDF_SECTIONS_BASE = [ASSESSOR_SECTION, VALIDATOR_SECTION, SCOPE_SECTION].concat(FRA_SECTIONS).concat([FINDINGS_SECTION]);
 
 const TOTAL_Q = FRA_SECTIONS.reduce((n,s)=>n+s.questions.length,0);
 
@@ -685,6 +697,12 @@ function reducer(state, action) {
       ...state,
       assessments:state.assessments.map(a=>a.id===state.activeId?{...a,advancedDismissed:true}:a)
     };
+    case "SKIP_QUESTION": return {
+      ...state,
+      assessments:state.assessments.map(a=>a.id===state.activeId
+        ?{...a,answers:{...a.answers,[action.ref]:{...(a.answers[action.ref]||{}),skipped:action.v,ans:action.v?"n/a":null}},savedAt:action.ts}
+        :a)
+    };
     case "GO": return {...state, screen:action.screen, showMissed:false, showValidation:false};
     default:   return state;
   }
@@ -692,6 +710,7 @@ function reducer(state, action) {
 
 // ─── HELPERS ──────────────────────────────────────────────────────
 const isAnswered = (q, ans={}) => {
+  if (ans.skipped) return true;
   if (q.t==="multi")     return (ans.sel||[]).length>0;
   if (q.t==="text")      return !!(ans.ans||"").trim();
   if (q.t==="address")   return !!(ans.ans||"").trim();
@@ -877,6 +896,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .ctb-btn.active{border-color:#C0392B;color:#C0392B;background:rgba(192,57,43,.08);}
 .ctb-btn.flag-active{border-color:#C0392B;color:#C0392B;background:rgba(192,57,43,.12);font-weight:700;}
 .ctb-btn.recording{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.1);animation:ctbpulse 1s infinite;}
+.ctb-btn.skip-active{border-color:#6E7681;color:#6E7681;background:rgba(110,118,129,.12);opacity:.8;}
 .ctb-btn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0;}
 .ctb-sep{width:1px;height:18px;background:#30363D;flex-shrink:0;}
 @keyframes ctbpulse{0%,100%{opacity:1}50%{opacity:.6}}
@@ -1429,7 +1449,7 @@ function WidthTool({q, state, upd}) {
 }
 
 
-function CardToolbar({q,note,showNote,setShowNote,flagged,handleFlag,photosArr,camRef,fileRef,handleFiles,voiceNote,onSaveVoice}){
+function CardToolbar({q,note,showNote,setShowNote,flagged,handleFlag,photosArr,camRef,fileRef,handleFiles,voiceNote,onSaveVoice,skipped,onSkip}){
   const [rec,setRec]=React.useState(false);
   const [mr,setMr]=React.useState(null);
   const showCamera=!["address","occupancy","floorarea","text","number","date"].includes(q.t)&&!q.noCamera;
@@ -1451,6 +1471,7 @@ function CardToolbar({q,note,showNote,setShowNote,flagged,handleFlag,photosArr,c
       <div className="ctb-sep"/>
       <button className={`ctb-btn${note?" active":""}`} onClick={()=>setShowNote(s=>!s)} title="Assessor's comments"><NoteIcon/>{note?"✓ Notes":"Notes"}</button>
       {showFlag&&<button className={`ctb-btn${flagged?" flag-active":""}`} onClick={handleFlag} title="Flag for Action Plan"><FlagIcon filled={flagged}/>{flagged?"Flagged":"Flag"}</button>}
+      {!["address","occupancy","floorarea","text","number","date"].includes(q.t)&&<><div className="ctb-sep"/><button className={`ctb-btn${skipped?" skip-active":""}`} onClick={onSkip} title="Mark this question as not applicable to this premises"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>{skipped?"✓ Not Applicable":"Not Applicable"}</button></>}
     </div>
   );
 }
@@ -1642,6 +1663,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           flagged={flagged} handleFlag={handleFlag} photosArr={photosArr}
           camRef={camRef} fileRef={fileRef} handleFiles={handleFiles}
           voiceNote={state.voiceNote||null} onSaveVoice={v=>upd({voiceNote:v})}
+          skipped={state.skipped||false} onSkip={()=>upd({skipped:!state.skipped,ans:!state.skipped?"n/a":null})}
         />
         {!["address","occupancy","floorarea","text","number","date","select"].includes(q.t) && (<>
         <span style={{display:"none"}}/>
@@ -2217,13 +2239,17 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
       <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="dash-scroll">
         <div className="dash-body">
-          <div style={{marginBottom:18}}>
-            <div style={{fontFamily:"'Nunito',sans-serif",fontSize:22,fontWeight:700,color:"#F0F6FC",lineHeight:1.1,marginBottom:3}}>
-              {firstName?`Morning, ${firstName}.`:"Your assessments."}
-            </div>
-            <div style={{fontSize:11,color:"#6E7681"}}>
-              {assessments.length===0?"Start your first assessment below.":
-               `${assessments.length} assessment${assessments.length>1?"s":""} · ${completed.length} complete · ${drafts.length} in progress`}
+          <div style={{marginBottom:16,paddingBottom:14,borderBottom:"1px solid #21262D"}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:800,color:"#F0F6FC",lineHeight:1.1,marginBottom:2}}>
+                  {firstName?`Welcome back, ${firstName}.`:"Your Assessments"}
+                </div>
+                <div style={{fontSize:11,color:"#6E7681"}}>
+                  {assessments.length===0?"No assessments yet — start your first below.":`${assessments.length} assessment${assessments.length>1?"s":""} · ${completed.length} complete · ${drafts.length} in progress`}
+                </div>
+              </div>
+              <button className="btn btn-teal btn-sm" style={{flexShrink:0}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>+ New</button>
             </div>
           </div>
 
@@ -2231,8 +2257,11 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
           {activeDraft && (
             <div style={{marginBottom:14}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:7}}>
-                <span style={{fontSize:11,fontWeight:600,color:"#E6EDF3"}}>{activeDraft.premisesName||"Current draft"}</span>
-                <span style={{fontSize:10,color:ac,fontWeight:600,cursor:"pointer"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue →</span>
+                <div>
+                  <div style={{fontSize:9,color:"#6E7681",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.8px",marginBottom:1}}>Current Draft</div>
+                  <span style={{fontSize:12,fontWeight:700,color:"#E6EDF3"}}>{activeDraft.premisesName||"Unnamed Premises"}</span>
+                </div>
+                <button style={{padding:"5px 12px",background:ac,color:"#fff",border:"none",borderRadius:7,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue ›</button>
               </div>
               <div className="heatmap">
                 {sectionStatus.map(({s,reqDone,anyDone},i)=>(
@@ -2253,26 +2282,26 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
           {/* Stats */}
           {assessments.length>0 && (
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7,marginBottom:14}}>
-              {[{v:assessments.length,l:"Total",ic:"📋",col:pr},{v:completed.length,l:"Complete",ic:"✅",col:"#059669"},
-                {v:drafts.reduce((n,a)=>n+Object.values(a.answers||{}).filter(v=>v?.flagged).length,0),l:"Flagged",ic:"⚑",col:ac}
-              ].map((s,i)=>(
-                <div key={i} style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:7,alignItems:"flex-start"}}>
-                  <span style={{fontSize:15}}>{s.ic}</span>
-                  <div>
-                    <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:s.col,lineHeight:1}}>{s.v}</div>
-                    <div style={{fontSize:9,color:"#6E7681",marginTop:2}}>{s.l}</div>
-                  </div>
-                </div>
-              ))}
+              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:"#F0F6FC",lineHeight:1}}>{assessments.length}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Total</div></div>
+              </div>
+              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:"#059669",lineHeight:1}}>{completed.length}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Complete</div></div>
+              </div>
+              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ac} strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:ac,lineHeight:1}}>{drafts.reduce((n,a)=>n+Object.values(a.answers||{}).filter(v=>v?.flagged).length,0)}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Flagged</div></div>
+              </div>
             </div>
           )}
 
           {/* Assessments */}
           {assessments.length>0 && (
             <div style={{marginBottom:18}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:9}}>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,color:"#F0F6FC",letterSpacing:".3px",textTransform:"uppercase"}}>Assessments</div>
-                <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>＋ New</button>
+              <div style={{marginBottom:9}}>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:11,fontWeight:700,color:"#6E7681",letterSpacing:"1px",textTransform:"uppercase"}}>All Assessments</div>
               </div>
               {assessments.slice().reverse().map(a=>{
                 const vTotal   = FRA_SECTIONS.reduce((n,s)=>n+visibleQs(s,a.answers||{}).length,0);
@@ -2355,7 +2384,7 @@ function Assessment({state, dispatch}) {
 
   var preset = BUILDING_PRESETS[a.buildingPreset||"standard"]||BUILDING_PRESETS.standard;
   var presetSec = (preset.extraQuestions&&preset.extraQuestions.length>0) ? [{id:1.5,title:preset.label+" Requirements",short:"Preset",questions:preset.extraQuestions}] : [];
-  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([FINDINGS_SECTION]);
+  var ALL_SECTIONS = [ASSESSOR_SECTION,VALIDATOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([FINDINGS_SECTION]);
 
   const curSec  = ALL_SECTIONS[secIdx];
   const intro   = SECTION_INTROS[curSec.id];
