@@ -1068,6 +1068,41 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .abadge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;}
 .at-prog{height:3px;background:#F3F4F6;border-radius:2px;margin-bottom:2px;}
 .at-prog-fill{height:100%;border-radius:2px;transition:width .3s;}
+/* ─ DASHBOARD v2 ─ */
+.ad-banner{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:14px;margin-bottom:0;}
+.ad-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px;}
+.ad-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.ad-info{flex:1;min-width:0;}
+.ad-cta{padding:7px 14px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;white-space:nowrap;flex-shrink:0;}
+.ad-progress-row{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.ad-prog-track{flex:1;height:5px;background:#21262D;border-radius:3px;overflow:hidden;}
+.ad-prog-fill{height:100%;border-radius:3px;transition:width .4s;}
+.ad-sec-chips{display:flex;flex-wrap:wrap;gap:4px;}
+.ad-chip{width:28px;height:22px;border-radius:5px;border:1px solid;font-size:9px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s;font-family:'JetBrains Mono',monospace;}
+.ad-chip:hover{transform:scale(1.1);}
+.stats-row{display:flex;gap:7px;flex-wrap:wrap;}
+.stat-pill{flex:1;min-width:0;background:#161B22;border:1px solid #30363D;border-radius:9px;padding:10px 11px;display:flex;align-items:center;gap:7px;}
+.dash-search{width:100%;background:#161B22;border:1px solid #30363D;border-radius:8px;padding:8px 10px 8px 30px;color:#E6EDF3;font-size:12px;font-family:'Inter',sans-serif;outline:none;}
+.dash-search:focus{border-color:#8B949E;}
+.dash-search::placeholder{color:#6E7681;}
+.dash-tabs{display:flex;gap:0;border-bottom:1px solid #21262D;}
+.dash-tab{background:none;border:none;border-bottom:2px solid transparent;padding:7px 14px;font-size:12px;font-weight:600;color:#6E7681;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;margin-bottom:-1px;}
+.dash-tab:hover{color:#E6EDF3;}
+.dash-tab.active{color:#F0F6FC;}
+.dash-tab-count{display:inline-block;background:#21262D;border-radius:8px;padding:1px 6px;font-size:9px;margin-left:5px;font-family:'JetBrains Mono',monospace;}
+.atile-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.atile2{background:#161B22;border:1px solid #30363D;border-radius:11px;display:flex;align-items:stretch;overflow:hidden;transition:box-shadow .12s;}
+.atile2:hover{box-shadow:0 4px 18px rgba(0,0,0,.18);}
+.atile2.complete{border-left:3px solid #059669;}
+.atile2.draft{border-left:3px solid #D97706;}
+.at2-left{padding:14px 0 14px 14px;display:flex;align-items:flex-start;padding-right:10px;}
+.at2-bldg-icon{width:34px;height:34px;background:#21262D;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;border:1px solid #30363D;flex-shrink:0;}
+.at2-body{flex:1;min-width:0;padding:14px 0;cursor:pointer;}
+.at2-prog-row{display:flex;align-items:center;gap:7px;margin-top:5px;}
+.at2-actions{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:12px 12px 12px 6px;}
+.at2-btn-primary{padding:7px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;color:#fff;white-space:nowrap;}
+.at2-btn-ghost{padding:5px 10px;background:none;border:1px solid #30363D;border-radius:7px;font-size:11px;font-weight:600;color:#8B949E;cursor:pointer;font-family:'Nunito',sans-serif;white-space:nowrap;}
+.at2-btn-ghost:hover{border-color:#8B949E;color:#E6EDF3;}
 .tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
 .tcrd{background:#161B22;border:1px solid #30363D;border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s;}
 .tcrd:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(0,0,0,.08);}
@@ -2293,6 +2328,8 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
   const firstName = org.assessor?.split(" ")[0]||null;
   const completed = assessments.filter(a=>a.status==="complete");
   const drafts    = assessments.filter(a=>a.status==="draft");
+  const [tab, setTab]       = React.useState("all");
+  const [search, setSearch] = React.useState("");
 
   const activeDraft = drafts[drafts.length-1];
   const draftAns    = activeDraft?.answers||{};
@@ -2303,11 +2340,21 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
     const anyDone= vqs.some(q=>isAnswered(q,draftAns[q.ref]||{}));
     return {s,reqDone,anyDone};
   });
+  const doneSecs = sectionStatus.filter(x=>x.reqDone).length;
 
-  const tools = [
-    {key:"fra",icon:"🔥",tag:"FRA",name:"Fire Risk Assessment",desc:"Card-by-card · 163 questions · RRO 2005",accent:"#DC2626",accentBg:"#FEF2F2"},
+  // Building type icon map
+  const bldgIcon = t => ({
+    "hmo":"🏠","care_home":"🏥","hotel":"🏨","higher_risk":"🏗",
+    "warehouse":"🏭","school":"🏫"
+  })[t]||"🏢";
 
-  ];
+  // Filter + search assessments
+  const visible = assessments.slice().reverse().filter(a=>{
+    const matchTab = tab==="all"||(tab==="progress"&&a.status==="draft")||(tab==="complete"&&a.status==="complete");
+    const q = search.toLowerCase();
+    const matchSearch = !q||(a.premisesName||"").toLowerCase().includes(q)||(a.premisesAddress||"").toLowerCase().includes(q)||(a.ref||"").toLowerCase().includes(q)||(a.clientName||"").toLowerCase().includes(q);
+    return matchTab && matchSearch;
+  });
 
   return (
     <div className="dash">
@@ -2324,134 +2371,167 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
       <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="dash-scroll">
         <div className="dash-body">
-          <div style={{marginBottom:16,paddingBottom:14,borderBottom:"1px solid #21262D"}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:800,color:"#F0F6FC",lineHeight:1.1,marginBottom:2}}>
-                  {firstName?`Welcome back, ${firstName}.`:"Your Assessments"}
-                </div>
-                <div style={{fontSize:11,color:"#6E7681"}}>
-                  {assessments.length===0?"No assessments yet — start your first below.":`${assessments.length} assessment${assessments.length>1?"s":""} · ${completed.length} complete · ${drafts.length} in progress`}
-                </div>
+
+          {/* ── Page header ── */}
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16,paddingBottom:14,borderBottom:"1px solid #21262D"}}>
+            <div>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:800,color:"#F0F6FC",lineHeight:1.1,marginBottom:2}}>
+                {firstName?`Welcome back, ${firstName}.`:"Your Assessments"}
               </div>
-              <button className="btn btn-teal btn-sm" style={{flexShrink:0}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>+ New</button>
+              <div style={{fontSize:11,color:"#6E7681"}}>
+                {assessments.length===0?"No assessments yet — start your first below.":`${assessments.length} assessment${assessments.length>1?"s":""} · ${completed.length} complete · ${drafts.length} in progress`}
+              </div>
             </div>
+            <button className="btn btn-teal btn-sm" style={{flexShrink:0}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>+ New</button>
           </div>
 
-          {/* Heat map */}
+          {/* ── Active draft banner ── */}
           {activeDraft && (
-            <div style={{marginBottom:14}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:7}}>
-                <div>
-                  <div style={{fontSize:9,color:"#6E7681",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.8px",marginBottom:1}}>Current Draft</div>
-                  <span style={{fontSize:12,fontWeight:700,color:"#E6EDF3"}}>{activeDraft.premisesName||"Unnamed Premises"}</span>
+            <div className="ad-banner" style={{borderColor:ac+"55",marginBottom:16}}>
+              <div className="ad-top">
+                <div className="ad-icon" style={{background:ac+"18",color:ac}}>{bldgIcon(activeDraft.buildingPreset)}</div>
+                <div className="ad-info">
+                  <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.8px",color:ac,marginBottom:2}}>Continue Draft</div>
+                  <div style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#F0F6FC",lineHeight:1.2}}>{activeDraft.premisesName||"Unnamed Premises"}</div>
+                  {activeDraft.premisesAddress&&activeDraft.premisesAddress!=="Address not set"&&<div style={{fontSize:10,color:"#6E7681",marginTop:1}}>{activeDraft.premisesAddress}</div>}
                 </div>
-                <button style={{padding:"5px 12px",background:ac,color:"#fff",border:"none",borderRadius:7,fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue ›</button>
+                <button className="ad-cta" style={{background:ac}} onClick={()=>dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"})}>Continue →</button>
               </div>
-              <div className="heatmap">
+              <div className="ad-progress-row">
+                <div className="ad-prog-track"><div className="ad-prog-fill" style={{width:`${Math.round((doneSecs/FRA_SECTIONS.length)*100)}%`,background:ac}}/></div>
+                <span style={{fontSize:10,color:"#8B949E",whiteSpace:"nowrap"}}>{doneSecs} of {FRA_SECTIONS.length} sections done</span>
+              </div>
+              <div className="ad-sec-chips">
                 {sectionStatus.map(({s,reqDone,anyDone},i)=>(
-                  <div key={i} className="hm-cell"
-                    style={{background:reqDone?"#0D3321":anyDone?`${ac}0F`:"#1C2128",border:`1px solid ${reqDone?"#6EE7B7":anyDone?ac+"44":"#30363D"}`}}
+                  <button key={i} className="ad-chip"
+                    style={{background:reqDone?"#0D3321":anyDone?ac+"18":"#1C2128",borderColor:reqDone?"#6EE7B7":anyDone?ac+"55":"#30363D",color:reqDone?"#059669":anyDone?ac:"#6E7681"}}
                     onClick={()=>{dispatch({type:"SET_ACTIVE",id:activeDraft.id,screen:"assessment"});dispatch({type:"SEC",i});}}>
-                    <div className="hm-num" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{reqDone?"✓":i+1}</div>
-                    <div className="hm-lbl" style={{color:reqDone?"#059669":anyDone?ac:"#9CA3AF"}}>{s.short||s.title.split(" ")[0]}</div>
-                  </div>
+                    {reqDone?"✓":i+1}
+                  </button>
                 ))}
               </div>
-
             </div>
           )}
 
-          {/* Stats */}
+          {/* ── Stats row ── */}
           {assessments.length>0 && (
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7,marginBottom:14}}>
-              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:"#F0F6FC",lineHeight:1}}>{assessments.length}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Total</div></div>
+            <div className="stats-row" style={{marginBottom:16}}>
+              <div className="stat-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#F0F6FC"}}>{assessments.length}</span>
+                <span style={{fontSize:10,color:"#6E7681"}}>Total</span>
               </div>
-              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:"#059669",lineHeight:1}}>{completed.length}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Complete</div></div>
+              <div className="stat-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#059669"}}>{completed.length}</span>
+                <span style={{fontSize:10,color:"#6E7681"}}>Complete</span>
               </div>
-              <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:9,padding:"11px 10px",display:"flex",gap:8,alignItems:"center"}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={ac} strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-                <div><div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:700,color:ac,lineHeight:1}}>{drafts.reduce((n,a)=>n+Object.values(a.answers||{}).filter(v=>v?.flagged).length,0)}</div><div style={{fontSize:9,color:"#6E7681",marginTop:1}}>Flagged</div></div>
+              <div className="stat-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#D97706"}}>{drafts.length}</span>
+                <span style={{fontSize:10,color:"#6E7681"}}>In Progress</span>
+              </div>
+              <div className="stat-pill">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={ac} strokeWidth="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+                <span style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:ac}}>{assessments.reduce((n,a)=>n+Object.values(a.answers||{}).filter(v=>v?.flagged).length,0)}</span>
+                <span style={{fontSize:10,color:"#6E7681"}}>Flagged</span>
               </div>
             </div>
           )}
 
-          {/* Assessments */}
+          {/* ── Assessments list ── */}
           {assessments.length>0 && (
-            <div style={{marginBottom:18}}>
-              <div style={{marginBottom:9}}>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:11,fontWeight:700,color:"#6E7681",letterSpacing:"1px",textTransform:"uppercase"}}>All Assessments</div>
+            <div>
+              {/* Search + Tabs */}
+              <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:12}}>
+                <div style={{position:"relative"}}>
+                  <svg style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",pointerEvents:"none"}} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6E7681" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input className="dash-search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search by name, address, reference…"/>
+                </div>
+                <div className="dash-tabs">
+                  {[["all","All",assessments.length],["progress","In Progress",drafts.length],["complete","Complete",completed.length]].map(([k,l,n])=>(
+                    <button key={k} className={"dash-tab"+(tab===k?" active":"")} style={tab===k?{borderBottomColor:ac,color:"#F0F6FC"}:{}} onClick={()=>setTab(k)}>
+                      {l}<span className="dash-tab-count">{n}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              {assessments.slice().reverse().map(a=>{
-                const vTotal   = FRA_SECTIONS.reduce((n,s)=>n+visibleQs(s,a.answers||{}).length,0);
-                const answered = Object.values(a.answers||{}).filter(v=>v&&(v.ans||(v.sel&&v.sel.length>0))).length;
-                const pct      = Math.round((answered/TOTAL_Q)*100);
-                const flagCount= Object.values(a.answers||{}).filter(v=>v?.flagged).length;
-                return (
-                  <div key={a.id} className={`atile ${a.status}`}>
-                    <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:5,gap:9}}>
-                      <div>
-                        <div className="at-ref">{a.ref}</div>
-                        <div className="at-name">{a.premisesName||"Unnamed Premises"}</div>
-                        <div className="at-addr">{a.premisesAddress||"Address not set"}</div>
-                      </div>
-                      <span className="abadge" style={{
-                        background:a.status==="complete"?"#0D3321":"#FDF3EE",
-                        color:a.status==="complete"?"#059669":ac,
-                        border:`1px solid ${a.status==="complete"?"#6EE7B7":ac+"44"}`,
-                        flexShrink:0,whiteSpace:"nowrap"
-                      }}>{a.status==="complete"?"✓ Complete":"In Progress"}</span>
-                    </div>
-                    <div className="at-meta">
-                      {a.premisesType&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.premisesType}</span>}
-                      {a.clientName&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.clientName}</span>}
-                      {a.riskRating&&<span className="abadge" style={{background:riskBg(a.riskRating),color:riskCol(a.riskRating),border:`1px solid ${riskCol(a.riskRating)}33`}}>{a.riskRating.split("—")[0].trim()}</span>}
-                      {flagCount>0&&<span className="abadge" style={{background:"#FDF3EE",color:ac}}>⚑ {flagCount}</span>}
-                      {a.savedAt&&<span style={{fontSize:9,color:"#6E7681"}}>Saved {a.savedAt}</span>}
-                    </div>
-                    {a.status==="draft"&&answered>0&&(
-                      <div style={{marginBottom:7}}>
-                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:2}}>
-                          <span style={{fontSize:9,color:"#6E7681"}}>{pct}% complete</span>
-                          <span style={{fontSize:9,color:ac,fontWeight:600}}>~{estMins(null,a.answers||{})} min left</span>
+
+              {/* Cards */}
+              {visible.length===0?(
+                <div style={{textAlign:"center",padding:"28px 16px",background:"#161B22",borderRadius:10,border:"1px solid #30363D"}}>
+                  <div style={{fontSize:12,color:"#6E7681"}}>{search?"No assessments match your search.":"No assessments in this category."}</div>
+                </div>
+              ):(
+                <div className="atile-list">
+                  {visible.map(a=>{
+                    const answered = Object.values(a.answers||{}).filter(v=>v&&(v.ans||(v.sel&&v.sel.length>0))).length;
+                    const pct      = Math.min(100,Math.round((answered/TOTAL_Q)*100));
+                    const flagCount= Object.values(a.answers||{}).filter(v=>v?.flagged).length;
+                    const isDraft  = a.status==="draft";
+                    return (
+                      <div key={a.id} className={`atile2 ${a.status}`}>
+                        <div className="at2-left">
+                          <div className="at2-bldg-icon">{bldgIcon(a.buildingPreset)}</div>
                         </div>
-                        <div className="at-prog"><div className="at-prog-fill" style={{width:`${pct}%`,background:ac}}/></div>
+                        <div className="at2-body" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:isDraft?"assessment":"complete"})}>
+                          <div style={{display:"flex",alignItems:"flex-start",gap:6,marginBottom:3}}>
+                            <div style={{flex:1,minWidth:0}}>
+                              <div className="at-ref">{a.ref}</div>
+                              <div className="at-name" style={{marginBottom:2}}>{a.premisesName||"Unnamed Premises"}</div>
+                              {a.premisesAddress&&a.premisesAddress!=="Address not set"&&<div className="at-addr">{a.premisesAddress}</div>}
+                            </div>
+                            <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4}}>
+                              <span className="abadge" style={{background:isDraft?"#1A1208":a.riskRating?riskBg(a.riskRating):"#0D3321",color:isDraft?"#D97706":a.riskRating?riskCol(a.riskRating):"#059669",border:`1px solid ${isDraft?"#D9770644":a.riskRating?riskCol(a.riskRating)+"33":"#6EE7B744"}`}}>{isDraft?"In Progress":"✓ Complete"}</span>
+                              {a.riskRating&&<span className="abadge" style={{background:riskBg(a.riskRating),color:riskCol(a.riskRating),border:`1px solid ${riskCol(a.riskRating)}33`}}>{a.riskRating.split("—")[0].trim()}</span>}
+                            </div>
+                          </div>
+                          <div className="at-meta" style={{marginBottom:isDraft&&answered>0?7:0}}>
+                            {a.premisesType&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.premisesType}</span>}
+                            {a.clientName&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.clientName}</span>}
+                            {flagCount>0&&<span className="abadge" style={{background:"#2D1500",color:ac,border:`1px solid ${ac}44`}}>⚑ {flagCount} flagged</span>}
+                            {a.savedAt&&<span style={{fontSize:9,color:"#6E7681",marginLeft:"auto"}}>Saved {a.savedAt}</span>}
+                          </div>
+                          {isDraft&&answered>0&&(
+                            <div className="at2-prog-row">
+                              <div className="at-prog"><div className="at-prog-fill" style={{width:`${pct}%`,background:ac}}/></div>
+                              <span style={{fontSize:9,color:"#6E7681",whiteSpace:"nowrap"}}>{pct}%</span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="at2-actions">
+                          <button className="at2-btn-primary" style={{background:isDraft?"#21262D":ac,border:isDraft?"1px solid #30363D":"none"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:isDraft?"assessment":"complete"})}>
+                            {isDraft?"Continue":"Report"}
+                          </button>
+                          {!isDraft&&<button className="at2-btn-ghost" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>Edit</button>}
+                        </div>
                       </div>
-                    )}
-                    <div style={{display:"flex",gap:7}}>
-                      <button style={{padding:"7px 14px",background:a.status==="complete"?"#C0392B":"#21262D",color:"#fff",border:a.status==="complete"?"none":"1px solid #30363D",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:a.status==="complete"?"complete":"assessment"})}>
-                        {a.status==="complete"?"View Report →":"Continue →"}
-                      </button>
-                      {a.status==="complete"&&<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>Edit</button>}
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
-          {/* New assessment prompt */}
+          {/* ── Empty state ── */}
           {assessments.length===0&&(
-            <div style={{textAlign:"center",padding:"32px 16px",borderRadius:14,border:"1.5px dashed #30363D",background:"#161B22"}}>
-              <div style={{fontSize:32,marginBottom:12,opacity:.5}}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <div style={{textAlign:"center",padding:"40px 16px",borderRadius:14,border:"1.5px dashed #30363D",background:"#161B22"}}>
+              <div style={{fontSize:40,marginBottom:14,opacity:.4}}>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#8B949E" strokeWidth="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
               </div>
-              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#E6EDF3",marginBottom:6}}>No assessments yet</div>
-              <div style={{fontSize:12,color:"#8B949E",marginBottom:20}}>Start your first fire risk assessment. It takes about 45 minutes on site.</div>
-              <button style={{padding:"12px 28px",background:"#C0392B",color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>
-                Start New Assessment
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:17,fontWeight:700,color:"#E6EDF3",marginBottom:6}}>No assessments yet</div>
+              <div style={{fontSize:12,color:"#8B949E",marginBottom:22,maxWidth:260,margin:"0 auto 22px"}}>Create your first fire risk assessment. Work through it section by section, on-site.</div>
+              <button style={{padding:"12px 28px",background:ac,color:"#fff",border:"none",borderRadius:10,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"NEW_ASSESSMENT"})}>
+                Start First Assessment
               </button>
             </div>
-          )}        </div>
+          )}
+
+        </div>
       </div>
     </div>
   );
 }
-
 // ─── ASSESSMENT — card-by-card flow ──────────────────────────────
 function Assessment({state, dispatch}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
