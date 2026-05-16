@@ -2798,10 +2798,10 @@ function Assessment({state, dispatch}) {
               {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
-            <button className="se-next" onClick={()=>{playSound("whoosh");goNextSec();}}
+            <button className="se-next" onClick={()=>{playSound("whoosh");goNextSec();}}>
               {secIdx<ALL_SECTIONS.length-1?`${ALL_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
             </button>
-            <button className="se-review" onClick={()=>{playSound("click");dispatch({type:"SET_MODE",mode:"review"});}}
+            <button className="se-review" onClick={()=>{playSound("click");dispatch({type:"SET_MODE",mode:"review"});}}>
               Review this section
             </button>
           </div>
