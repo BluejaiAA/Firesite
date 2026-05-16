@@ -15,7 +15,7 @@
 <link rel="manifest" id="pwa-manifest"/>
 <script>
 (function(){
-var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
+var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/app.html",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
 var mb=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
 document.getElementById("pwa-manifest").href=URL.createObjectURL(mb);
 if("serviceWorker"in navigator){
@@ -204,16 +204,34 @@ const SMART_ACTIONS = {
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
+const SEC_SVG = {
+  building: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 8h.01M15 12h.01M15 16h.01"/></svg>,
+  person: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
+  flame: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>,
+  bolt: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  lock: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>,
+  group: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  exit: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+  door: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M13 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 4v5h5"/><circle cx="15.5" cy="14.5" r=".5" fill="currentColor"/></svg>,
+  alarm: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
+  extinguisher: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M9 2h6l1 4H8L9 2z"/><rect x="7" y="6" width="10" height="15" rx="2"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>,
+  chart: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+  risk: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  clipboard: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>,
+};
 const SECTION_INTROS = {
-  1:  {icon:"🏢", colour:"#C0392B", text:"Record the address, construction type and occupancy. This determines which standards apply.", mins:2},
-  2:  {icon:"👤", colour:"#C0392B", text:"Identify the Responsible Person under Article 3 of the RRO 2005 — the person with control of the premises.", mins:2},
-  3:  {icon:"🔥", colour:"#DC2626", text:"Walk the entire premises. Consider all ignition sources and combustible materials — permanent and temporary.", mins:5},
-  4:  {icon:"⚡", colour:"#D97706", text:"Ask to see the EICR and PAT records. Check for visible cable or equipment defects.", mins:3},
-  5:  {icon:"🔒", colour:"#374151", text:"Consider the likelihood of deliberate fire-raising. Assess external fuel loads, lighting and CCTV.", mins:2},
-  6:  {icon:"👥", colour:"#C0392B", text:"Identify all persons present, paying attention to those needing additional assistance to evacuate.", mins:3},
+  0:   {icon:"person", colour:"#C0392B", text:"Complete before commencing. Record assessor competence, qualifications and any conflict of interest. Satisfies PAS 79-1:2020 Section 5.", mins:3},
+  0.25:{icon:"alarm", colour:"#059669", text:"Record independent validation details. Best practice under BS 8674:2025. Recommended for all higher-risk premises.", mins:2},
+  0.5: {icon:"clipboard", colour:"#C0392B", text:"Define the scope and limitations of this assessment. Record what was and was not inspected. Satisfies PAS 79-1:2020 Section 6.", mins:2},
+  1:  {icon:"building", colour:"#C0392B", text:"Record the address, construction type and occupancy. This determines which standards apply.", mins:2},
+  2:  {icon:"person", colour:"#C0392B", text:"Identify the Responsible Person under Article 3 of the RRO 2005 — the person with control of the premises.", mins:2},
+  3:  {icon:"flame", colour:"#DC2626", text:"Walk the entire premises. Consider all ignition sources and combustible materials — permanent and temporary.", mins:5},
+  4:  {icon:"bolt", colour:"#D97706", text:"Ask to see the EICR and PAT records. Check for visible cable or equipment defects.", mins:3},
+  5:  {icon:"lock", colour:"#374151", text:"Consider the likelihood of deliberate fire-raising. Assess external fuel loads, lighting and CCTV.", mins:2},
+  6:  {icon:"group", colour:"#C0392B", text:"Identify all persons present, paying attention to those needing additional assistance to evacuate.", mins:3},
   7:  {icon:"🚪", colour:"#059669", text:"Walk every escape route to the final exit. Test every door. Do not rely on plans — check what is actually there.", mins:5},
-  8:  {icon:"🔥", colour:"#DC2626", text:"Use a gap gauge to test door tolerances. Check self-closers under load from 90°. Look for wedges or props.", mins:4},
-  9:  {icon:"🔔", colour:"#C0392B", text:"Test the fire alarm if possible. Check the log book for weekly test records. Review the latest service certificate.", mins:3},
+  8:  {icon:"door", colour:"#DC2626", text:"Use a gap gauge to test door tolerances. Check self-closers under load from 90°. Look for wedges or props.", mins:4},
+  9:  {icon:"alarm", colour:"#C0392B", text:"Test the fire alarm if possible. Check the log book for weekly test records. Review the latest service certificate.", mins:3},
   10: {icon:"🧯", colour:"#D97706", text:"Check service labels, gauges and positions. Confirm extinguisher types match the identified fire risks.", mins:3},
   11: {icon:"📋", colour:"#374151", text:"Ask to see the fire safety log book and training evidence. Good management significantly reduces risk.", mins:4},
   12: {icon:"⚖️", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
@@ -478,10 +496,7 @@ const FRA_SECTIONS = [
     {ref:"9.8",q:"Are portable extinguishers checked visually each month by a responsible person?",t:"yn",required:true},
     {ref:"9.9",q:"Is all firefighting equipment serviced at the required intervals by a competent contractor?",t:"yn",required:true},
     {ref:"9.10",q:"Identify the contractor responsible for maintenance and servicing of firefighting equipment.",t:"text",required:true},
-    {ref:"9.11",q:"Is a wet or dry riser system installed within the building?",t:"ynna",required:true},
-    {ref:"9.12",q:"If a riser system is installed - is it serviced and pressure tested at the required intervals?",t:"ynna",required:false},
-    {ref:"9.13",q:"Is an automatic sprinkler or other fixed suppression system installed?",t:"ynna",required:false},
-    {ref:"9.14",q:"Where kitchen facilities are present - are fire blankets provided in accessible locations?",t:"ynna",required:false},
+    {ref:"9.11",q:"Where kitchen facilities are present, are fire blankets provided in accessible locations at the point of use?",t:"ynna",required:false},
   ]},
   {id:11,title:"Fire Safety Management and Training",short:"Management",questions:[
     {ref:"6.1",q:"Is a written fire safety policy document in place and available to all relevant persons?",t:"yn",required:true},
@@ -633,6 +648,7 @@ function reducer(state, action) {
     case "HYDRATE":       return {...action.state};
     case "SET_ORG":       return {...state, org:{...state.org,...action.p}};
     case "SETUP_STEP":    return {...state, setupStep:action.i};
+    case "SET_USER_TYPE": return {...state, org:{...state.org, userType:action.v, showDisclaimer:action.v!=="assessor"}};
     case "FINISH_SETUP":  return {...state, screen:"dashboard", setupDone:true, setupStep:0};
     case "EDIT_ORG":      return {...state, screen:"setup", setupStep:0};
     case "SET_ONLINE":    return {...state, isOnline:action.v};
@@ -1937,14 +1953,48 @@ function Setup({state, dispatch}) {
   const ac   = org.accentColor||"#C0392B";
   const pr   = org.primaryColor||"#0D1117";
   const STEPS = [
-    {title:"Your Details",     icon:"🏢",sub:"Your name or trading name and contact details — appears on every report you produce."},
-    {title:"Assessor Details", icon:"👤",sub:"Your qualifications and professional details for the report declaration page."},
-    {title:"Brand & Identity", icon:"🎨",sub:"Your logo and colours. Every report will carry your identity."},
-    {title:"Report Settings",  icon:"📄",sub:"Report footer, disclaimer and reference format."},
+    {title:"Who are you?",     icon:"group",sub:"Tell us a bit about yourself so we can tailor the experience."},
+    {title:"Your Details",     icon:"building",sub:"Your name or trading name and contact details — appears on every report you produce."},
+    {title:"Assessor Details", icon:"person",sub:"Your qualifications and professional details for the report declaration page."},
+    {title:"Brand & Identity", icon:"brand",sub:"Your logo and colours. Every report will carry your identity."},
+    {title:"Report Settings",  icon:"doc",sub:"Report footer, disclaimer and reference format."},
   ];
   const SW = ["#0D1117","#0F2847","#1B3461","#C0392B","#065F46","#7B1C1C","#1D4ED8","#9333EA","#B45309","#374151"];
 
+  const USER_TYPES = [
+    {id:"assessor",label:"Qualified Fire Risk Assessor",sub:"I hold recognised fire safety qualifications and carry out fire risk assessments professionally.",icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>},
+    {id:"owner",label:"Business Owner or Manager",sub:"I manage or own the premises and need to produce or review a fire risk assessment.",icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>},
+    {id:"rp",label:"Responsible Person",sub:"I am legally responsible for fire safety at this premises under the Regulatory Reform (Fire Safety) Order 2005.",icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
+    {id:"fm",label:"Facilities or Property Manager",sub:"I manage fire safety compliance for one or more premises on behalf of owners or occupiers.",icon:<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>},
+  ];
+  const showDisclaimer = (org.userType && org.userType!=="assessor" && org.showDisclaimer);
   const pages = [
+    <div key="s-type" style={{display:"flex",flexDirection:"column",gap:10}}>
+      {USER_TYPES.map(ut=>(
+        <button key={ut.id} onClick={()=>{upd({userType:ut.id,showDisclaimer:ut.id!=="assessor"});}} style={{display:"flex",alignItems:"flex-start",gap:14,padding:"14px 16px",borderRadius:11,border:org.userType===ut.id?"2px solid "+ac:"1.5px solid #30363D",background:org.userType===ut.id?"rgba(192,57,43,.08)":"#0D1117",cursor:"pointer",textAlign:"left",transition:"all .15s",width:"100%"}}>
+          <div style={{width:38,height:38,borderRadius:9,background:org.userType===ut.id?"rgba(192,57,43,.15)":"#21262D",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,color:org.userType===ut.id?ac:"#8B949E",marginTop:2}}>{ut.icon}</div>
+          <div>
+            <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,color:"#E6EDF3",marginBottom:2}}>{ut.label}</div>
+            <div style={{fontSize:11,color:"#6E7681",lineHeight:1.4}}>{ut.sub}</div>
+          </div>
+          {org.userType===ut.id&&<div style={{marginLeft:"auto",flexShrink:0,color:ac}}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>}
+        </button>
+      ))}
+      {showDisclaimer&&<div style={{marginTop:14}}>
+        <div style={{background:"rgba(192,57,43,.08)",border:"1px solid rgba(192,57,43,.3)",borderRadius:10,padding:"14px",marginBottom:12}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C0392B" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            <span style={{fontFamily:"'Nunito',sans-serif",fontSize:13,fontWeight:700,color:"#C0392B"}}>Important Notice</span>
+          </div>
+          <p style={{fontSize:11,color:"#E6EDF3",lineHeight:1.6,marginBottom:8}}>Fire risk assessments are a legal requirement under the <strong>Regulatory Reform (Fire Safety) Order 2005</strong> and must be carried out by a <strong>competent person</strong>. Firesite will guide you through every step, but <strong>the accuracy of the assessment remains your responsibility</strong>. Firesite by Bluejai accepts no liability for the outcome.</p>
+          <p style={{fontSize:11,color:"#8B949E",lineHeight:1.5}}>If unsure of your competence, we recommend engaging a qualified assessor. Find one at <strong>FRACC.co.uk</strong> or the <strong>Institute of Fire Engineers (IFE)</strong>.</p>
+        </div>
+        <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer",padding:"10px",borderRadius:9,border:"1px solid "+(org.disclaimerAgreed?"rgba(192,57,43,.4)":"#30363D"),background:"#161B22"}}>
+          <input type="checkbox" checked={!!org.disclaimerAgreed} onChange={e=>upd({disclaimerAgreed:e.target.checked})} style={{marginTop:2,accentColor:ac,flexShrink:0}}/>
+          <span style={{fontSize:11,color:"#E6EDF3",lineHeight:1.5}}>I understand that I am responsible for the accuracy of this fire risk assessment and that Firesite by Bluejai does not accept liability for the outcome determined by the assessor.</span>
+        </label>
+      </div>}
+    </div>,
     <div key="s0" className="g2">
       <div className="fg span2"><label className="fl">Your name or trading name <span className="req">*</span></label>
         <input className="fi" placeholder="e.g. James Hartley Fire Safety" value={org.name||""} onChange={e=>upd({name:e.target.value})}/></div>
@@ -2034,10 +2084,10 @@ function Setup({state, dispatch}) {
         <div className="form-card fade" key={step} style={{maxWidth:520,width:"100%"}}>
           <div className="fch">
             <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:9}}>
-              <div style={{width:30,height:30,borderRadius:6,background:"#FDF3EE",border:"1px solid #0D7A7A14",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15}}>{STEPS[step].icon}</div>
+              <div style={{width:30,height:30,borderRadius:6,background:"#21262D",border:"1px solid #30363D",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15}}>{SEC_SVG[STEPS[step].icon]||STEPS[step].icon}</div>
               <div>
                 <div style={{fontSize:8,fontWeight:700,textTransform:"uppercase",letterSpacing:2,color:ac,marginBottom:1}}>Step {step+1} of {STEPS.length}</div>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:19,fontWeight:700,color:"#0D1117"}}>{STEPS[step].title}</div>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:19,fontWeight:700,color:"#E6EDF3"}}>{STEPS[step].title}</div>
               </div>
             </div>
             <p style={{fontSize:12,color:"#6B7280",lineHeight:1.6,paddingBottom:14,borderBottom:"1px solid #F3F4F6"}}>{STEPS[step].sub}</p>
@@ -2079,10 +2129,10 @@ function Setup({state, dispatch}) {
             {step>0?<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step-1})}>← Back</button>:
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"landing"})}>← Home</button>}
             <div style={{display:"flex",gap:4}}>
-              {STEPS.map((_,i)=><div key={i} style={{height:4,width:i===step?12:4,borderRadius:2,background:i<=step?ac:"#EAECF0",transition:"all .25s"}}/>)}
+              {STEPS.map((_,i)=><div key={i} style={{height:4,width:i===step?12:4,borderRadius:2,background:i<=step?ac:"rgba(255,255,255,.1)",transition:"all .25s"}}/>)}
             </div>
             {step<STEPS.length-1
-              ?<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step+1})}>Continue →</button>
+              ?<button className="btn btn-teal btn-sm" disabled={step===0&&(!org.userType||(org.showDisclaimer&&!org.disclaimerAgreed))} style={{opacity:step===0&&(!org.userType||(org.showDisclaimer&&!org.disclaimerAgreed))?0.4:1}} onClick={()=>dispatch({type:"SETUP_STEP",i:step+1})}>Continue →</button>
               :<button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"FINISH_SETUP"})}>Launch →</button>}
           </div>
         </div>
@@ -2637,8 +2687,11 @@ function Assessment({state, dispatch}) {
 
         {/* ── SECTION START CARD ── */}
         {mode==="start" && (
-          <div className="sec-start fade">
-            <div className="ss-icon">{intro?.icon||"📋"}</div>
+          <div className="sec-start fade" style={{position:"relative"}}>
+            <button style={{position:"absolute",top:12,left:12,padding:"6px 12px",borderRadius:8,border:"1px solid #30363D",background:"transparent",color:"#8B949E",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SEC",i:Math.max(0,secIdx-1)})}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>Sections
+            </button>
+            <div className="ss-icon">{SEC_SVG[intro?.icon]||SEC_SVG.clipboard}</div>
             <div className="ss-num" style={{color:intro?.colour||ac}}>Section {curSec.id} of {ALL_SECTIONS.length}</div>
             <div className="ss-title">{curSec.title}</div>
             <div className="ss-desc">{intro?.text||""}</div>
@@ -2687,9 +2740,12 @@ function Assessment({state, dispatch}) {
 
         {/* ── SECTION END CARD ── */}
         {mode==="end" && (
-          <div className="sec-end fade">
-            <div className="se-icon">{secDone(curSec)?"✅":"📋"}</div>
-            <div className="se-title" style={{color:secDone(curSec)?"#059669":"#0D1117"}}>{secDone(curSec)?`Section ${curSec.id} complete!`:`Section ${curSec.id} done`}</div>
+          <div className="sec-end fade" style={{position:"relative"}}>
+            <button style={{position:"absolute",top:12,left:12,padding:"6px 12px",borderRadius:8,border:"1px solid #30363D",background:"transparent",color:"#8B949E",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>Dashboard
+            </button>
+            <div className="se-icon" style={{color:secDone(curSec)?"#059669":"#8B949E"}}>{secDone(curSec)?<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>:<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>}</div>
+            <div className="se-title" style={{color:secDone(curSec)?"#059669":"#F0F6FC"}}>{secDone(curSec)?`Section ${curSec.id} complete!`:`Section ${curSec.id} done`}</div>
             <div className="se-sub">
               {curSec.title}<br/>
               {secAns(curSec)} of {vqs.length} questions answered
