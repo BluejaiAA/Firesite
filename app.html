@@ -397,7 +397,7 @@ const SCOPE_SECTION = {id:0.5,title:"Scope of Assessment",short:"Scope",
   {ref:"SC.1",q:"Describe all areas of the premises included within the scope of this fire risk assessment.",t:"textarea",required:true,ph:"e.g. All accessible areas of the ground, first and second floors of 14 High Street, including the basement plant room and rear service yard. The attached warehouse (Unit 2, under separate ownership) is excluded from this assessment.",g:"List all buildings, floors, zones and external areas covered. If only part of a building is covered, state precisely what is excluded and why. Example: All areas of the ground and first floor were included. The roof void was excluded as access was unavailable. The adjoining unit is excluded as it is occupied by a separate tenant."},
   {ref:"SC.2",q:"Were there any areas that could not be inspected?",t:"yn",required:true,g:"Common examples: locked plant rooms, occupied residential units, inaccessible roof spaces, areas under construction.",sub:{on:"y",fields:[{ref:"SC.2a",q:"List the areas not inspected and the reason for each",t:"textarea",ph:"e.g. Roof void — hatch locked, no access available. Basement plant room — key unavailable. To be reviewed on next visit."}]}},
   {ref:"SC.3",q:"Were any documents or certificates requested during this assessment but not made available?",t:"yn",required:true,g:"During your visit, you should have asked to see: Electrical Installation Condition Report (EICR), gas safety certificate, fire alarm service record, emergency lighting certificate, Portable Appliance Testing (PAT) log, fire door inspection report, and any previous fire risk assessment. Answer based on what you actually requested and received during the visit.",sub:{on:"y",fields:[{ref:"SC.3a",q:"List the documents requested but not produced, and the explanation given",t:"textarea",ph:"e.g. Electrical Installation Condition Report (EICR) — occupier stated no copy available. Fire alarm service record — last certificate could not be located. Previous fire risk assessment — stated none existed."}]}},
-  {ref:"SC.4",q:"Did you identify any fire safety issues during this assessment that need a specialist to investigate further?",t:"yn",required:false,g:"This means issues you found that are outside the scope of a standard fire risk assessment — for example: a complex smoke control or ventilation system that needs an engineering specialist; structural questions about how fire would spread through the building; an explosion risk from chemicals or flammable gases (assessed under DSEAR regulations); or anything else where you cannot form a confident conclusion without expert input. If in doubt, say yes and explain what needs looking at.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the issue and what type of specialist is recommended",t:"textarea",ph:"e.g. The pressurisation system serving the protected staircase could not be verified as functional — recommend inspection by a specialist smoke control engineer. \n\ne.g. Asbestos-containing materials suspected in roof void — recommend asbestos survey before further work."}]}},
+  {ref:"SC.4",q:"Did you identify any issues during this assessment that are outside the scope of a standard FRA and require a specialist to investigate?",t:"yn",required:false,g:"Examples include: a complex smoke control or ventilation system requiring an engineering specialist; structural questions affecting fire spread; an explosion risk from chemicals or flammable gases (under DSEAR regulations); or any other matter requiring specialist expertise beyond fire risk assessment. Record these here so they can be flagged in the report as items requiring further investigation.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the issue and what type of specialist is recommended",t:"textarea",ph:"e.g. The pressurisation system serving the protected staircase could not be verified as functional — recommend inspection by a specialist smoke control engineer. \n\ne.g. Asbestos-containing materials suspected in roof void — recommend asbestos survey before further work."}]}},
   {ref:"SC.5",q:"Describe the methodology used to carry out this assessment.",t:"textarea",required:true,ph:"e.g. The assessment was carried out by physical walk-through inspection of all accessible areas of the premises, interview with the Responsible Person, review of relevant documentation including fire safety records and maintenance certificates, and assessment of occupant characteristics.",g:"PAS 79-1:2020 Clause 6.3 requires the methodology to be recorded. A complete methodology should cover:\n\n1. Inspection method — physical walk-through of all accessible areas, noting areas not accessed\n2. Documentation review — which records were examined\n3. Interview — who was spoken to (e.g. Responsible Person, building manager)\n4. Assessment approach — how risk was evaluated (e.g. likelihood × consequence)\n\nExample answer: \'The assessment was conducted by way of a physical walk-through inspection of all areas accessible at the time of the visit, a review of fire safety documentation presented by the client, and an interview with the Responsible Person. Risk was assessed by considering the likelihood of fire occurring and the likely consequences for life safety, informed by the guidance in PAS 79-1:2020.\'"},
   {ref:"SC.6",q:"State any assumptions made in reaching the conclusions of this assessment.",t:"textarea",required:false,ph:"e.g. It is assumed that compartment walls and floors are structurally sound and have not been compromised by subsequent building works. It is assumed fire-stopping is in place at all penetrations where not visible for inspection. It is assumed that the premises is used as described by the Responsible Person.",g:"Record any assumptions you have had to make because something could not be directly verified. This protects you professionally if the assessment is later challenged. Common assumptions: compartment walls assumed as-built; fire-stopping assumed where not visible; electrical installation assumed compliant where EICR not produced."},
  ]};
@@ -421,15 +421,16 @@ const FRA_SECTIONS = [
   {id:1,title:"Premises Details",short:"Premises",questions:[
     {ref:"P1.1",q:"State the full address of the premises under assessment.",t:"address",required:true,postcodeLookup:true},
     {ref:"P1.2",q:"What is the primary use and occupancy of the premises?",t:"occupancy",required:true},
-    {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true},
+    {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true,g:"These figures are used to calculate occupancy density and inform assessment findings. Floor area should be Gross Internal Area (GIA) — total internal floor space across all levels. Record each figure separately below."},
     {ref:"P1.3a",q:"Does the building exceed 18 metres in height? If yes, does it fall under the Building Safety Act 2022 higher-risk regime?",t:"yn",required:true,g:"Buildings over 18m (approx 7 storeys) are subject to additional requirements under the Building Safety Act 2022."},
-    {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels? If yes, state the number and primary use.",t:"textarea",required:true,ph:"e.g. One basement level used as storage. / e.g. Two sub-ground levels: lower ground floor used as restaurant kitchen and dining; basement level used as cold storage and plant room.",g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design."},
-    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"select",opts:["1-10","11-20","21-50","51-100","101-250","251-500","500+"],required:true},
+    {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels?",t:"yn",required:true,g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design. A 'No' answer will remove basement-specific questions from the assessment.",sub:{on:"y",fields:[{ref:"P1.3b_detail",q:"State the number of basement levels and their primary use",t:"textarea",ph:"e.g. One basement level used as storage. / e.g. Two sub-ground levels: lower ground used as restaurant kitchen; basement used as plant room."}]}},
+    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"occupantcount",required:true,g:"Enter the maximum number of people who may be present at any one time across all floors, including staff, visitors and contractors. This figure is used to check the adequacy of means of escape — exit widths, travel distances and stair capacity. Include all shifts if applicable."},
     {ref:"P1.5",q:"Are any parts of the premises used for sleeping accommodation?",t:"yn",required:true,g:"Sleeping risk fundamentally changes fire protection requirements. Automatic detection to BS 5839 is likely required throughout."},
     {ref:"P1.6",q:"Describe the construction type and approximate age of the building.",t:"text",required:false},
-    {ref:"P1.7",q:"Have there been any recent alterations, extensions or changes of use to the building?",t:"yn",required:false,g:"Material changes may invalidate previous assessments and affect compartmentation and means of escape."},
-    {ref:"P1.8",q:"Is the building listed or within a conservation area? If yes, state the listing grade.",t:"yn",required:false,g:"Listed status can restrict alterations to fire doors, compartmentation and other fire precautions."},
-    {ref:"P1.9",q:"Is a current fire risk assessment already in place for these premises?",t:"yn",required:false,g:"Establishes whether this is a new or review assessment.",sub:{on:"y",fields:[{ref:"P1.9a",q:"Date of last assessment",t:"text",ph:"DD/MM/YYYY"},{ref:"P1.9b",q:"Assessor name and organisation",t:"text",ph:"Name, Company"}]}},
+    {ref:"P1.7",q:"Have there been any recent alterations, extensions or changes of use to the building?",t:"yn",required:false,g:"Material changes may invalidate previous assessments and affect compartmentation and means of escape. Includes new partitioning, change of use, new plant, or any building works.",sub:{on:"y",fields:[{ref:"P1.7a",q:"Describe the alterations, extensions or changes of use",t:"textarea",ph:"e.g. New partitioning to first floor creating additional office pods — completed approx. 6 months ago. / e.g. Ground floor converted from retail to restaurant use 12 months ago, new kitchen extraction installed."},{ref:"P1.7b",q:"Were the works subject to Building Regulations approval?",t:"yn"}]}},
+    {ref:"P1.8",q:"Is the building listed or within a conservation area?",t:"yn",required:false,g:"Listed status can restrict alterations to fire doors, compartmentation and other fire precautions. Historic England may need to be consulted before remedial works are carried out.\n\nHow to check: Search the National Heritage List for England (NHLE) at historicengland.org.uk/listing/the-list using the postcode or address. Also check the Local Planning Authority website — conservation area boundaries are shown on the local plan maps. Ask the Responsible Person — they should know if the property is listed.\n\nGrades: Grade I = exceptional interest; Grade II* = particularly important; Grade II = nationally important (approx. 92% of all listed buildings).",sub:{on:"y",fields:[{ref:"P1.8a",q:"State the listing grade and any known restrictions on works",t:"textarea",ph:"e.g. Grade II listed. Local authority conservation officer to be consulted before any alterations to fire doors or external fabric. Intumescent strips must be period-appropriate or concealed."}]}},
+    {ref:"P1.9",q:"Is a current fire risk assessment already in place for these premises?",t:"yn",required:false,g:"Establishes whether this is a new or review assessment. PAS 79-1:2020 recommends FRAs are reviewed at least annually, or sooner following any material change, incident, or enforcement notice.",sub:{on:"y",fields:[{ref:"P1.9a",q:"Date of last assessment",t:"text",ph:"DD/MM/YYYY"},{ref:"P1.9b",q:"Assessor name and organisation",t:"text",ph:"e.g. J. Smith, SafeFire Consulting Ltd"},{ref:"P1.9c",q:"Has the previous FRA been reviewed by the Responsible Person within the last 12 months?",t:"yn"},{ref:"P1.9d",q:"Are there any outstanding actions or recommendations from the previous FRA not yet completed?",t:"yn"},{ref:"P1.9d_detail",q:"List the outstanding actions (complete only if Yes above)",t:"textarea",ph:"e.g. 1. Install fire door self-closer to first floor kitchen — not yet completed.\n2. Replace missing emergency lighting fitting in rear corridor — outstanding.\n3. Compartmentation survey to loft void — no action taken."}]}},
+
   ]},
   {id:2,title:"Responsible Person",short:"Resp. Person",questions:[
     {ref:"R2.1",q:"State the name of the Responsible Person as defined under Article 3 of the RRO 2005.",t:"text",required:true},
@@ -795,6 +796,8 @@ const isAnswered = (q, ans={}) => {
   if (q.t==="address")   return !!(ans.ans||"").trim();
   if (q.t==="occupancy") return !!(ans.occupancyCat||ans.ans||"").trim();
   if (q.t==="floorarea") return !!(ans.floorArea||ans.floors);
+  if (q.t==="occupantcount") return !!(ans.ans);
+  if (q.t==="textarea")  return !!(ans.ans||"").trim();
   return !!ans.ans;
 };
 const isMissed  = (q, ans) => q.required && !isAnswered(q, ans||{});
@@ -1733,14 +1736,34 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </select>
         )}
         {q.t==="text" && (
-          <input className="qc-inp" placeholder="Enter details…" value={ans||""}
+          <input className="qc-inp" placeholder={q.ph||"Enter details…"} value={ans||""}
             onChange={e=>upd({ans:e.target.value||null})}/>
+        )}
+        {q.t==="textarea" && (
+          <textarea className="obs-box" style={{minHeight:100,marginBottom:14}} placeholder={q.ph||"Enter details…"} value={ans||""}
+            onChange={e=>upd({ans:e.target.value||null})}/>
+        )}
+        {q.t==="occupantcount" && (
+          <div style={{marginBottom:14}}>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <input className="qc-inp" type="number" min="1" placeholder="e.g. 45" style={{maxWidth:160,fontSize:20,fontWeight:700,textAlign:"center"}} value={ans||""} onChange={e=>upd({ans:e.target.value||null})}/>
+              <span style={{fontSize:13,color:"#8B949E",fontWeight:500}}>persons</span>
+            </div>
+          </div>
         )}
         {q.t==="address"&&(<PostcodeLookup state={state} onChange={s=>upd({...s})}/>)}
         {q.t==="occupancy"&&(<textarea className="obs-box" style={{minHeight:90,marginBottom:14}} placeholder="e.g. Office / Retail / Residential — mixed use if applicable…" value={ans||""} onChange={e=>upd({ans:e.target.value||null})}/>)}
         {q.t==="floorarea" && (
-          <textarea className="obs-box" style={{minHeight:70,marginBottom:14}} placeholder="e.g. 3 floors, approx 1,200 m² GIA — ground, first and second floors" value={ans||""}
-            onChange={e=>upd({ans:e.target.value||null})}/>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
+            <div>
+              <label style={{fontSize:10,fontWeight:600,color:"#8B949E",display:"block",marginBottom:5,textTransform:"uppercase",letterSpacing:"0.5px"}}>Number of floors</label>
+              <input className="qc-inp" type="number" min="1" placeholder="e.g. 3" value={state.floors||""} onChange={e=>upd({floors:e.target.value||null})}/>
+            </div>
+            <div>
+              <label style={{fontSize:10,fontWeight:600,color:"#8B949E",display:"block",marginBottom:5,textTransform:"uppercase",letterSpacing:"0.5px"}}>Floor area (m²)</label>
+              <input className="qc-inp" type="number" min="0" placeholder="e.g. 1200" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value||null})}/>
+            </div>
+          </div>
         )}
         {q.t==="multi" && (
           <div className="mc-wrap">
@@ -2852,9 +2875,7 @@ function Assessment({state, dispatch}) {
                   {qIdx<vqs.length-1?<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Next<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg></span>:<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Complete Section ✓</span>}
                 </button>
               ) : (
-                <button className="q-next q-next-skip" onClick={goNextQ}>
-                  Skip ›
-                </button>
+                <button className="q-next q-next-skip" onClick={()=>{playSound("click");goNextQ();}}>Skip to next question ›</button>
               )}
             </div>
           </>
