@@ -2099,39 +2099,7 @@ function Setup({state, dispatch}) {
             <p style={{fontSize:12,color:"#6B7280",lineHeight:1.6,paddingBottom:14,borderBottom:"1px solid #F3F4F6"}}>{STEPS[step].sub}</p>
           </div>
           <div className="fcb">{pages[step]}</div>
-            <div style={{marginTop:14,padding:"14px 0 0",borderTop:"1px solid #F3F4F6"}}>
-              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:13,fontWeight:700,marginBottom:10,color:"#374151"}}>Assessment Configuration</div>
-              <div className="g2">
-                <div className="fg span2"><label className="fl">Building type preset</label>
-                  <select className="fs" value={a.buildingPreset||"standard"} onChange={e=>upd({buildingPreset:e.target.value})}>
-                    <option value="standard">Standard Commercial / Office</option>
-                    <option value="hmo">HMO / Houses in Multiple Occupation</option>
-                    <option value="care_home">Care Home / Residential Care</option>
-                    <option value="hotel">Hotel / Guest Accommodation</option>
-                    <option value="higher_risk">Higher-Risk Building (BSA 2022, 18m+)</option>
-                    <option value="warehouse">Warehouse / Industrial</option>
-                    <option value="school">School / Educational</option>
-                  </select></div>
-                <div className="fg span2"><label className="fl">Assessment type</label>
-                  <select className="fs" value={a.reviewType||"new"} onChange={e=>upd({reviewType:e.target.value})}>
-                    <option value="new">New assessment</option>
-                    <option value="review">Review of previous assessment</option>
-                    <option value="material_change">Review following material change</option>
-                    <option value="enforcement">Reassessment — enforcement notice</option>
-                    <option value="incident">Reassessment — fire or near-miss incident</option>
-                  </select></div>
-                {(a.reviewType||"new")!=="new"&&(<>
-                <div className="fg"><label className="fl">Previous assessment date</label>
-                  <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>
-                <div className="fg"><label className="fl">Previous assessment ref.</label>
-                  <input className="fi" placeholder="e.g. FRA-2024-001" value={a.previousAssessmentRef||""} onChange={e=>upd({previousAssessmentRef:e.target.value})}/></div>
-                <div className="fg span2"><label className="fl">Previous assessor</label>
-                  <input className="fi" placeholder="Name, Company" value={a.previousAssessor||""} onChange={e=>upd({previousAssessor:e.target.value})}/></div>
-                </>)}
-              </div>
-            </div>
-
-          <div className="fcf">
+            <div className="fcf">
             {step>0?<button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"SETUP_STEP",i:step-1})}>← Back</button>:
               <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"landing"})}>← Home</button>}
             <div style={{display:"flex",gap:4}}>
