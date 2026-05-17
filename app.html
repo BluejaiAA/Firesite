@@ -116,7 +116,7 @@ const SKIP_LOGIC = {
   "1.11": { parent:"1.10", showWhen:"y" },
   "1.14": { parent:"1.13", showWhen:"y" },
   "1.16": { parent:"1.15", showWhen:"y" },
-  "2.7":  { parent:"2.6",  showWhen:"y" },
+  "2.5":  { parent:"2.4",  hideWhen:"Not Conducted" },
   "2.9":  { parent:"2.8",  showWhen:"y" },
   "2.11": { parent:"2.10", showWhen:"y" },
   "2.13": { parent:"2.12", showWhen:"y" },
@@ -187,7 +187,6 @@ const SMART_ACTIONS = {
   "4.4":   {action:"Relocate external waste containers to at least 10 metres from the building.",priority:"P3 — Within 3 months",on:"n"},
   "1.20":  {action:"Arrange deep clean of kitchen extraction canopies and ductwork. Implement BESA TR/19 schedule.",priority:"P3 — Within 3 months",on:"n"},
   "2.2":   {action:"Arrange a PAT programme. Frequency risk-based: annually for high-use equipment.",priority:"P3 — Within 3 months",on:"Not conducted"},
-  "2.6":   {action:"Manage trailing lead risks: cable management, no daisy-chaining, replace with fixed sockets.",priority:"P3 — Within 3 months",on:"y"},
   "4.6":   {action:"Relocate combustible items stored within 10 metres of the building.",priority:"P3 — Within 3 months",on:"n"},
   "5.6":   {action:"Implement visitor management: fire safety briefing on arrival, sign-in register, evacuation person.",priority:"P3 — Within 3 months",on:"y"},
   "7.6":   {action:"Install compliant fire exit signs and directional arrows per BS ISO 7010:2019. Photoluminescent signs recommended for escape routes.",priority:"P2 — Within 1 month",on:"n"},
@@ -207,6 +206,9 @@ const SMART_ACTIONS = {
   "1.14":  {action:"Arrange annual gas appliance servicing by a Gas Safe registered engineer. Obtain and retain service records. All gas work must be carried out by a Gas Safe registered contractor.",priority:"P2 — Within 1 month",on:"n"},
   "1.16":  {action:"Arrange annual inspection of oil-fired appliances by an OFTEC registered contractor. Obtain and retain service records.",priority:"P2 — Within 1 month",on:"n"},
   "R2.5":  {action:"Document and communicate fire safety responsibilities to all relevant persons. Produce a written fire safety policy statement and implement a communication programme covering employees, contractors and visitors. Evidence of communication should be retained in the fire safety log.",priority:"P3 — Within 3 months",on:"n"},
+  "2.4":   {action:"Commission an Electrical Installation Condition Report (EICR) from a competent electrical contractor registered with NICEIC, NAPIT or ECA. This is a legal requirement for landlords and strongly recommended for all commercial premises. Priority: arrange assessment within 1 month.",priority:"P2 — Within 1 month",on:"Not Conducted"},
+  "2.9":   {action:"Implement fire safety controls for EV charging: ensure chargers are off a dedicated circuit with RCD protection, are not left unattended during charging, and that the area has appropriate detection. Seek specialist advice from a competent electrical engineer.",priority:"P2 — Within 1 month",on:"n"},
+  "2.10":  {action:"Implement fire safety controls for battery storage/charging: segregate batteries from combustible materials, use a designated charging area with fire detection, never charge damaged or swollen batteries, and review manufacturer guidance on storage and disposal.",priority:"P2 — Within 1 month",on:"y"},
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
@@ -475,13 +477,11 @@ const FRA_SECTIONS = [
     {ref:"2.3",q:"Is the fixed electrical installation tested periodically by a competent electrical engineer?",t:"ynna",required:true,g:"Ask to see the most recent EICR. Offices: every 5 years. Industrial: every 3 years.",sub:{on:"y",fields:[{ref:"2.3a",q:"Name of electrical engineer or company who undertook the EICR",t:"text",ph:"Name, Company"},{ref:"2.3b",q:"Date the EICR was completed",t:"text",ph:"DD/MM/YYYY"},{ref:"2.3c",q:"EICR certificate reference (if available)",t:"text",ph:"Optional"}]}},
     {ref:"2.4",q:"How long ago was the most recent EICR carried out?",t:"select",opts:["Under 3 Years","3-5 Years","Over 5 Years","Not Conducted","N/A"],required:true},
     {ref:"2.5",q:"Have all C1, C2, C3 and FI items from the latest EICR been properly resolved?",t:"ynna",required:true},
-    {ref:"2.6",q:"Are trailing leads, multi-way adaptors or extension blocks in use?",t:"yn",required:true},
-    {ref:"2.7",q:"If yes - are the associated risks adequately controlled?",t:"ynna",required:false},
     {ref:"2.8",q:"Are electric vehicle (EV) charging facilities provided at or within the premises?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"2.8a",q:"How many EV charging points are installed?",t:"text",ph:"e.g. 4"},{ref:"2.8b",q:"Location of EV charging points",t:"text",ph:"e.g. underground car park"},{ref:"2.8c",q:"Were the EV chargers installed after the most recent EICR was completed?",t:"yn",ph:""},{ref:"2.8d",q:"Is there a separate EICR report covering the EV charging installation?",t:"yn",ph:""},{ref:"2.8e",q:"Name of electrical engineer who certified the EV installation",t:"text",ph:"Name, Company"},{ref:"2.8f",q:"Date of EV installation EICR",t:"text",ph:"DD/MM/YYYY"}]}},
     {ref:"2.9",q:"If yes - are appropriate fire safety controls in place for EV charging?",t:"ynna",required:false},
     {ref:"2.10",q:"Are lithium-ion, lead-acid or other batteries stored, charged or used on site?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"2.10a",q:"Where are the batteries stored or charged?",t:"text",ph:"e.g. server room, storeroom"}]}},
     {ref:"2.11",q:"If yes - are the fire risks from battery storage and charging adequately managed?",t:"ynna",required:false},
-    {ref:"2.12",q:"Are solar photovoltaic (PV) panels or other renewable energy systems installed?",t:"yn",required:false},
+    {ref:"2.12",q:"Are solar photovoltaic (PV) panels or other renewable energy systems installed?",t:"yn",required:false,sub:{on:"y",fields:[{ref:"2.12a",q:"Where are the panels located?",t:"text",ph:"e.g. roof-mounted, south elevation"},{ref:"2.12b",q:"Are the panels covered by a current electrical inspection certificate?",t:"yn",ph:""},{ref:"2.12c",q:"Name of installer / certifying engineer",t:"text",ph:"e.g. SolarTech Ltd — MCS certified"}]}},
     {ref:"2.13",q:"If yes - are the fire risks associated with the PV installation adequately controlled?",t:"ynna",required:false},
   ]},
   {id:5,title:"Arson Risk and Security",short:"Arson",questions:[
@@ -826,6 +826,7 @@ const addDays = (days) => {
 const shouldShow = (q, answers) => {
   const rule = SKIP_LOGIC[q.ref];
   if (!rule) return true;
+  if (rule.hideWhen !== undefined) return answers[rule.parent]?.ans !== rule.hideWhen;
   return answers[rule.parent]?.ans === rule.showWhen;
 };
 
@@ -1683,8 +1684,10 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
     const sa=SMART_ACTIONS[q.ref];
     const sf=sa&&newAns&&((sa.on==="y"&&newAns==="y")||(sa.on==="n"&&newAns==="n")||(newAns===sa.on));
     if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});setShowFlagAck(true);}else{upd({ans:newAns});}
-    // Auto-advance after 350ms — only if no note/flag panel open and not newly flagged
-    if (newAns && !note && !flagged && !sf) {
+    // Auto-advance after 350ms — suppress if sub-fields or warn triggered
+    const hasSubFields = q.sub && newAns === q.sub.on;
+    const hasWarn = q.warn && newAns === q.warn.on;
+    if (newAns && !note && !flagged && !sf && !hasSubFields && !hasWarn) {
       setTimeout(() => onNext(), 350);
     }
   };
