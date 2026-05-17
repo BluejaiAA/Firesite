@@ -1510,7 +1510,7 @@ function SubQuestions({q, state, upd}) {
   return (
     <div style={{marginTop:14,padding:14,background:isWarn?"rgba(220,38,38,.05)":"rgba(232,119,58,.06)",borderRadius:10,border:isWarn?"1px solid rgba(220,38,38,.25)":"1px solid rgba(232,119,58,.2)"}}>
       {isWarn&&<div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#DC2626",marginBottom:8}}>{activeSub.warnTitle}</div>}
-      {!isWarn&&<div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>
+      {!isWarn&&<div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>}
       {(activeSub.fields||[]).map(function(sf) { return (
         <div key={sf.ref} style={{marginBottom:12}}>
           <div style={{fontSize:12,fontWeight:600,color:"#F0F6FC",marginBottom:6}}>{sf.q}</div>
