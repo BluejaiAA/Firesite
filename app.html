@@ -2977,21 +2977,8 @@ function Assessment({state, dispatch}) {
               {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
-            {secIdx<ALL_SECTIONS.length-1&&(
-              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.15)",textAlign:"left"}}>
-                <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#8B949E",marginBottom:4}}>Up next</div>
-                <div style={{fontSize:14,fontWeight:700,color:"#F0F6FC"}}>{ALL_SECTIONS[secIdx+1].title}</div>
-                {ALL_SECTIONS[secIdx+1].questions&&<div style={{fontSize:11,color:"#8B949E",marginTop:2}}>{ALL_SECTIONS[secIdx+1].questions.length} questions</div>}
-              </div>
-            )}
-            {curSec.title==="Responsible Person"&&(
-              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(13,51,33,.4)",borderRadius:10,border:"1px solid rgba(5,150,105,.2)",textAlign:"left"}}>
-                <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#059669",marginBottom:4}}>Definition</div>
-                <div style={{fontSize:12,color:"#F0F6FC",lineHeight:1.6}}><strong style={{color:"#059669"}}>Responsible Person</strong> — under Article 3 of the Regulatory Reform (Fire Safety) Order 2005, the Responsible Person is the employer, owner or occupier of premises who has control in connection with a trade or business. They have a legal duty to carry out a suitable and sufficient fire risk assessment and implement appropriate fire safety measures.</div>
-              </div>
-            )}
             <button className="se-next" onClick={()=>{playSound("whoosh");goNextSec();}}>
-              {secIdx<ALL_SECTIONS.length-1?`${ALL_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
+              {secIdx<ALL_SECTIONS.length-1?`Start ${ALL_SECTIONS[secIdx+1].title}`:"Complete Assessment →"}
             </button>
             <button className="se-review" onClick={()=>{playSound("click");dispatch({type:"SET_MODE",mode:"review"});}}>
               Review this section
