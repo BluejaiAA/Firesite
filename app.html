@@ -201,6 +201,12 @@ const SMART_ACTIONS = {
   "P1.3a": {action:"Engage with the Building Safety Regulator. Register the building and appoint an Accountable Person as required by the Building Safety Act 2022.",priority:"P1 — Immediate",on:"y"},
   "P1.5":  {action:"Review automatic detection coverage against BS 5839-1 LD1 or LD2. Install interlinked detection in all sleeping areas and circulation routes per RRO 2005 Article 13.",priority:"P1 — Immediate",on:"y"},
   "7.14":  {action:"Commission a structural survey of all external metal escape staircases by a chartered structural engineer. Implement all remedial works identified.",priority:"P2 — Within 1 month",on:"n"},
+  "1.2":   {action:"Commission a formal DSEAR (Dangerous Substances and Explosive Atmospheres Regulations 2002) assessment for the identified flammable/explosive atmosphere hazard. A competent DSEAR assessor must be appointed. Assessment must identify hazardous zones, classify equipment and document control measures.",priority:"P1 — Immediate",on:"y"},
+  "1.3":   {action:"Commission a formal DSEAR assessment immediately. A flammable or explosive atmosphere has been identified but no DSEAR assessment has been conducted. This is a legal requirement under the Dangerous Substances and Explosive Atmospheres Regulations 2002.",priority:"P1 — Immediate",on:"n"},
+  "1.6":   {action:"Review storage, handling and management controls for substances hazardous to fire safety. Implement appropriate COSHH and fire safety controls including segregation, ventilation and access restriction.",priority:"P2 — Within 1 month",on:"n"},
+  "1.14":  {action:"Arrange annual gas appliance servicing by a Gas Safe registered engineer. Obtain and retain service records. All gas work must be carried out by a Gas Safe registered contractor.",priority:"P2 — Within 1 month",on:"n"},
+  "1.16":  {action:"Arrange annual inspection of oil-fired appliances by an OFTEC registered contractor. Obtain and retain service records.",priority:"P2 — Within 1 month",on:"n"},
+  "R2.5":  {action:"Document and communicate fire safety responsibilities to all relevant persons. Produce a written fire safety policy statement and implement a communication programme covering employees, contractors and visitors. Evidence of communication should be retained in the fire safety log.",priority:"P3 — Within 3 months",on:"n"},
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
@@ -373,8 +379,7 @@ const ASSESSOR_SECTION = {id:0,title:"Assessor Details",short:"Assessor",
   {ref:"AD.3",q:"State the assessor's professional body membership number and grade (e.g. IFE 123456 MIFireE, IFPO, IFSM).",t:"text",required:false,naOpt:true,naMsg:"Professional body membership is not mandatory but is strongly recommended. It demonstrates ongoing CPD and adherence to a code of conduct.",g:"Recognised bodies include: IFE (Institution of Fire Engineers), FPA, IFSM, IFPO. Membership provides independent verification of competence."},
   {ref:"AD.4",q:"State the assessor's Fire Risk Assessors' Competency Council (FRACC) registration number and competency level under BS 8674:2025.",t:"select",opts:["Level 1 — Low complexity","Level 2 — Medium complexity","Level 3 — High complexity (care homes, HMOs, higher-risk)","Level 4 — Specialist / Expert Witness","Not registered with FRACC"],required:true,naOpt:true,naMsg:"FRACC registration is not currently mandatory but is strongly recommended under BS 8674:2025. If not registered, ensure AD.2 fully records your qualifications and relevant experience.",g:"BS 8674:2025 defines four competency levels. FRACC provides a national register searchable by Responsible Persons. If not registered: record qualifications at AD.2 and experience at AD.3."},
   {ref:"AD.5a",q:"Name of the organisation conducting this assessment.",t:"text",required:false,ph:"e.g. SafeFire Consulting Ltd"},
-  {ref:"AD.5b",q:"Company registration number (Companies House).",t:"text",required:false,ph:"e.g. 12345678",g:"Sole traders may enter their UTR or write 'Sole trader — no company registration'."},
-  {ref:"AD.6",q:"Does the assessor or their organisation hold professional indemnity (PI) insurance?",t:"yn",required:false,g:"Professional indemnity insurance protects the Responsible Person if the assessment contains errors or omissions. Many clients require evidence of PI cover. Cover is typically held by the company rather than the individual — check with your employer if you are employed rather than self-employed.",sub:{on:"y",fields:[{ref:"AD.6a",q:"Insurer name and policy reference",t:"text",ph:"e.g. Hiscox Ltd — Policy ref: PI-2026-123456"},{ref:"AD.6b",q:"Level of cover",t:"text",ph:"e.g. £2,000,000 per claim"}]}},
+  {ref:"AD.6",q:"Does the assessor or their organisation hold professional indemnity (PI) insurance?",t:"yn",required:false,g:"Professional indemnity insurance protects the Responsible Person if the assessment contains errors or omissions. Many clients require evidence of PI cover. Cover is typically held by the company rather than the individual — check with your employer if you are employed rather than self-employed.",sub:{on:"y",fields:[{ref:"AD.6a",q:"Insurer name and policy reference",t:"text",ph:"e.g. Hiscox Ltd — Policy ref: PI-2026-123456"},{ref:"AD.6b",q:"Level of cover",t:"text",ph:"e.g. £2,000,000 per claim"}]},warn:{on:"n",title:"No PI Insurance — Important Notice",msg:"Without professional indemnity insurance, the assessor or their organisation may face significant personal financial liability if the assessment is found to be negligent or contains material errors. The Responsible Person could seek damages for losses arising from a deficient FRA. Many clients, insurers and public sector bodies require evidence of PI cover before commissioning an assessment. This risk should be disclosed to the client before proceeding.",ack:true}},
   {ref:"AD.7",q:"Does the assessor have any conflict of interest in conducting this assessment?",t:"yn",required:true,g:"PAS 79-1:2020 Clause 5.5 requires disclosure of any actual or perceived conflict of interest. A conflict exists where the assessor has a personal, financial or professional relationship with the client or premises that could influence — or appear to influence — objectivity. Examples: the assessor installed fire safety systems at these premises; the assessor is employed by the building owner; the assessor has a financial interest in the property. Declaring a conflict does not disqualify the assessor, but it must be recorded and the client informed so they can decide whether to proceed.",sub:{on:"y",fields:[{ref:"AD.7a",q:"Describe the nature of the conflict of interest",t:"textarea",ph:"e.g. Assessor previously involved in the installation of the fire alarm system at these premises. Client has been informed and consented to proceed."}]}},
   {ref:"AD.8",q:"Is this a new assessment or a review of a previous assessment?",t:"select",opts:["New assessment — no previous FRA exists","Review of a previous assessment","Review following a material change","Reassessment following enforcement notice","Reassessment following fire or near-miss incident"],required:true},
   {ref:"AD.9a",q:"Reference number of the previous fire risk assessment (if applicable).",t:"text",required:false,ph:"e.g. FRA-2024-001",g:"Linking to the previous assessment creates an audit trail and allows comparison of findings over time."},
@@ -1473,11 +1478,40 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
 // ─── SUB-QUESTIONS COMPONENT ─────────────────────────────────────────────
 function SubQuestions({q, state, upd}) {
   var ans = state.ans || null;
-  if (!q.sub || ans !== q.sub.on) return null;
+  // Warning box — shown when a specific answer triggers a risk alert
+  if (q.warn && ans === q.warn.on) {
+    return (
+      <div style={{marginTop:14,padding:14,background:"rgba(220,38,38,.06)",borderRadius:10,border:"1px solid rgba(220,38,38,.3)"}}>
+        <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+          <span style={{fontSize:18,lineHeight:1}}>⚠️</span>
+          <div style={{flex:1}}> 
+            <div style={{fontSize:12,fontWeight:700,color:"#DC2626",marginBottom:4}}>{q.warn.title||"Important"}</div>
+            <div style={{fontSize:12,color:"#F0F6FC",lineHeight:1.6}}>{q.warn.msg}</div>
+            {q.warn.ack && (
+              <button onClick={()=>{var p={};p[q.ref+"_ack"]=!state[q.ref+"_ack"];upd(p);}}
+                style={{marginTop:10,padding:"7px 14px",borderRadius:7,cursor:"pointer",fontSize:11,fontWeight:700,
+                  border:state[q.ref+"_ack"]?"2px solid #059669":"2px solid #DC2626",
+                  background:state[q.ref+"_ack"]?"rgba(5,150,105,.12)":"rgba(220,38,38,.08)",
+                  color:state[q.ref+"_ack"]?"#059669":"#DC2626",display:"flex",alignItems:"center",gap:6}}>
+                {state[q.ref+"_ack"]?<><span>✓</span><span> Acknowledged</span></>:<><span>□</span><span> I acknowledge this risk</span></>}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  // subNo — shown when ans === "n"
+  var activeSub = null;
+  if (q.sub && ans === q.sub.on) activeSub = q.sub;
+  else if (q.subNo && ans === "n") activeSub = q.subNo;
+  if (!activeSub) return null;
+  var isWarn = !!(q.subNo && ans === "n" && activeSub === q.subNo && activeSub.warnTitle);
   return (
-    <div style={{marginTop:14,padding:14,background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.2)"}}>
-      <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>
-      {q.sub.fields.map(function(sf) { return (
+    <div style={{marginTop:14,padding:14,background:isWarn?"rgba(220,38,38,.05)":"rgba(232,119,58,.06)",borderRadius:10,border:isWarn?"1px solid rgba(220,38,38,.25)":"1px solid rgba(232,119,58,.2)"}}>
+      {isWarn&&<div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#DC2626",marginBottom:8}}>{activeSub.warnTitle}</div>}
+      {!isWarn&&<div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#E8773A",marginBottom:10}}>Follow-up questions</div>
+      {(activeSub.fields||[]).map(function(sf) { return (
         <div key={sf.ref} style={{marginBottom:12}}>
           <div style={{fontSize:12,fontWeight:600,color:"#F0F6FC",marginBottom:6}}>{sf.q}</div>
           {sf.t==="text" && (
@@ -1608,6 +1642,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
   const [showNote,  setShowNote]  = useState(!!note);
   const [showGuide, setShowGuide] = useState(false);
   const [flash,     setFlash]     = useState(false);
+  const [showFlagAck, setShowFlagAck] = useState(false);
   const [photosArr, setPhotosArr] = useState(photos);
 
   // Keep local photos in sync
@@ -1646,10 +1681,10 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
   const handleAns = v => {
     const newAns = ans===v ? null : v;
     const sa=SMART_ACTIONS[q.ref];
-    const sf=sa&&newAns&&((sa.on==="y"&&newAns==="y")||(sa.on==="n"&&newAns==="n")||(sa.on==="Not conducted"&&newAns===sa.on));
-    if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});}else{upd({ans:newAns});}
-    // Auto-advance after 350ms — only if no note/flag panel open
-    if (newAns && !note && !flagged) {
+    const sf=sa&&newAns&&((sa.on==="y"&&newAns==="y")||(sa.on==="n"&&newAns==="n")||(newAns===sa.on));
+    if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});setShowFlagAck(true);}else{upd({ans:newAns});}
+    // Auto-advance after 350ms — only if no note/flag panel open and not newly flagged
+    if (newAns && !note && !flagged && !sf) {
       setTimeout(() => onNext(), 350);
     }
   };
@@ -1725,10 +1760,10 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         )}
 
         {/* Auto-flag banner */}
-        {SMART_ACTIONS[q.ref]&&!flagged&&ans&&((SMART_ACTIONS[q.ref].on==="y"&&ans==="y")||(SMART_ACTIONS[q.ref].on==="n"&&ans==="n"))&&(
+        {SMART_ACTIONS[q.ref]&&!flagged&&ans&&((SMART_ACTIONS[q.ref].on==="y"&&ans==="y")||(SMART_ACTIONS[q.ref].on==="n"&&ans==="n")||(SMART_ACTIONS[q.ref].on===ans))&&(
           <div className="autoflag">
             <span style={{fontSize:15,flexShrink:0}}>⚑</span>
-            <div><strong>Action suggested</strong> — this finding has been flagged automatically with a pre-written action. Review below.</div>
+            <div><strong>Action flagged</strong> — this response requires follow-up action. A pre-written action has been added below — review and adjust as needed.</div>
           </div>
         )}
 
@@ -1879,6 +1914,31 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         )}
       </div>
+
+      {/* ── FLAG ACKNOWLEDGEMENT MODAL ── */}
+      {showFlagAck && (
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}
+          onClick={()=>setShowFlagAck(false)}>
+          <div style={{background:"#161B22",borderRadius:"14px 14px 0 0",width:"100%",maxWidth:580,padding:"20px 20px 32px",borderTop:"3px solid #C0392B"}}
+            onClick={e=>e.stopPropagation()}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
+              <span style={{fontSize:22}}>⚑</span>
+              <div style={{flex:1}}>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#F0F6FC"}}>Finding Flagged</div>
+                <div style={{fontSize:12,color:"#8B949E",marginTop:2}}>A pre-written action has been added to the action plan</div>
+              </div>
+            </div>
+            <div style={{padding:"12px 14px",background:"rgba(192,57,43,.08)",borderRadius:10,border:"1px solid rgba(192,57,43,.25)",fontSize:12,color:"#F0F6FC",lineHeight:1.6,marginBottom:16}}>
+              {SMART_ACTIONS[q.ref]&&SMART_ACTIONS[q.ref].action}
+            </div>
+            <div style={{fontSize:11,color:"#8B949E",marginBottom:16}}>Review and edit this action in the action panel below. Set the priority, responsible person and target date.</div>
+            <button onClick={()=>setShowFlagAck(false)}
+              style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:"#C0392B",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}}>
+              Acknowledged — Review Action →
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -2917,6 +2977,19 @@ function Assessment({state, dispatch}) {
               {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
+            {secIdx<ALL_SECTIONS.length-1&&(
+              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(232,119,58,.06)",borderRadius:10,border:"1px solid rgba(232,119,58,.15)",textAlign:"left"}}>
+                <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#8B949E",marginBottom:4}}>Up next</div>
+                <div style={{fontSize:14,fontWeight:700,color:"#F0F6FC"}}>{ALL_SECTIONS[secIdx+1].title}</div>
+                {ALL_SECTIONS[secIdx+1].questions&&<div style={{fontSize:11,color:"#8B949E",marginTop:2}}>{ALL_SECTIONS[secIdx+1].questions.length} questions</div>}
+              </div>
+            )}
+            {curSec.title==="Responsible Person"&&(
+              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(13,51,33,.4)",borderRadius:10,border:"1px solid rgba(5,150,105,.2)",textAlign:"left"}}>
+                <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.8,color:"#059669",marginBottom:4}}>Definition</div>
+                <div style={{fontSize:12,color:"#F0F6FC",lineHeight:1.6}}><strong style={{color:"#059669"}}>Responsible Person</strong> — under Article 3 of the Regulatory Reform (Fire Safety) Order 2005, the Responsible Person is the employer, owner or occupier of premises who has control in connection with a trade or business. They have a legal duty to carry out a suitable and sufficient fire risk assessment and implement appropriate fire safety measures.</div>
+              </div>
+            )}
             <button className="se-next" onClick={()=>{playSound("whoosh");goNextSec();}}>
               {secIdx<ALL_SECTIONS.length-1?`${ALL_SECTIONS[secIdx+1].title} →`:"Complete Assessment →"}
             </button>
