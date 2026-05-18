@@ -855,7 +855,7 @@ const CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;font-family:'Nunito',sans-serif;color:#F0F6FC;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
 button,input,select,textarea{font-family:'Nunito',sans-serif;}
-::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px;}
+::-webkit-scrollbar{width:3px;} ::-webkit-scrollbar-thumb{background:#8B949E;border-radius:3px;}
 
 /* ─ TOP NAV ─ */
 .tnav{height:50px;flex-shrink:0;display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;}
@@ -882,7 +882,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 /* ─ SECTION PROGRESS DOTS ─ */
 .sec-dots-bar{background:#0D1117;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .sec-dot-row{display:flex;gap:4px;flex:1;}
-.sec-dot-item{height:5px;border-radius:3px;transition:all .35s cubic-bezier(.4,0,.2,1);}
+.sec-dot-item{height:4px;border-radius:4px;transition:all .35s cubic-bezier(.4,0,.2,1);}
 .sec-dot-item:hover{transform:scaleY(1.5);}
 .sec-label-row{font-size:9px;color:rgba(255,255,255,.3);white-space:nowrap;flex-shrink:0;}
 
@@ -897,9 +897,9 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 /* ─ SECTION TABS (scrollable, compact) ─ */
 .stabs{background:#161B22;border-bottom:1px solid #30363D;display:flex;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;}
 .stabs::-webkit-scrollbar{display:none;}
-.stab{padding:8px 11px;font-size:10px;font-weight:500;color:#6E7681;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none;display:flex;align-items:center;gap:3px;transition:all .1s;}
+.stab{padding:10px 12px;font-size:11px;font-weight:600;color:#6E7681;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none;display:flex;align-items:center;gap:4px;transition:all .15s;min-height:40px;}
 .stab:hover{color:#E6EDF3;}
-.stab.on{color:#F0F6FC;border-bottom-color:#C0392B;font-weight:600;}
+.stab.on{color:#F0F6FC;border-bottom-color:#E8773A;font-weight:700;}
 .stab.done{color:#059669;border-bottom-color:#059669;}
 .stab.miss{color:#DC2626;}
 .stab-miss-dot{width:4px;height:4px;border-radius:50%;background:#DC2626;}
@@ -911,16 +911,16 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .sec-start{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .ss-icon{font-size:52px;margin-bottom:18px;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
 .ss-num{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
-.ss-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:700;color:#F0F6FC;margin-bottom:10px;line-height:1.1;}
-.ss-desc{font-size:13px;color:#8B949E;line-height:1.65;max-width:280px;margin-bottom:24px;}
+.ss-title{font-family:'Nunito',sans-serif;font-size:28px;font-weight:800;color:#F0F6FC;margin-bottom:12px;line-height:1.15;letter-spacing:-.3px;}
+.ss-desc{font-size:14px;color:#8B949E;line-height:1.7;max-width:300px;margin-bottom:28px;}
 .ss-meta{display:flex;gap:12px;margin-bottom:28px;}
-.ss-pill{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;background:#FDF3EE;color:#C0392B;border:1px solid #C0392B22;}
+.ss-pill{font-size:10px;font-weight:600;padding:4px 12px;border-radius:20px;background:rgba(192,57,43,.12);color:#E8773A;border:1px solid rgba(192,57,43,.3);}
 .ss-begin{width:100%;max-width:280px;padding:15px;background:#0D1117;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.3px;}
 .ss-begin:hover{background:#1F2937;transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
 .ss-begin:active{transform:none;box-shadow:none;}
 .ss-prev-btn{display:flex;align-items:center;gap:6px;padding:11px 20px;border-radius:10px;border:1px solid #30363D;background:#161B22;color:#8B949E;font-size:13px;font-weight:600;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
 .ss-prev-btn:hover{border-color:#6E7681;color:#E6EDF3;background:#21262D;}
-.ss-begin{width:auto;min-width:160px;padding:13px 28px;}
+.ss-begin{width:auto;min-width:200px;padding:15px 32px;background:#C0392B;border-radius:12px;font-size:16px;}
 
 
 /* ─ QUESTION CARD ─ */
@@ -928,65 +928,65 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .q-card::-webkit-scrollbar{display:none;}
 
 .qc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.qc-ref{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:500;color:#C0392B;background:#FDF3EE;border:1px solid #C0392B1A;padding:3px 8px;border-radius:5px;}
+.qc-ref{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:#E8773A;background:rgba(232,119,58,.1);border:1px solid rgba(232,119,58,.25);padding:4px 9px;border-radius:6px;}
 .qc-dots{display:flex;gap:3px;align-items:center;}
-.qc-dot{width:6px;height:6px;border-radius:50%;transition:all .2s;}
-.qc-dot.done{background:#C0392B;}
-.qc-dot.now{background:#0D1117;transform:scale(1.3);}
-.qc-dot.todo{background:#E5E7EB;}
+.qc-dot{width:18px;height:4px;border-radius:4px;transition:all .25s cubic-bezier(.4,0,.2,1);}
+.qc-dot.done{background:#059669;}
+.qc-dot.now{background:#E8773A;width:24px;}
+.qc-dot.todo{background:#30363D;}
 .qc-dot.miss{background:#DC2626;}
 
-.qc-question{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#F0F6FC;line-height:1.25;margin-bottom:12px;}
+.qc-question{font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#F0F6FC;line-height:1.3;margin-bottom:14px;letter-spacing:-.2px;}
 .qc-req{color:#DC2626;font-size:13px;}
 
-.qc-guide-btn{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:#8B949E;background:#1C2128;border:1.5px solid #30363D;border-radius:20px;padding:5px 12px;cursor:pointer;margin-bottom:16px;transition:all .12s;}
+.qc-guide-btn{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#8B949E;background:#1C2128;border:1.5px solid #30363D;border-radius:20px;padding:6px 13px;cursor:pointer;margin-bottom:14px;transition:all .12s;}
 .qc-guide-btn:hover{border-color:#8B949E;color:#E6EDF3;}
-.qc-guide{padding:12px 14px;background:#161B22;border:1.5px solid #30363D;border-left:3px solid #C0392B;border-radius:8px;font-size:12px;color:#8B949E;line-height:1.65;margin-bottom:14px;animation:fu .2s ease both;}
+.qc-guide{padding:12px 14px;background:#1C2128;border:1px solid #30363D;border-left:3px solid #E8773A;border-radius:8px;font-size:12px;color:#8B949E;line-height:1.65;margin-bottom:14px;animation:fu .2s ease both;}
 
 /* BIG ANSWER BUTTONS */
 .big-ans{display:flex;flex-direction:column;gap:10px;margin-bottom:18px;}
-.big-btn{width:100%;padding:16px 18px;border-radius:14px;font-size:16px;font-weight:600;cursor:pointer;border:2px solid #30363D;background:#161B22;color:#8B949E;transition:all .15s;text-align:left;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;}
+.big-btn{width:100%;padding:17px 20px;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;border:2px solid #30363D;background:#1C2128;color:#8B949E;transition:all .15s cubic-bezier(.4,0,.2,1);text-align:left;display:flex;align-items:center;gap:14px;font-family:'Nunito',sans-serif;-webkit-tap-highlight-color:transparent;min-height:56px;}
 .big-btn:active{transform:scale(.97);}
 .big-btn.y,.big-btn.n,.big-btn.na{animation:btnPop .25s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes btnPop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
 .big-btn.y{background:rgba(52,211,153,.1);border-color:#34D399;color:#34D399;}
 .big-btn.n{background:rgba(248,113,113,.1);border-color:#F87171;color:#F87171;}
 .big-btn.na{background:rgba(139,148,158,.08);border-color:#6E7681;color:#8B949E;}
-.big-btn:not(.y):not(.n):not(.na):hover{border-color:#D1D5DB;color:#E6EDF3;}
+.big-btn:not(.y):not(.n):not(.na):hover{border-color:#6E7681;color:#E6EDF3;background:#21262D;}
 .big-btn-icon{font-size:20px;flex-shrink:0;}
 .big-btn-label{flex:1;}
 .big-btn-check{font-size:18px;margin-left:auto;flex-shrink:0;}
 
 /* SELECT / TEXT INPUTS */
-.qc-sel{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;cursor:pointer;transition:all .1s;}
+.qc-sel{width:100%;background:#1C2128;border:1.5px solid #30363D;border-radius:10px;padding:13px 15px;font-size:15px;color:#E6EDF3;outline:none;margin-bottom:14px;cursor:pointer;transition:all .15s;}
 .qc-sel:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
-.qc-inp{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:12px 14px;font-size:14px;color:#E6EDF3;outline:none;margin-bottom:14px;transition:all .1s;}
+.qc-inp{width:100%;background:#1C2128;border:1.5px solid #30363D;border-radius:10px;padding:13px 15px;font-size:15px;color:#E6EDF3;outline:none;margin-bottom:14px;transition:all .15s;line-height:1.5;}
 .qc-inp:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
-.qc-inp::placeholder{color:#D1D5DB;}
+.qc-inp::placeholder{color:#8B949E;}
 .mc-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
-.mc-c{padding:8px 14px;border-radius:20px;font-size:12px;font-weight:500;border:2px solid #EAECF0;background:#1C2128;color:#8B949E;cursor:pointer;transition:all .12s;}
-.mc-c.on{background:#FDF3EE;border-color:#C0392B;color:#C0392B;font-weight:600;}
+.mc-c{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;border:1.5px solid #30363D;background:#1C2128;color:#8B949E;cursor:pointer;transition:all .12s;min-height:40px;display:flex;align-items:center;}
+.mc-c.on{background:rgba(192,57,43,.15);border-color:#C0392B;color:#E8773A;font-weight:700;}
 
 /* AUTO-FLAG BANNER */
-.autoflag{display:flex;align-items:flex-start;gap:9px;padding:11px 13px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;margin-bottom:14px;font-size:12px;color:#92400E;line-height:1.55;}
+.autoflag{display:flex;align-items:flex-start;gap:9px;padding:11px 13px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.3);border-radius:9px;margin-bottom:14px;font-size:12px;color:#FCD34D;line-height:1.55;}
 
 /* OBS — collapsed */
 .obs-row{display:none;}
 .obs-row-label{font-size:12px;color:#6E7681;flex:1;}
 .obs-row-label.has{color:#E6EDF3;font-weight:500;}
-.obs-box{width:100%;background:#1C2128;border:2px solid #EAECF0;border-radius:10px;padding:11px 13px;font-size:13px;color:#E6EDF3;outline:none;resize:none;min-height:80px;line-height:1.6;transition:all .1s;margin-bottom:12px;}
+.obs-box{width:100%;background:#1C2128;border:1.5px solid #30363D;border-radius:10px;padding:12px 14px;font-size:13px;color:#E6EDF3;outline:none;resize:none;min-height:80px;line-height:1.6;transition:all .15s;margin-bottom:12px;}
 .obs-box:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
-.obs-box::placeholder{color:#D1D5DB;}
+.obs-box::placeholder{color:#8B949E;}
 
 /* PHOTO — camera first */
 .photo-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px;-webkit-overflow-scrolling:touch;}
 .photo-strip::-webkit-scrollbar{display:none;}
-.photo-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:2px solid #EAECF0;flex-shrink:0;}
+.photo-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:2px solid #30363D;flex-shrink:0;}
 .photo-thumb img{width:100%;height:100%;object-fit:cover;}
 .photo-del{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;border:none;cursor:pointer;font-size:9px;display:flex;align-items:center;justify-content:center;}
 /* ─ UNIFIED CARD TOOLBAR ─ */
 .card-toolbar{display:flex;align-items:center;gap:6px;padding:10px 0 4px;border-top:1px solid #21262D;margin-top:6px;flex-wrap:wrap;}
-.ctb-btn{display:flex;align-items:center;gap:5px;padding:7px 11px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid #30363D;background:#161B22;color:#6E7681;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;}
+.ctb-btn{display:flex;align-items:center;gap:5px;padding:8px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1.5px solid #30363D;background:#1C2128;color:#6E7681;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;min-height:34px;}
 .ctb-btn:hover{border-color:#8B949E;color:#E6EDF3;}
 .ctb-btn.active{border-color:#C0392B;color:#C0392B;background:rgba(192,57,43,.08);}
 .ctb-btn.flag-active{border-color:#C0392B;color:#C0392B;background:rgba(192,57,43,.12);font-weight:700;}
@@ -999,56 +999,56 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .photo-btn{display:none;}
 .photo-flash{position:fixed;inset:0;background:#161B22;opacity:0;pointer-events:none;z-index:9999;transition:opacity .1s;}
 .photo-cap{width:100%;background:#1C2128;border:1px solid #30363D;border-radius:7px;padding:6px 10px;font-size:11px;color:#E6EDF3;outline:none;margin-bottom:5px;}
-.photo-cap::placeholder{color:#D1D5DB;}
+.photo-cap::placeholder{color:#8B949E;}
 .photo-cap:focus{border-color:#C0392B;}
 
 .flag-btn{display:none;}
 
 /* ACTION PANEL */
-.act-panel{background:#FDF3EE;border:2px solid #C0392B1A;border-radius:10px;padding:14px;margin-bottom:14px;}
-.act-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#C0392B;margin-bottom:10px;}
+.act-panel{background:rgba(192,57,43,.06);border:1.5px solid rgba(192,57,43,.25);border-radius:12px;padding:14px;margin-bottom:14px;}
+.act-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#E8773A;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
 .act-ta{width:100%;background:#161B22;border:1px solid #30363D;border-radius:7px;padding:9px 11px;font-size:12px;color:#E6EDF3;outline:none;resize:none;min-height:60px;line-height:1.55;margin-bottom:10px;}
-.act-ta::placeholder{color:#D1D5DB;}
+.act-ta::placeholder{color:#8B949E;}
 .act-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
 .act-field{display:flex;flex-direction:column;gap:3px;}
 .act-fl{font-size:8px;font-weight:700;color:#6E7681;text-transform:uppercase;letter-spacing:.5px;}
 .act-sel{background:#161B22;border:1px solid #30363D;border-radius:6px;padding:7px 9px;font-size:11px;color:#E6EDF3;outline:none;width:100%;cursor:pointer;}
 .act-inp{background:#161B22;border:1px solid #30363D;border-radius:6px;padding:7px 9px;font-size:11px;color:#E6EDF3;outline:none;width:100%;}
-.act-inp::placeholder{color:#D1D5DB;}
+.act-inp::placeholder{color:#8B949E;}
 .date-shortcuts{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
-.date-sc{font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;background:#FDF3EE;color:#C0392B;border:1px solid #C0392B22;cursor:pointer;transition:all .1s;}
+.date-sc{font-size:9px;font-weight:600;padding:3px 8px;border-radius:10px;background:rgba(192,57,43,.12);color:#E8773A;border:1px solid rgba(192,57,43,.3);cursor:pointer;transition:all .1s;}
 .date-sc:hover{background:#C0392B;color:#fff;}
 .person-suggestions{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
-.person-sug{font-size:9px;font-weight:500;padding:3px 8px;border-radius:10px;background:#F3F4F6;color:#8B949E;border:1px solid #30363D;cursor:pointer;}
+.person-sug{font-size:9px;font-weight:500;padding:3px 8px;border-radius:10px;background:#21262D;color:#8B949E;border:1px solid #30363D;cursor:pointer;}
 .person-sug:hover{background:#C0392B;color:#fff;border-color:#C0392B;}
 
 /* NEXT BUTTON — sticky at bottom */
 .q-footer{position:sticky;bottom:0;left:0;right:0;padding:12px 16px;background:linear-gradient(transparent,#0D1117 30%,#0D1117);display:flex;gap:8px;align-items:center;}
-.q-prev{padding:11px 14px;border-radius:10px;font-size:18px;cursor:pointer;border:1.5px solid #30363D;background:#161B22;color:#8B949E;transition:all .1s;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.q-prev{padding:12px 15px;border-radius:12px;font-size:18px;cursor:pointer;border:1.5px solid #30363D;background:#1C2128;color:#8B949E;transition:all .15s;flex-shrink:0;display:flex;align-items:center;justify-content:center;min-height:50px;}
 .q-prev:disabled{opacity:.3;cursor:not-allowed;}
-.q-next{flex:1;padding:13px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;border:none;color:#fff;background:#C0392B;transition:all .12s;font-family:'Nunito',sans-serif;}
+.q-next{flex:1;padding:14px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;border:none;color:#fff;background:#C0392B;transition:all .12s;font-family:'Nunito',sans-serif;letter-spacing:.2px;min-height:50px;}
 .q-next:hover{background:#A93226;}
 .q-next.dark{background:#0D1117;}
 .q-next.dark:hover{background:#1F2937;}
 .q-skip{padding:11px 12px;border-radius:9px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid #30363D;background:#161B22;color:#6E7681;flex-shrink:0;}
-.q-next-skip{flex:1;padding:13px;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;border:1.5px solid #30363D;background:#161B22;color:#6E7681;transition:all .12s;font-family:'Nunito',sans-serif;}
+.q-next-skip{flex:1;padding:14px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #30363D;background:#1C2128;color:#6E7681;transition:all .12s;font-family:'Nunito',sans-serif;min-height:50px;}
 .q-next-skip:hover{color:#E6EDF3;border-color:#6E7681;}
 
 /* SECTION END CARD */
 .sec-end{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .se-icon{font-size:52px;margin-bottom:16px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 4px 12px rgba(5,150,105,.25));}
-.se-title{font-family:'Nunito',sans-serif;font-size:24px;font-weight:700;color:#F0F6FC;margin-bottom:6px;}
+.se-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:800;color:#F0F6FC;margin-bottom:8px;letter-spacing:-.2px;}
 .se-sub{font-size:12px;color:#8B949E;margin-bottom:20px;line-height:1.6;}
 .se-stats{display:flex;gap:10px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;}
 .se-stat{padding:8px 16px;border-radius:20px;font-size:11px;font-weight:600;}
-.se-next{width:100%;max-width:280px;padding:15px;background:#C0392B;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.3px;}
+.se-next{width:100%;max-width:300px;padding:16px;background:#C0392B;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;letter-spacing:.2px;min-height:52px;}
 .se-next:hover{background:#A93226;transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,57,43,.3);}
 .se-next:active{transform:none;box-shadow:none;}
 .se-review{background:none;border:none;font-size:11px;color:#6E7681;cursor:pointer;margin-top:12px;text-decoration:underline;}
 
 /* REVIEW MODE */
 .review-mode{height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.review-q{padding:14px 16px;border-bottom:1px solid #F3F4F6;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .08s;}
+.review-q{padding:14px 16px;border-bottom:1px solid #21262D;display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:background .08s;}
 .review-q:hover{background:#161B22;}
 .review-q:last-child{border-bottom:none;}
 .rq-ref{font-family:'JetBrains Mono',monospace;font-size:8px;color:#6E7681;flex-shrink:0;margin-top:3px;width:36px;}
@@ -1056,8 +1056,8 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .rq-ans{font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0;white-space:nowrap;}
 .rq-ans.y{background:#ECFDF5;color:#065F46;}
 .rq-ans.n{background:rgba(248,113,113,.12);color:#F87171;}
-.rq-ans.na{background:#F3F4F6;color:#8B949E;}
-.rq-ans.flag{background:#FDF3EE;color:#C0392B;}
+.rq-ans.na{background:#21262D;color:#8B949E;}
+.rq-ans.flag{background:rgba(192,57,43,.15);color:#E8773A;}
 .rq-ans.miss{background:rgba(248,113,113,.12);color:#DC2626;}
 
 /* DASHBOARD */
@@ -1078,7 +1078,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .at-addr{font-size:10px;color:#6E7681;margin-bottom:7px;}
 .at-meta{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px;}
 .abadge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;}
-.at-prog{height:3px;background:#F3F4F6;border-radius:2px;margin-bottom:2px;}
+.at-prog{height:3px;background:#21262D;border-radius:2px;margin-bottom:2px;}
 .at-prog-fill{height:100%;border-radius:2px;transition:width .3s;}
 /* ─ DASHBOARD v2 ─ */
 .ad-banner{background:#161B22;border:1px solid #30363D;border-radius:12px;padding:14px;margin-bottom:0;}
@@ -1136,7 +1136,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .fl .req{color:#DC2626;}
 .fi,.fs,.ft{background:#1C2128;border:1.5px solid #30363D;border-radius:8px;padding:9px 12px;color:#F0F6FC;font-size:13px;outline:none;width:100%;transition:all .1s;}
 .fi:focus,.fs:focus,.ft:focus{border-color:#C0392B;background:#161B22;box-shadow:0 0 0 3px #C0392B0D;}
-.fi::placeholder,.ft::placeholder{color:#D1D5DB;}
+.fi::placeholder,.ft::placeholder{color:#8B949E;}
 .ft{min-height:70px;resize:vertical;line-height:1.6;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .span2{grid-column:1/-1;}
@@ -1151,7 +1151,7 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 
 /* CARDS */
 .card{background:#161B22;border:1px solid #30363D;border-radius:10px;overflow:hidden;}
-.ch{padding:12px 16px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between;}
+.ch{padding:12px 16px;border-bottom:1px solid #21262D;display:flex;align-items:center;justify-content:space-between;}
 .ct{font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;}
 .cb{padding:14px 16px;}
 
@@ -1161,19 +1161,19 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .tnb{flex:1;padding:8px 4px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:500;transition:all .1s;text-align:center;}
 
 /* REPORT */
-.rpt-wrap{background:#CBD5E1;padding:12px;}
+.rpt-wrap{background:#0D1117;padding:12px;}
 .rpt-page{background:#161B22;border-radius:2px;box-shadow:0 2px 12px rgba(0,0,0,.1);overflow:hidden;margin-bottom:14px;}
 .rpt-body{padding:18px 16px;}
-.rpt-sh{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid #EAECF0;}
-.rpt-sn{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#EAECF0;line-height:1;flex-shrink:0;}
+.rpt-sh{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid #30363D;}
+.rpt-sn{font-family:'Nunito',sans-serif;font-size:22px;font-weight:700;color:#8B949E;line-height:1;flex-shrink:0;}
 .rpt-st{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:#F0F6FC;}
 .rpt-sl{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1px;}
 .rpt-p{font-size:10px;line-height:1.75;color:#C9D1D9;margin-bottom:10px;}
 .rpt-tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;}
 .rpt-tbl th{padding:6px 8px;text-align:left;font-size:7px;font-weight:700;text-transform:uppercase;color:#fff;}
-.rpt-tbl td{padding:7px 8px;border-bottom:1px solid #F3F4F6;line-height:1.5;vertical-align:top;}
+.rpt-tbl td{padding:7px 8px;border-bottom:1px solid #21262D;line-height:1.5;vertical-align:top;}
 .rpt-tbl tr:nth-child(even) td{background:#1C2128;}
-.rpt-finding{padding:9px 0;border-bottom:1px solid #F3F4F6;}
+.rpt-finding{padding:9px 0;border-bottom:1px solid #21262D;}
 .rpt-finding:last-child{border-bottom:none;}
 .rpt-f-head{display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;}
 .rpt-f-ref{font-family:'JetBrains Mono',monospace;font-size:8px;color:#6E7681;flex-shrink:0;margin-top:2px;}
@@ -1192,22 +1192,22 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .sig-f{display:flex;flex-direction:column;gap:2px;}
 .sig-l{font-size:7px;font-weight:700;text-transform:uppercase;color:#6E7681;}
 .sig-v{font-size:11px;font-weight:600;padding-bottom:3px;border-bottom:1.5px solid #0D1117;}
-.sig-c{border:1px dashed #D1D5DB;border-radius:3px;height:34px;display:flex;align-items:center;justify-content:center;color:#6E7681;font-size:9px;font-style:italic;}
+.sig-c{border:1px dashed #8B949E;border-radius:3px;height:34px;display:flex;align-items:center;justify-content:center;color:#6E7681;font-size:9px;font-style:italic;}
 
 /* ACTION TRACKER */
-.act-item{padding:12px 0;border-bottom:1px solid #F3F4F6;display:flex;gap:9px;align-items:flex-start;}
+.act-item{padding:12px 0;border-bottom:1px solid #21262D;display:flex;gap:9px;align-items:flex-start;}
 .act-item:last-child{border-bottom:none;}
 .act-pdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
 .act-body{flex:1;min-width:0;}
 .act-text{font-size:12px;font-weight:500;color:#F0F6FC;line-height:1.5;margin-bottom:4px;}
 .act-tags{display:flex;gap:5px;flex-wrap:wrap;}
-.act-tag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:8px;background:#F3F4F6;color:#8B949E;font-family:'JetBrains Mono',monospace;}
+.act-tag{font-size:8px;font-weight:600;padding:2px 7px;border-radius:8px;background:#21262D;color:#8B949E;font-family:'JetBrains Mono',monospace;}
 .act-ssel{font-size:10px;background:#1C2128;border:1px solid #30363D;border-radius:5px;padding:3px 7px;color:#E6EDF3;outline:none;cursor:pointer;flex-shrink:0;}
 
 /* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
 .modal{background:#161B22;border-radius:14px 14px 0 0;width:100%;max-width:580px;overflow:hidden;}
-.modal-h{padding:16px 18px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between;}
+.modal-h{padding:16px 18px;border-bottom:1px solid #21262D;display:flex;align-items:center;justify-content:space-between;}
 .modal-t{font-family:'Nunito',sans-serif;font-size:17px;font-weight:700;}
 .modal-x{background:none;border:none;font-size:18px;color:#6E7681;cursor:pointer;}
 .modal-b{padding:16px 18px;} .modal-f{padding:12px 18px;border-top:1px solid #30363D;display:flex;gap:8px;justify-content:flex-end;}
@@ -1224,17 +1224,17 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 .hero-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .trust{background:#161B22;border-top:1px solid #30363D;border-bottom:1px solid #30363D;padding:10px 16px;display:flex;gap:0;overflow-x:auto;}
 .trust::-webkit-scrollbar{display:none;}
-.ti{display:flex;align-items:center;gap:4px;padding:0 12px;border-right:1px solid #F3F4F6;font-size:8px;font-weight:600;color:#C0392B;white-space:nowrap;flex-shrink:0;}
+.ti{display:flex;align-items:center;gap:4px;padding:0 12px;border-right:1px solid #21262D;font-size:8px;font-weight:600;color:#C0392B;white-space:nowrap;flex-shrink:0;}
 .ti:last-child{border-right:none;}
 
 /* LOGO / COLOUR */
-.logo-drop{border:2px dashed #D1D5DB;border-radius:8px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;min-height:80px;background:#1C2128;text-align:center;transition:all .12s;}
-.logo-drop:hover{border-color:#C0392B;background:#FDF3EE;}
+.logo-drop{border:2px dashed #8B949E;border-radius:8px;padding:16px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;min-height:80px;background:#1C2128;text-align:center;transition:all .12s;}
+.logo-drop:hover{border-color:#C0392B;background:rgba(192,57,43,.1);}
 .logo-drop img{max-width:110px;max-height:50px;object-fit:contain;}
 .swatches{display:flex;flex-wrap:wrap;gap:5px;}
 .sw{width:24px;height:24px;border-radius:5px;cursor:pointer;border:2px solid transparent;transition:all .1s;flex-shrink:0;}
 .sw.on{border-color:#F0F6FC;transform:scale(1.1);}
-.sw-pick{display:flex;align-items:center;justify-content:center;font-size:13px;color:#6E7681;border:1.5px dashed #D1D5DB;background:#1C2128;position:relative;overflow:hidden;}
+.sw-pick{display:flex;align-items:center;justify-content:center;font-size:13px;color:#6E7681;border:1.5px dashed #8B949E;background:#1C2128;position:relative;overflow:hidden;}
 .sw-pick input{position:absolute;inset:0;opacity:0;cursor:pointer;}
 
 /* ANIMATIONS */
@@ -1253,6 +1253,30 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
   .g2{grid-template-columns:1fr;}
   .act-grid{grid-template-columns:1fr;}
   .heatmap{grid-template-columns:repeat(3,1fr);}
+}
+
+/* ─ RISK BADGE ─ */
+.risk-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.risk-badge.critical{background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.4);color:#EF4444;}
+.risk-badge.high{background:rgba(249,115,22,.12);border:1.5px solid rgba(249,115,22,.35);color:#F97316;}
+.risk-badge.medium{background:rgba(234,179,8,.1);border:1.5px solid rgba(234,179,8,.3);color:#EAB308;}
+.risk-badge.low{background:rgba(34,197,94,.1);border:1.5px solid rgba(34,197,94,.3);color:#22C55E;}
+
+/* ─ QUESTION CARD COUNTER ─ */
+.qc-counter{font-size:11px;font-weight:700;color:#6E7681;font-family:'JetBrains Mono',monospace;}
+.qc-counter span{color:#E8773A;}
+
+/* ─ PRIORITY CHIP ─ */
+.pri-chip{display:inline-flex;align-items:center;padding:3px 9px;border-radius:12px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;}
+.pri-chip.p1{background:rgba(220,38,38,.15);color:#EF4444;border:1px solid rgba(220,38,38,.3);}
+.pri-chip.p2{background:rgba(232,119,58,.12);color:#E8773A;border:1px solid rgba(232,119,58,.25);}
+.pri-chip.p3{background:rgba(245,158,11,.1);color:#F59E0B;border:1px solid rgba(245,158,11,.2);}
+
+/* ─ MOBILE IMPROVEMENTS ─ */
+@media(max-width:600px){
+  .qc-question{font-size:19px;}
+  .big-btn{padding:16px 16px;font-size:15px;}
+  .q-next{font-size:14px;}
 }
 
 `;
@@ -1334,7 +1358,7 @@ function AddressFinder({value, onChange}) {
   return(
     <div>
       <div style={{position:"relative",marginBottom:8}}>
-        <input style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
+        <input style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
           placeholder="Enter postcode (e.g. EC2V 4QS) or address..."
           value={query} onChange={e=>handleInput(e.target.value)}/>
         <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
@@ -1344,14 +1368,14 @@ function AddressFinder({value, onChange}) {
       {results.length>0&&(
         <div style={{background:"#161B22",border:"1.5px solid #30363D",borderRadius:10,overflow:"hidden",marginBottom:8,boxShadow:"0 4px 16px rgba(0,0,0,.08)"}}>
           {results.map((r,i)=>(
-            <div key={i} style={{padding:"11px 14px",fontSize:12,color:"#374151",cursor:"pointer",borderBottom:"1px solid #F3F4F6"}} onClick={()=>selectResult(r)}>
+            <div key={i} style={{padding:"11px 14px",fontSize:12,color:"#374151",cursor:"pointer",borderBottom:"1px solid #21262D"}} onClick={()=>selectResult(r)}>
               <div style={{fontWeight:600,color:"#1C1C1C"}}>{r.display}</div>
               {r.sub&&<div style={{color:"#6E7681",fontSize:11}}>{r.sub}</div>}
             </div>
           ))}
         </div>
       )}
-      <textarea style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",resize:"none",minHeight:80,lineHeight:1.6,fontFamily:"'Nunito',sans-serif",marginBottom:8}}
+      <textarea style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",resize:"none",minHeight:80,lineHeight:1.6,fontFamily:"'Nunito',sans-serif",marginBottom:8}}
         placeholder="Or type the full address here..." value={value||""} onChange={e=>{onChange(e.target.value);setQuery(e.target.value);}}/>
     </div>
   );
@@ -1426,7 +1450,7 @@ function OccupancyPicker({state={},onChange}) {
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7,marginBottom:12}}>
         {OCC_TYPES.map(t=>(
           <button key={t.cat} onClick={()=>upd({occupancyCat:t.cat,ans:t.cat})}
-            style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #EAECF0",background:cat===t.cat?"#FDF3EE":"#1C2128",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
+            style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #30363D",background:cat===t.cat?"#FDF3EE":"#1C2128",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
             <div style={{fontSize:22,marginBottom:5}}>{t.icon}</div>
             <div style={{fontSize:11,fontWeight:600,color:cat===t.cat?"#C0392B":"#374151"}}>{t.cat}</div>
             <div style={{fontSize:9,color:"#6E7681",marginTop:1}}>{t.sub}</div>
@@ -1434,7 +1458,7 @@ function OccupancyPicker({state={},onChange}) {
         ))}
       </div>
       {cat&&(
-        <input style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",marginBottom:8,fontFamily:"'Nunito',sans-serif"}}
+        <input style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"11px 14px",fontSize:13,color:"#374151",outline:"none",marginBottom:8,fontFamily:"'Nunito',sans-serif"}}
           placeholder={"Describe how "+cat.toLowerCase()+" space is used..."}
           value={state.detail||""} onChange={e=>upd({detail:e.target.value})}/>
       )}
@@ -1452,23 +1476,23 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Floor area</div>
           <input type="number" min="0" step="50"
-            style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
+            style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="850" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value})}/>
           <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>m2 gross internal</div>
         </div>
         <div style={{flex:1}}>
           <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Number of floors</div>
           <input type="number" min="1" step="1"
-            style={{width:"100%",background:"#1C2128",border:"2px solid #EAECF0",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
+            style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}
             placeholder="4" value={state.floors||""} onChange={e=>upd({floors:e.target.value})}/>
           <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>floors above ground</div>
         </div>
       </div>
       <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-        style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #EAECF0",background:"#1C2128",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Nunito',sans-serif"}}>
+        style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #30363D",background:"#1C2128",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Nunito',sans-serif"}}>
         Open in Google Maps to measure
       </a>
-      <div style={{fontSize:10,color:"#6E7681",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #EAECF0"}}>
+      <div style={{fontSize:10,color:"#6E7681",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #30363D"}}>
         In Google Maps: right-click the building roof outline then Measure distance. Trace the perimeter and multiply by number of floors.
       </div>
     </div>
@@ -1718,13 +1742,13 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         <div className="qc-header">
           <span className="qc-ref">{q.ref}</span>
           <div style={{display:"flex",alignItems:"center",gap:8}}>
-            <span style={{fontSize:10,color:"#6E7681",fontWeight:500}}>{qIdx+1}<span style={{opacity:.5}}>/{totalVisible}</span></span>
+            <span className="qc-counter">{qIdx+1}<span>/{totalVisible}</span></span>
             <div className="qc-dots">
-              {Array.from({length:Math.min(totalVisible,9)}).map((_,i)=>{
+              {Array.from({length:Math.min(totalVisible,7)}).map((_,i)=>{
                 const cls = i<qIdx?"done":i===qIdx?"now":"todo";
                 return <div key={i} className={`qc-dot ${cls}`}/>;
               })}
-              {totalVisible>9 && <span style={{fontSize:9,color:"#6E7681",marginLeft:2}}>+{totalVisible-9}</span>}
+              {totalVisible>7 && <span style={{fontSize:9,color:"#6E7681",marginLeft:3,fontWeight:600}}>+{totalVisible-7}</span>}
             </div>
           </div>
         </div>
@@ -1754,9 +1778,11 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
             ].map(opt=>(
               <button key={opt.v} className={`big-btn ${ans===opt.v?opt.v:""}`}
                 onClick={()=>{playSound('click');handleAns(opt.v);}}>
-                <span className="big-btn-icon">{opt.icon}</span>
-                <span className="big-btn-label">{opt.label}</span>
-                {ans===opt.v&&<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{marginLeft:"auto",opacity:.6}}><polyline points="20 6 9 17 4 12"/></svg>}
+                <span className="big-btn-icon" style={{fontSize:22}}>{opt.icon}</span>
+                <span className="big-btn-label" style={{fontWeight:ans===opt.v?700:600}}>{opt.label}</span>
+                <span style={{marginLeft:"auto",width:22,height:22,borderRadius:"50%",background:ans===opt.v?"currentColor":"transparent",opacity:ans===opt.v?.2:.4,border:ans===opt.v?"none":"1.5px solid #30363D",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                  {ans===opt.v&&<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" style={{opacity:5}}><polyline points="20 6 9 17 4 12"/></svg>}
+                </span>
               </button>
             ))}
           </div>
@@ -1765,8 +1791,8 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         {/* Auto-flag banner */}
         {SMART_ACTIONS[q.ref]&&!flagged&&ans&&((SMART_ACTIONS[q.ref].on==="y"&&ans==="y")||(SMART_ACTIONS[q.ref].on==="n"&&ans==="n")||(SMART_ACTIONS[q.ref].on===ans))&&(
           <div className="autoflag">
-            <span style={{fontSize:15,flexShrink:0}}>⚑</span>
-            <div><strong>Action flagged</strong> — this response requires follow-up action. A pre-written action has been added below — review and adjust as needed.</div>
+            <span style={{fontSize:16,flexShrink:0}}>🚩</span>
+            <div><strong style={{color:"#F59E0B"}}>Finding flagged</strong> — a pre-written action has been added to the action plan below. Review and adjust as needed.</div>
           </div>
         )}
 
@@ -1861,7 +1887,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         {/* Action panel */}
         {flagged && (
           <div className="act-panel">
-            <div className="act-lbl">Action Plan Entry</div>
+            <div className="act-lbl"><span>📋</span> Action Plan Entry</div>
             <textarea className="act-ta" placeholder="Describe the action required…"
               value={action} onChange={e=>upd({action:e.target.value})}/>
             <div className="act-grid">
@@ -1920,25 +1946,34 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
 
       {/* ── FLAG ACKNOWLEDGEMENT MODAL ── */}
       {showFlagAck && (
-        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.7)",backdropFilter:"blur(4px)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center",animation:"fu .2s ease both"}}
           onClick={()=>setShowFlagAck(false)}>
-          <div style={{background:"#161B22",borderRadius:"14px 14px 0 0",width:"100%",maxWidth:580,padding:"20px 20px 32px",borderTop:"3px solid #C0392B"}}
+          <div style={{background:"#161B22",borderRadius:"18px 18px 0 0",width:"100%",maxWidth:580,padding:"6px 0 0",borderTop:"3px solid #C0392B",boxShadow:"0 -8px 40px rgba(0,0,0,.4)"}}
             onClick={e=>e.stopPropagation()}>
-            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
-              <span style={{fontSize:22}}>⚑</span>
-              <div style={{flex:1}}>
-                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:700,color:"#F0F6FC"}}>Finding Flagged</div>
-                <div style={{fontSize:12,color:"#8B949E",marginTop:2}}>A pre-written action has been added to the action plan</div>
+            <div style={{width:36,height:4,background:"#30363D",borderRadius:2,margin:"0 auto 18px"}}/>
+            <div style={{padding:"0 20px 32px"}}>
+              <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:16}}>
+                <div style={{width:40,height:40,borderRadius:10,background:"rgba(192,57,43,.15)",border:"1.5px solid rgba(192,57,43,.4)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>🚩</div>
+                <div style={{flex:1}}>
+                  <div style={{fontFamily:"'Nunito',sans-serif",fontSize:17,fontWeight:800,color:"#F0F6FC",marginBottom:2}}>Action Required</div>
+                  <div style={{fontSize:12,color:"#8B949E",lineHeight:1.5}}>This finding has been automatically flagged and added to your action plan.</div>
+                </div>
               </div>
+              {SMART_ACTIONS[q.ref]&&<div style={{padding:"2px 8px",borderRadius:20,background:SMART_ACTIONS[q.ref].priority.includes("P1")?"rgba(220,38,38,.15)":SMART_ACTIONS[q.ref].priority.includes("P2")?"rgba(232,119,58,.12)":"rgba(245,158,11,.1)",border:SMART_ACTIONS[q.ref].priority.includes("P1")?"1.5px solid rgba(220,38,38,.4)":SMART_ACTIONS[q.ref].priority.includes("P2")?"1.5px solid rgba(232,119,58,.35)":"1.5px solid rgba(245,158,11,.3)",color:SMART_ACTIONS[q.ref].priority.includes("P1")?"#EF4444":SMART_ACTIONS[q.ref].priority.includes("P2")?"#E8773A":"#F59E0B",fontSize:9,fontWeight:800,textTransform:"uppercase",letterSpacing:".8px",display:"inline-flex",alignItems:"center",gap:5,marginBottom:12}}>
+                ● {SMART_ACTIONS[q.ref].priority}
+              </div>}
+              <div style={{padding:"13px 15px",background:"#1C2128",borderRadius:10,border:"1px solid #30363D",borderLeft:"3px solid #C0392B",fontSize:13,color:"#E6EDF3",lineHeight:1.65,marginBottom:16}}>
+                {SMART_ACTIONS[q.ref]&&SMART_ACTIONS[q.ref].action}
+              </div>
+              <div style={{fontSize:11,color:"#6E7681",marginBottom:16,display:"flex",alignItems:"center",gap:6}}>
+                <span>✏️</span>
+                <span>You can edit this action, reassign or change the date in the action panel below.</span>
+              </div>
+              <button onClick={()=>setShowFlagAck(false)}
+                style={{width:"100%",padding:"15px",borderRadius:12,border:"none",background:"#C0392B",color:"#fff",fontSize:15,fontWeight:800,cursor:"pointer",fontFamily:"'Nunito',sans-serif",letterSpacing:".1px"}}>
+                Understood — Continue Assessment
+              </button>
             </div>
-            <div style={{padding:"12px 14px",background:"rgba(192,57,43,.08)",borderRadius:10,border:"1px solid rgba(192,57,43,.25)",fontSize:12,color:"#F0F6FC",lineHeight:1.6,marginBottom:16}}>
-              {SMART_ACTIONS[q.ref]&&SMART_ACTIONS[q.ref].action}
-            </div>
-            <div style={{fontSize:11,color:"#8B949E",marginBottom:16}}>Review and edit this action in the action panel below. Set the priority, responsible person and target date.</div>
-            <button onClick={()=>setShowFlagAck(false)}
-              style={{width:"100%",padding:"13px",borderRadius:10,border:"none",background:"#C0392B",color:"#fff",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"'Nunito',sans-serif"}}>
-              Acknowledged — Review Action →
-            </button>
           </div>
         </div>
       )}
@@ -2228,7 +2263,7 @@ function Setup({state, dispatch}) {
           <ColourPicker value={org.accentColor||"#C0392B"} onChange={v=>upd({accentColor:v})}/></div>
       </div>
       <label className="fl" style={{display:"block",marginBottom:8}}>Live cover preview</label>
-      <div style={{borderRadius:9,overflow:"hidden",border:"1px solid #EAECF0",boxShadow:"0 3px 14px rgba(0,0,0,.07)"}}>
+      <div style={{borderRadius:9,overflow:"hidden",border:"1px solid #30363D",boxShadow:"0 3px 14px rgba(0,0,0,.07)"}}>
         <div style={{background:pr,padding:"16px 14px 12px",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",bottom:-20,right:-20,width:90,height:90,borderRadius:"50%",border:"14px solid rgba(255,255,255,.05)"}}/>
           <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:18,position:"relative"}}>
@@ -2246,7 +2281,7 @@ function Setup({state, dispatch}) {
         <div style={{height:2,background:`linear-gradient(90deg,${ac},transparent)`}}/>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",background:"#1C2128"}}>
           {[["Reference","FRA-2026-001"],["Risk Rating","MEDIUM"]].map(([l,v])=>(
-            <div key={l} style={{padding:"7px 11px",borderRight:"1px solid #F3F4F6",borderBottom:"1px solid #F3F4F6"}}>
+            <div key={l} style={{padding:"7px 11px",borderRight:"1px solid #21262D",borderBottom:"1px solid #21262D"}}>
               <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",color:"#6E7681",marginBottom:1}}>{l}</div>
               <div style={{fontSize:10,fontWeight:600,color:v==="MEDIUM"?"#D97706":"#0D1117"}}>{v}</div>
             </div>
@@ -2289,7 +2324,7 @@ function Setup({state, dispatch}) {
                 <div style={{fontFamily:"'Nunito',sans-serif",fontSize:19,fontWeight:700,color:"#E6EDF3"}}>{STEPS[step].title}</div>
               </div>
             </div>
-            <p style={{fontSize:12,color:"#6B7280",lineHeight:1.6,paddingBottom:14,borderBottom:"1px solid #F3F4F6"}}>{STEPS[step].sub}</p>
+            <p style={{fontSize:12,color:"#6B7280",lineHeight:1.6,paddingBottom:14,borderBottom:"1px solid #21262D"}}>{STEPS[step].sub}</p>
           </div>
           <div className="fcb">{pages[step]}</div>
             <div className="fcf">
@@ -2330,7 +2365,7 @@ function ClientSetup({state, dispatch}) {
           </div>
           <div className="form-card">
             <div className="fcb">
-              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,marginBottom:11,paddingBottom:9,borderBottom:"1px solid #F3F4F6"}}>Client</div>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,marginBottom:11,paddingBottom:9,borderBottom:"1px solid #21262D"}}>Client</div>
               <div className="g2">
                 <div className="fg span2"><label className="fl">Client name <span className="req">*</span></label>
                   <input className="fi" placeholder="e.g. Meridian Property Group" value={a.clientName||""} onChange={e=>upd({clientName:e.target.value})}/></div>
@@ -2339,8 +2374,8 @@ function ClientSetup({state, dispatch}) {
                 <div className="fg"><label className="fl">Contact email</label>
                   <input className="fi" type="email" value={a.clientEmail||""} onChange={e=>upd({clientEmail:e.target.value})}/></div>
               </div>
-              <div style={{height:1,background:"#F3F4F6",margin:"12px 0"}}/>
-              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,marginBottom:11,paddingBottom:9,borderBottom:"1px solid #F3F4F6"}}>Premises</div>
+              <div style={{height:1,background:"#21262D",margin:"12px 0"}}/>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontSize:14,fontWeight:700,marginBottom:11,paddingBottom:9,borderBottom:"1px solid #21262D"}}>Premises</div>
               <div className="g2">
                 <div className="fg span2"><label className="fl">Building name <span className="req">*</span></label>
                   <input className="fi" placeholder="e.g. Crown House" value={a.premisesName||""} onChange={e=>upd({premisesName:e.target.value})}/></div>
@@ -2908,14 +2943,14 @@ function Assessment({state, dispatch}) {
             <button style={{position:"absolute",top:12,left:12,padding:"6px 12px",borderRadius:8,border:"1px solid #30363D",background:"transparent",color:"#8B949E",fontSize:12,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",gap:5,fontFamily:"'Nunito',sans-serif"}} onClick={()=>dispatch({type:"SEC",i:Math.max(0,secIdx-1)})}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>Sections
             </button>
-            <div className="ss-icon"><SecIcon name={intro?.icon||"clipboard"} size={40} color={intro?.colour||ac}/></div>
-            <div className="ss-num" style={{color:intro?.colour||ac}}>{secIdx+1} of {ALL_SECTIONS.length}</div>
+            <div className="ss-icon" style={{marginBottom:16}}><SecIcon name={intro?.icon||"clipboard"} size={44} color={intro?.colour||ac}/></div>
+            <div className="ss-num" style={{color:intro?.colour||ac,marginBottom:6}}>Section {secIdx+1} of {ALL_SECTIONS.length}</div>
             <div className="ss-title">{curSec.title}</div>
             <div className="ss-desc">{intro?.text||""}</div>
             <div className="ss-meta">
               <span className="ss-pill">{vqs.length} question{vqs.length!==1?"s":""}</span>
               
-              {secAns(curSec)>0&&<span className="ss-pill" style={{background:"#0D3321",color:"#C0392B",borderColor:"#6EE7B744"}}>{secAns(curSec)} done</span>}
+              {secAns(curSec)>0&&<span className="ss-pill" style={{background:"rgba(5,150,105,.15)",color:"#34D399",borderColor:"rgba(52,211,153,.3)"}}>{secAns(curSec)} answered</span>}
             </div>
             <div style={{display:"flex",alignItems:"center",gap:12,justifyContent:"center",marginTop:8}}>
               {secIdx>0&&<button className="ss-prev-btn" onClick={()=>{playSound("click");dispatch({type:"SEC",i:secIdx-1});dispatch({type:"SET_MODE",mode:"end"});}}>
@@ -2956,7 +2991,7 @@ function Assessment({state, dispatch}) {
                   {qIdx<vqs.length-1?<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Next<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg></span>:<span style={{display:"flex",alignItems:"center",gap:6,justifyContent:"center"}}>Complete Section ✓</span>}
                 </button>
               ) : (
-                <button className="q-next q-next-skip" onClick={()=>{playSound("click");goNextQ();}}>Skip to next question ›</button>
+                <button className="q-next q-next-skip" onClick={()=>{playSound("click");goNextQ();}}>Continue →</button>
               )}
             </div>
           </>
@@ -2976,7 +3011,7 @@ function Assessment({state, dispatch}) {
             </div>
             <div className="se-stats">
               <span className="se-stat" style={{background:"#0D3321",color:"#059669"}}>✓ {secAns(curSec)} answered</span>
-              {secFlag(curSec)>0&&<span className="se-stat" style={{background:"#FDF3EE",color:ac}}>⚑ {secFlag(curSec)} flagged</span>}
+              {secFlag(curSec)>0&&<span className="se-stat" style={{background:"rgba(192,57,43,.12)",color:"#E8773A",border:"1px solid rgba(192,57,43,.25)"}}>🚩 {secFlag(curSec)} flagged</span>}
               {secDone(curSec)&&<span className="se-stat" style={{background:"#0D3321",color:"#059669",fontWeight:700}}>Section complete ✓</span>}
               {secMiss(curSec)&&<span className="se-stat" style={{background:"#FEF2F2",color:"#DC2626"}}>⚠ {visibleQs(curSec,answers).filter(q=>isMissed(q,answers[q.ref])).length} missing</span>}
             </div>
@@ -3014,7 +3049,7 @@ function Assessment({state, dispatch}) {
                     : ans?.ans==="na" ? <span className="rq-ans na">N/A</span>
                     : ans?.sel?.length>0 ? <span className="rq-ans y">{ans.sel.length} selected</span>
                     : ans?.ans ? <span className="rq-ans y">Answered</span>
-                    : <span style={{fontSize:10,color:"#D1D5DB"}}>—</span>}
+                    : <span style={{fontSize:10,color:"#8B949E"}}>—</span>}
                   </div>
                 );
               })}
@@ -3139,7 +3174,7 @@ function generatePDF(a, org) {
 
   // Photo to data URL (already base64 from camera capture)
   const photoImg = (p, w, h) =>
-    p.src ? `<img src="${p.src}" style="width:${w}px;height:${h}px;object-fit:cover;border-radius:4px;border:1px solid #EAECF0;" alt="${p.caption||"Evidence photo"}"/>` : "";
+    p.src ? `<img src="${p.src}" style="width:${w}px;height:${h}px;object-fit:cover;border-radius:4px;border:1px solid #30363D;" alt="${p.caption||"Evidence photo"}"/>` : "";
 
   const logoTag = org.logo
     ? `<img src="${org.logo}" style="height:28px;object-fit:contain;border-radius:3px;" alt="logo"/>`
@@ -3174,12 +3209,12 @@ function generatePDF(a, org) {
   .cover-subtitle{font-size:14pt;opacity:.55;margin-top:4px;}
   .cover-stripe{height:3px;background:linear-gradient(90deg,${ac},transparent);}
   .cover-meta{display:grid;grid-template-columns:1fr 1fr;}
-  .cover-mc{padding:10px 16px;border-right:1px solid #F3F4F6;border-bottom:1px solid #F3F4F6;}
+  .cover-mc{padding:10px 16px;border-right:1px solid #21262D;border-bottom:1px solid #21262D;}
   .cover-mc:nth-child(even){border-right:none;}
   .cover-ml{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9CA3AF;margin-bottom:2px;}
   .cover-mv{font-size:10pt;font-weight:600;color:#0D1117;}
   .cover-mv.risk{color:${rCol(risk)};}
-  .cover-foot{padding:8px 16px;background:#F9FAFB;display:flex;justify-content:space-between;border-top:1px solid #EAECF0;}
+  .cover-foot{padding:8px 16px;background:#F9FAFB;display:flex;justify-content:space-between;border-top:1px solid #30363D;}
   .cover-fl{font-size:7.5pt;color:#9CA3AF;}
 
   /* PAGE HEADER */
@@ -3192,12 +3227,12 @@ function generatePDF(a, org) {
   .pg-body{padding:24px 20px;}
 
   /* PAGE FOOTER */
-  .pg-ftr{border-top:1px solid #EAECF0;padding:6px 16px;display:flex;justify-content:space-between;background:#F9FAFB;position:absolute;bottom:0;left:0;right:0;}
+  .pg-ftr{border-top:1px solid #30363D;padding:6px 16px;display:flex;justify-content:space-between;background:#F9FAFB;position:absolute;bottom:0;left:0;right:0;}
   .pg-fl{font-size:7pt;color:#9CA3AF;}
 
   /* SECTION HEADINGS */
-  .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #EAECF0;}
-  .sec-n{font-family:'Cormorant Garamond',serif;font-size:28pt;font-weight:700;color:#EAECF0;line-height:1;flex-shrink:0;}
+  .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #30363D;}
+  .sec-n{font-family:'Cormorant Garamond',serif;font-size:28pt;font-weight:700;color:#30363D;line-height:1;flex-shrink:0;}
   .sec-t{font-family:'Cormorant Garamond',serif;font-size:14pt;font-weight:700;color:#0D1117;}
   .sec-l{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:${ac};margin-bottom:2px;}
 
@@ -3206,11 +3241,11 @@ function generatePDF(a, org) {
 
   /* PREMISES TABLE */
   table.info{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:14px;}
-  table.info td{padding:6px 0;border-bottom:1px solid #F3F4F6;vertical-align:top;}
+  table.info td{padding:6px 0;border-bottom:1px solid #21262D;vertical-align:top;}
   table.info td.lbl{width:110px;font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#9CA3AF;padding-right:10px;}
 
   /* FINDINGS */
-  .finding{padding:10px 0;border-bottom:1px solid #F3F4F6;}
+  .finding{padding:10px 0;border-bottom:1px solid #21262D;}
   .finding:last-child{border-bottom:none;}
   .finding-head{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;}
   .finding-ref{font-family:'JetBrains Mono',monospace;font-size:7.5pt;color:#9CA3AF;flex-shrink:0;margin-top:2px;}
@@ -3224,15 +3259,15 @@ function generatePDF(a, org) {
   /* ACTION PLAN TABLE */
   table.action{width:100%;border-collapse:collapse;font-size:8.5pt;margin-bottom:14px;}
   table.action th{background:${pr};color:#fff;padding:6px 8px;text-align:left;font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
-  table.action td{padding:7px 8px;border-bottom:1px solid #F3F4F6;line-height:1.5;vertical-align:top;}
+  table.action td{padding:7px 8px;border-bottom:1px solid #21262D;line-height:1.5;vertical-align:top;}
   table.action tr:nth-child(even) td{background:#F9FAFB;}
 
   /* RISK MATRIX */
-  .matrix{width:100%;border-collapse:collapse;border:1px solid #EAECF0;border-radius:6px;overflow:hidden;font-size:8pt;margin-bottom:14px;}
-  .matrix th{background:#F9FAFB;padding:5px 8px;text-align:center;font-size:6.5pt;font-weight:700;text-transform:uppercase;color:#6B7280;border-bottom:1px solid #EAECF0;}
-  .matrix td{padding:8px;text-align:center;font-weight:700;font-size:8pt;border:1px solid #EAECF0;}
+  .matrix{width:100%;border-collapse:collapse;border:1px solid #30363D;border-radius:6px;overflow:hidden;font-size:8pt;margin-bottom:14px;}
+  .matrix th{background:#F9FAFB;padding:5px 8px;text-align:center;font-size:6.5pt;font-weight:700;text-transform:uppercase;color:#6B7280;border-bottom:1px solid #30363D;}
+  .matrix td{padding:8px;text-align:center;font-weight:700;font-size:8pt;border:1px solid #30363D;}
   .c-tr{background:#ECFDF5;color:#065F46;}
-  .c-to{background:#FFFBEB;color:#92400E;}
+  .c-to{background:rgba(232,119,58,.12);color:#E8773A;}
   .c-mo{background:#FEF3C7;color:#B45309;}
   .c-su{background:#FEF2F2;color:#991B1B;}
   .c-in{background:#7B1C1C;color:#FECACA;}
@@ -3242,13 +3277,13 @@ function generatePDF(a, org) {
   .risk-box{border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;}
 
   /* SIGNATURE */
-  .sig-card{border:1px solid #EAECF0;border-radius:6px;overflow:hidden;margin-bottom:12px;}
-  .sig-head{background:#F9FAFB;padding:6px 12px;font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9CA3AF;border-bottom:1px solid #EAECF0;}
+  .sig-card{border:1px solid #30363D;border-radius:6px;overflow:hidden;margin-bottom:12px;}
+  .sig-head{background:#F9FAFB;padding:6px 12px;font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9CA3AF;border-bottom:1px solid #30363D;}
   .sig-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .sig-f{display:flex;flex-direction:column;gap:3px;}
   .sig-l{font-size:6.5pt;font-weight:700;text-transform:uppercase;color:#9CA3AF;}
   .sig-v{font-size:10pt;font-weight:600;padding-bottom:3px;border-bottom:1.5px solid #0D1117;}
-  .sig-c{border:1px dashed #D1D5DB;border-radius:3px;height:36px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:9pt;font-style:italic;}
+  .sig-c{border:1px dashed #8B949E;border-radius:3px;height:36px;display:flex;align-items:center;justify-content:center;color:#9CA3AF;font-size:9pt;font-style:italic;}
 
   /* PHOTO APPENDIX */
   .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
@@ -3316,7 +3351,7 @@ function generatePDF(a, org) {
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
         ${Object.entries(answers).filter(([,v])=>v.photos&&v.photos.length>0).flatMap(([ref,v])=>v.photos.map(p=>({ref,photo:p}))).map(({ref,photo})=>{
           const q = ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions).find(q=>q.ref===ref);
-          return `<div style="border:1px solid #E5E7EB;border-radius:6px;overflow:hidden"><img src="${photo.src}" style="width:100%;height:140px;object-fit:cover" alt="${photo.caption}"/><div style="padding:6px;background:#F9FAFB"><p style="font-size:9px;font-weight:700;color:#E55B2D;margin:0">${photo.ref||ref}</p><p style="font-size:9px;color:#374151;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${photo.caption}</p></div></div>`;
+          return `<div style="border:1px solid #30363D;border-radius:6px;overflow:hidden"><img src="${photo.src}" style="width:100%;height:140px;object-fit:cover" alt="${photo.caption}"/><div style="padding:6px;background:#F9FAFB"><p style="font-size:9px;font-weight:700;color:#E55B2D;margin:0">${photo.ref||ref}</p><p style="font-size:9px;color:#374151;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${photo.caption}</p></div></div>`;
         }).join("")}
       </div>
     </div>` : ""}
@@ -3337,7 +3372,7 @@ function generatePDF(a, org) {
             {ref:"BS 5266-1",std:"BS 5266-1:2016",req:"Emergency escape lighting",status:"Assessed"},
             {ref:"BS 9991",std:"BS 9991:2015+A1:2021",req:"Fire safety in residential buildings",status:["hmo","care_home","hotel"].includes(a.buildingPreset)?"Assessed":"Noted"},
             {ref:"LACORS",std:"LACORS Housing Fire Safety Guidance 2008",req:"Fire safety in houses in multiple occupation",status:a.buildingPreset==="hmo"?"Assessed":"N/A"},
-          ].map(r=>`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 8px;font-weight:600;white-space:nowrap">${r.ref}</td><td style="padding:5px 8px;color:#374151">${r.std}</td><td style="padding:5px 8px;color:#374151">${r.req}</td><td style="padding:5px 8px;text-align:center;color:${r.status.startsWith("Assessed")?"#16A34A":r.status.startsWith("N/A")?"#9CA3AF":"#D97706"};font-weight:600">${r.status}</td></tr>`).join("")}
+          ].map(r=>`<tr style="border-bottom:1px solid #21262D"><td style="padding:5px 8px;font-weight:600;white-space:nowrap">${r.ref}</td><td style="padding:5px 8px;color:#374151">${r.std}</td><td style="padding:5px 8px;color:#374151">${r.req}</td><td style="padding:5px 8px;text-align:center;color:${r.status.startsWith("Assessed")?"#16A34A":r.status.startsWith("N/A")?"#9CA3AF":"#D97706"};font-weight:600">${r.status}</td></tr>`).join("")}
         </tbody>
       </table>
     </div>
@@ -3423,7 +3458,7 @@ function generatePDF(a, org) {
       <p style="font-size:11px;color:#6B7280;margin-bottom:8px">Status of actions carried forward from the previous assessment dated ${a.previousAssessmentDate||"N/A"} (Ref: ${a.previousAssessmentRef||"N/A"}) — PAS 79-1:2020 Cl.6.5</p>
       <table style="width:100%;border-collapse:collapse;font-size:11px">
         <thead><tr style="background:#374151;color:#fff"><th style="padding:5px 8px;text-align:left">Previous Action</th><th style="padding:5px 8px;text-align:center;width:120px">Status</th></tr></thead>
-        <tbody>${a.previousActionsStatus.map(item=>`<tr style="border-bottom:1px solid #F3F4F6"><td style="padding:5px 8px;color:#374151">${item.description||""}</td><td style="padding:5px 8px;text-align:center;font-weight:600;color:${item.status==="completed"?"#16A34A":item.status==="deferred"?"#D97706":item.status==="superseded"?"#9CA3AF":"#DC2626"}">${(item.status||"outstanding").charAt(0).toUpperCase()+(item.status||"outstanding").slice(1)}</td></tr>`).join("")}</tbody>
+        <tbody>${a.previousActionsStatus.map(item=>`<tr style="border-bottom:1px solid #21262D"><td style="padding:5px 8px;color:#374151">${item.description||""}</td><td style="padding:5px 8px;text-align:center;font-weight:600;color:${item.status==="completed"?"#16A34A":item.status==="deferred"?"#D97706":item.status==="superseded"?"#9CA3AF":"#DC2626"}">${(item.status||"outstanding").charAt(0).toUpperCase()+(item.status||"outstanding").slice(1)}</td></tr>`).join("")}</tbody>
       </table>
     </div>` : ""}
 ${actionItems.length > 0 ? actionItems.map(item => `
@@ -3470,7 +3505,7 @@ ${actionItems.length > 0 ? actionItems.map(item => `
           <td style="white-space:nowrap;"><span style="font-size:8pt;font-weight:700;color:${pColor(item.priority)};">${item.priority?.split(" — ")[0]||"P3"}</span></td>
           <td style="font-size:8.5pt;">${item.responsible||"—"}</td>
           <td style="font-size:8.5pt;white-space:nowrap;color:${item.priority?.includes("P1")?"#B91C1C":"#374151"};">${item.targetDate?fmtDate(item.targetDate):"—"}</td>
-          <td><span style="font-size:7pt;font-weight:700;padding:1px 6px;border-radius:6px;background:#F3F4F6;color:#6B7280;text-transform:capitalize;">${item.actionStatus||"Pending"}</span></td>
+          <td><span style="font-size:7pt;font-weight:700;padding:1px 6px;border-radius:6px;background:#21262D;color:#6B7280;text-transform:capitalize;">${item.actionStatus||"Pending"}</span></td>
         </tr>`).join("")}
       </tbody>
     </table>` : `<p class="body" style="font-style:italic;color:#9CA3AF;">No actions recorded.</p>`}
@@ -3506,7 +3541,7 @@ ${actionItems.length > 0 ? actionItems.map(item => `
         <div class="sig-f"><div class="sig-l">Name</div><div class="sig-v">${a.rpName||"—"}</div></div>
         <div class="sig-f"><div class="sig-l">Title</div><div class="sig-v">${a.rpTitle||"—"}</div></div>
         <div class="sig-f"><div class="sig-l">Signature</div><div class="sig-c">Awaiting signature</div></div>
-        <div class="sig-f"><div class="sig-l">Date</div><div class="sig-v" style="color:#9CA3AF;border-color:#D1D5DB;">—</div></div>
+        <div class="sig-f"><div class="sig-l">Date</div><div class="sig-v" style="color:#9CA3AF;border-color:#8B949E;">—</div></div>
       </div>
     </div>
   </div>
@@ -3617,7 +3652,7 @@ function CompleteScreen({state, dispatch}) {
   );
 
   const RFtr = ({pg,tot=7}) => (
-    <div className="rpt-nav" style={{borderTop:"1px solid #EAECF0",background:"#1C2128"}}>
+    <div className="rpt-nav" style={{borderTop:"1px solid #30363D",background:"#1C2128"}}>
       <span className="rpt-fl">© {new Date().getFullYear()} {org.name||"Assessor"} · Confidential</span>
       <span style={{fontSize:8,fontWeight:700,color:pr}}>Firesite™</span>
       <span className="rpt-fl">Page {pg} of {tot}</span>
@@ -3671,7 +3706,7 @@ function CompleteScreen({state, dispatch}) {
       </div>
 
       {/* Tab bar */}
-      <div className="tab-nav" style={{background:"#fff",borderBottom:"1px solid #EAECF0",top:50}}>
+      <div className="tab-nav" style={{background:"#fff",borderBottom:"1px solid #30363D",top:50}}>
         {[["overview","📊 Overview"],["actions","⚑ Actions"],["report","📄 Report"]].map(([k,l])=>(
           <button key={k} className="tnb" onClick={()=>setTab(k)} style={{
             background:tab===k?pr:"transparent",
@@ -3731,7 +3766,7 @@ function CompleteScreen({state, dispatch}) {
                   return (
                     <div key={i} title={s.title}
                       onClick={()=>{dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"});dispatch({type:"SEC",i});}}
-                      style={{cursor:"pointer",display:"flex",alignItems:"center",gap:4,background:done?"#0D3321":"#F3F4F6",border:`1px solid ${done?"#6EE7B7":"#EAECF0"}`,color:done?"#065F46":"#9CA3AF",borderRadius:6,padding:"4px 8px",fontSize:10,fontWeight:done?600:400}}>
+                      style={{cursor:"pointer",display:"flex",alignItems:"center",gap:4,background:done?"#0D3321":"#21262D",border:`1px solid ${done?"#6EE7B7":"#30363D"}`,color:done?"#065F46":"#9CA3AF",borderRadius:6,padding:"4px 8px",fontSize:10,fontWeight:done?600:400}}>
                       {done?"✓":i+1} {s.short||s.title.split(" ")[0]}
                     </div>
                   );
@@ -3750,14 +3785,14 @@ function CompleteScreen({state, dispatch}) {
               <div style={{padding:"12px 14px"}}>
                 <div style={{display:"flex",gap:6,overflow:"hidden",flexWrap:"wrap"}}>
                   {allPhotos.slice(0,8).map((p,i)=>(
-                    <div key={i} style={{position:"relative",width:60,height:60,borderRadius:6,overflow:"hidden",border:"1px solid #EAECF0",flexShrink:0}}>
+                    <div key={i} style={{position:"relative",width:60,height:60,borderRadius:6,overflow:"hidden",border:"1px solid #30363D",flexShrink:0}}>
                       <img src={p.src} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                       <div style={{position:"absolute",bottom:0,left:0,right:0,background:"linear-gradient(transparent,rgba(0,0,0,.65))",padding:"2px 4px"}}>
                         <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:6,color:"rgba(255,255,255,.8)"}}>{p.ref}</div>
                       </div>
                     </div>
                   ))}
-                  {allPhotos.length>8&&<div style={{width:60,height:60,borderRadius:6,background:"#F3F4F6",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#6E7681",fontWeight:600}}>+{allPhotos.length-8}</div>}
+                  {allPhotos.length>8&&<div style={{width:60,height:60,borderRadius:6,background:"#21262D",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#6E7681",fontWeight:600}}>+{allPhotos.length-8}</div>}
                 </div>
                 <div style={{fontSize:10,color:"#6E7681",marginTop:8}}>Photos appear in report findings and Photo Evidence Appendix (Page 7)</div>
               </div>
@@ -3810,7 +3845,7 @@ function CompleteScreen({state, dispatch}) {
                       {ac2.photos.length>0&&(
                         <div style={{display:"flex",gap:4,marginTop:6,flexWrap:"wrap"}}>
                           {ac2.photos.map((p,j)=>(
-                            <div key={j} style={{position:"relative",width:48,height:48,borderRadius:5,overflow:"hidden",border:"1px solid #EAECF0"}}>
+                            <div key={j} style={{position:"relative",width:48,height:48,borderRadius:5,overflow:"hidden",border:"1px solid #30363D"}}>
                               <img src={p.src} alt={p.caption} style={{width:"100%",height:"100%",objectFit:"cover"}}/>
                             </div>
                           ))}
@@ -3878,13 +3913,13 @@ function CompleteScreen({state, dispatch}) {
                 {[["Reference",a.ref],["Date",fmtDate(a.assessmentDate)],
                   ["Risk Rating",(risk||"Not set").split("—")[0].trim()],["Next Review",a.nextReview||"—"],
                   ["Resp. Person",(a.rpName||"—")+(a.rpTitle?"\n"+a.rpTitle:"")],["Client",a.clientName||"—"]].map(([l,v])=>(
-                  <div key={l} style={{padding:"8px 12px",borderRight:"1px solid #F3F4F6",borderBottom:"1px solid #F3F4F6"}}>
+                  <div key={l} style={{padding:"8px 12px",borderRight:"1px solid #21262D",borderBottom:"1px solid #21262D"}}>
                     <div style={{fontSize:6,fontWeight:700,textTransform:"uppercase",letterSpacing:.5,color:"#6E7681",marginBottom:2}}>{l}</div>
                     <div style={{fontSize:10,fontWeight:600,color:l==="Risk Rating"?riskCol(risk):"#0D1117",whiteSpace:"pre-line",lineHeight:1.3}}>{v}</div>
                   </div>
                 ))}
               </div>
-              <div style={{padding:"5px 12px",background:"#1C2128",display:"flex",justifyContent:"space-between",borderTop:"1px solid #EAECF0"}}>
+              <div style={{padding:"5px 12px",background:"#1C2128",display:"flex",justifyContent:"space-between",borderTop:"1px solid #30363D"}}>
                 <span style={{fontSize:8,color:"#6E7681"}}>Prepared by: {org.assessor||"Assessor"}{org.quals?` · ${org.quals}`:""}</span>
                 <span style={{fontSize:8,fontWeight:700,color:pr}}>Firesite™</span>
               </div>
@@ -3907,8 +3942,8 @@ function CompleteScreen({state, dispatch}) {
                       ["Legislation","Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021"]
                     ].map(([l,v])=>(
                       <tr key={l}>
-                        <td style={{width:100,fontWeight:700,fontSize:8,textTransform:"uppercase",color:"#6E7681",padding:"5px 0",borderBottom:"1px solid #F3F4F6",verticalAlign:"top"}}>{l}</td>
-                        <td style={{padding:"5px 0 5px 8px",borderBottom:"1px solid #F3F4F6",color:"#374151",lineHeight:1.5}}>{v}</td>
+                        <td style={{width:100,fontWeight:700,fontSize:8,textTransform:"uppercase",color:"#6E7681",padding:"5px 0",borderBottom:"1px solid #21262D",verticalAlign:"top"}}>{l}</td>
+                        <td style={{padding:"5px 0 5px 8px",borderBottom:"1px solid #21262D",color:"#374151",lineHeight:1.5}}>{v}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -3953,16 +3988,16 @@ function CompleteScreen({state, dispatch}) {
                 ):<p className="rpt-p">Risk rating not set — complete Section 12.</p>}
                 {/* Risk matrix */}
                 <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#6E7681",marginBottom:5,fontWeight:600,textTransform:"uppercase",letterSpacing:.8}}>Risk Matrix</div>
-                <div style={{display:"grid",gridTemplateColumns:"60px 1fr 1fr 1fr",border:"1px solid #EAECF0",borderRadius:6,overflow:"hidden",fontSize:9,marginBottom:12}}>
+                <div style={{display:"grid",gridTemplateColumns:"60px 1fr 1fr 1fr",border:"1px solid #30363D",borderRadius:6,overflow:"hidden",fontSize:9,marginBottom:12}}>
                   {["","Slight Harm","Moderate Harm","Extreme Harm"].map((h,i)=>(
-                    <div key={i} style={{padding:"5px 6px",background:"#1C2128",borderBottom:"1px solid #EAECF0",borderLeft:i>0?"1px solid #EAECF0":"none",fontWeight:700,fontSize:7,textTransform:"uppercase",color:"#6B7280",textAlign:i===0?"left":"center"}}>{h}</div>
+                    <div key={i} style={{padding:"5px 6px",background:"#1C2128",borderBottom:"1px solid #30363D",borderLeft:i>0?"1px solid #30363D":"none",fontWeight:700,fontSize:7,textTransform:"uppercase",color:"#6B7280",textAlign:i===0?"left":"center"}}>{h}</div>
                   ))}
                   {[["Low","#0D3321","#065F46","#FFFBEB","#92400E","#FEF3C7","#B45309"],
                     ["Medium","#FFFBEB","#92400E","#FEF3C7","#B45309","#FEF2F2","#991B1B"],
                     ["High","#FEF3C7","#B45309","#FEF2F2","#991B1B","#7B1C1C","#FECACA"]].map(([l,...cs])=>[
-                    <div key={l} style={{padding:"7px 6px",background:"#1C2128",borderTop:"1px solid #EAECF0",fontSize:8,fontWeight:700,textTransform:"uppercase",color:"#6B7280"}}>{l}</div>,
+                    <div key={l} style={{padding:"7px 6px",background:"#1C2128",borderTop:"1px solid #30363D",fontSize:8,fontWeight:700,textTransform:"uppercase",color:"#6B7280"}}>{l}</div>,
                     ...[0,1,2].map(i=>(
-                      <div key={i} style={{padding:"7px",textAlign:"center",fontWeight:700,fontSize:9,background:cs[i*2],color:cs[i*2+1],borderLeft:"1px solid #EAECF0",borderTop:"1px solid #EAECF0"}}>
+                      <div key={i} style={{padding:"7px",textAlign:"center",fontWeight:700,fontSize:9,background:cs[i*2],color:cs[i*2+1],borderLeft:"1px solid #30363D",borderTop:"1px solid #30363D"}}>
                         {[["Trivial","Tolerable","Moderate"],["Tolerable","Moderate","Substantial"],["Moderate","Substantial","Intolerable"]][["Low","Medium","High"].indexOf(l)][i]}
                       </div>
                     ))
@@ -4019,7 +4054,7 @@ function CompleteScreen({state, dispatch}) {
                     <RSecHead n="E" label="Section E" title="Positive Findings"/>
                     <p className="rpt-p">The following positive fire safety arrangements were observed during the assessment.</p>
                     {positiveFindings.map((f,i)=>(
-                      <div key={i} style={{padding:"6px 0",borderBottom:"1px solid #F3F4F6",display:"flex",gap:8}}>
+                      <div key={i} style={{padding:"6px 0",borderBottom:"1px solid #21262D",display:"flex",gap:8}}>
                         <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:8,color:"#C0392B",flexShrink:0,marginTop:2}}>✓ {f.ref}</span>
                         <span style={{fontSize:10,color:"#374151",lineHeight:1.5}}>{f.note}</span>
                       </div>
@@ -4045,7 +4080,7 @@ function CompleteScreen({state, dispatch}) {
                         <td style={{whiteSpace:"nowrap"}}><span style={{fontSize:8,fontWeight:700,color:pColor(item.priority)}}>{item.priority?.split(" — ")[0]||"P3"}</span></td>
                         <td style={{fontSize:9}}>{item.responsible||"—"}</td>
                         <td style={{fontSize:9,whiteSpace:"nowrap",color:item.priority?.includes("P1")?"#B91C1C":"#374151"}}>{item.targetDate?fmtDate(item.targetDate):"—"}</td>
-                        <td><span style={{fontSize:7,fontWeight:700,padding:"1px 5px",borderRadius:6,background:"#F3F4F6",color:"#6B7280",textTransform:"capitalize"}}>{item.actionStatus||"Pending"}</span></td>
+                        <td><span style={{fontSize:7,fontWeight:700,padding:"1px 5px",borderRadius:6,background:"#21262D",color:"#6B7280",textTransform:"capitalize"}}>{item.actionStatus||"Pending"}</span></td>
                       </tr>
                     ))}</tbody>
                   </table>
@@ -4092,7 +4127,7 @@ function CompleteScreen({state, dispatch}) {
                     <div className="sig-f"><div className="sig-l">Name</div><div className="sig-v">{a.rpName||"—"}</div></div>
                     <div className="sig-f"><div className="sig-l">Title</div><div className="sig-v">{a.rpTitle||"—"}</div></div>
                     <div className="sig-f"><div className="sig-l">Signature</div><div className="sig-c">Awaiting signature</div></div>
-                    <div className="sig-f"><div className="sig-l">Date</div><div className="sig-v" style={{color:"#6E7681",borderColor:"#D1D5DB"}}>—</div></div>
+                    <div className="sig-f"><div className="sig-l">Date</div><div className="sig-v" style={{color:"#6E7681",borderColor:"#8B949E"}}>—</div></div>
                   </div>
                 </div>
               </div>
