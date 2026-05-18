@@ -111,56 +111,57 @@ const { useState, useReducer, useRef, useCallback, useEffect } = React;
 // ─── SKIP LOGIC ───────────────────────────────────────────────────
 // Questions that only show when a parent is answered a certain way
 const SKIP_LOGIC = {
-  "1.3":  { parent:"1.2",  showWhen:"y" },
-  "1.4":  { parent:"1.3",  showWhen:"y" },
-  "1.11": { parent:"1.10", showWhen:"y" },
-  "1.14": { parent:"1.13", showWhen:"y" },
-  "1.16": { parent:"1.15", showWhen:"y" },
-  "2.5":  { parent:"2.4",  hideWhen:"Not Conducted" },
-  "2.9":  { parent:"2.8",  showWhen:"y" },
-  "2.11": { parent:"2.10", showWhen:"y" },
-  "2.13": { parent:"2.12", showWhen:"y" },
-  "4.2":  { parent:"4.1",  showWhen:"y" },
-  "5.4":  { parent:"5.3",  showWhen:"y" },
-  "5.5":  { parent:"5.3",  showWhen:"y" },
-  "5.7":  { parent:"5.6",  showWhen:"y" },
-  "5.8":  { parent:"5.3",  showWhen:"y" },
-  "P1.7": { parent:"P1.5", showWhen:"y" },
-  "R2.4": { parent:"R2.3", showWhen:"y" },
-  "6.4":  { parent:"6.3",  showWhen:"y" },
-  "6.6":  { parent:"6.5",  showWhen:"y" },
-  "7.13": { parent:"7.12", showWhen:"y" },
-  "7.14": { parent:"7.12", showWhen:"y" },
-  "8.7":  { parent:"8.4",  showWhen:"y" },
-  "9.2":  { parent:"9.1",  showWhen:"y" },
-  "9.4":  { parent:"9.3",  showWhen:"y" },
+  "1.3":   { parent:"1.2",   showWhen:"y" },
+  "1.4":   { parent:"1.3",   showWhen:"y" },
+  "1.11":  { parent:"1.10",  showWhen:"y" },
+  "1.14":  { parent:"1.13",  showWhen:"y" },
+  "1.16":  { parent:"1.15",  showWhen:"y" },
+  "2.5":   { parent:"2.4",   hideWhen:"Not Conducted" },
+  "2.9":   { parent:"2.8",   showWhen:"y" },
+  "2.11":  { parent:"2.10",  showWhen:"y" },
+  "2.13":  { parent:"2.12",  showWhen:"y" },
+  "4.2":   { parent:"4.1",   showWhen:"y" },
+  "5.4":   { parent:"5.3",   showWhen:"y" },
+  "5.5":   { parent:"5.3",   showWhen:"y" },
+  "5.7":   { parent:"5.6",   showWhen:"y" },
+  "5.8":   { parent:"5.3",   showWhen:"y" },
+  "P1.7":  { parent:"P1.5",  showWhen:"y" },
+  "R2.4":  { parent:"R2.3",  showWhen:"y" },
+  "6.4":   { parent:"6.3",   showWhen:"y" },
+  "6.6":   { parent:"6.5",   showWhen:"y" },
+  "7.13":  { parent:"7.12",  showWhen:"y" },
+  "7.14":  { parent:"7.12",  showWhen:"y" },
+  "7.15b": { parent:"7.15a", showWhen:"y" },
+  "9.7":   { parent:"9.4",   showWhen:"y" },
+  "10.2":  { parent:"10.1",  showWhen:"y" },
+  "10.4":  { parent:"10.3",  showWhen:"y" },
 };
 
 // ─── PRIORITY BY SECTION ──────────────────────────────────────────
 const SECTION_PRIORITY = {
   1:"P3 — Within 3 months", 2:"P3 — Within 3 months",
   3:"P3 — Within 3 months", 4:"P2 — Within 1 month",
-  5:"P3 — Within 3 months", 6:"P3 — Within 3 months",
-  7:"P1 — Immediate",       8:"P1 — Immediate",
-  9:"P2 — Within 1 month",  10:"P2 — Within 1 month",
+  5:"P2 — Within 1 month",  6:"P3 — Within 3 months",
+  7:"P1 — Immediate",       8:"P2 — Within 1 month",
+  9:"P1 — Immediate",       10:"P2 — Within 1 month",
   11:"P3 — Within 3 months",12:"P4 — Within 12 months",
 };
 
 // ─── SMART ACTIONS ────────────────────────────────────────────────
 const SMART_ACTIONS = {
   "7.9":   {action:"Remove deadlock from final exit door and replace with panic latch compliant with BS EN 1125. Implement immediately.",priority:"P1 — Immediate",on:"y"},
-  "3.5":   {action:"Replace inoperative self-closing device on fire door. Must close fully and latch from any open position.",priority:"P1 — Immediate",on:"n"},
+  "8.5":   {action:"Replace inoperative self-closing device on fire door. Must close fully and latch from any open position.",priority:"P1 — Immediate",on:"n"},
   "7.10":  {action:"Replace key-operated lock on final exit door with single-operation release device. Implement immediately.",priority:"P1 — Immediate",on:"n"},
-  "8.4":   {action:"Arrange emergency inspection of fire alarm system by competent contractor.",priority:"P1 — Immediate",on:"n"},
+  "9.4":   {action:"Arrange emergency inspection of fire alarm system by competent contractor.",priority:"P1 — Immediate",on:"n"},
   "2.5":   {action:"Rectify all outstanding C1, C2 and FI coded EICR items. Obtain completion certificates.",priority:"P1 — Immediate",on:"n"},
   "5.2":   {action:"Review maximum occupancy immediately. Implement controls to prevent safe capacity being exceeded.",priority:"P1 — Immediate",on:"y"},
   "7.5":   {action:"Provide an additional alternative escape route accessible from all parts of the building.",priority:"P1 — Immediate",on:"n"},
   "7.19":  {action:"Ensure all final exits lead to a place of ultimate safety away from the building.",priority:"P1 — Immediate",on:"n"},
-  "3.4":   {action:"Arrange inspection of all fire doors by a competent fire door inspector.",priority:"P2 — Within 1 month",on:"n"},
-  "3.9":   {action:"Adjust or replace fire doors where gap tolerances exceed 3mm at sides/top or 8mm at threshold.",priority:"P2 — Within 1 month",on:"n"},
-  "3.10":  {action:"Fit intumescent strips and cold smoke seals to all fire doors where missing or damaged.",priority:"P2 — Within 1 month",on:"n"},
-  "3.1":   {action:"Commission compartmentation survey to identify hidden fire spread pathways.",priority:"P2 — Within 1 month",on:"y"},
-  "8.11":  {action:"Reposition obstructions to manual call points. Maintain minimum 500mm clear access.",priority:"P2 — Within 1 month",on:"n"},
+  "8.4":   {action:"Arrange inspection of all fire doors by a competent fire door inspector.",priority:"P2 — Within 1 month",on:"n"},
+  "8.9":   {action:"Adjust or replace fire doors where gap tolerances exceed 3mm at sides/top or 8mm at threshold.",priority:"P2 — Within 1 month",on:"n"},
+  "8.10":  {action:"Fit intumescent strips and cold smoke seals to all fire doors where missing or damaged.",priority:"P2 — Within 1 month",on:"n"},
+  "8.1_spread":   {action:"Commission compartmentation survey to identify hidden fire spread pathways.",priority:"P2 — Within 1 month",on:"y"},
+  "9.11":  {action:"Reposition obstructions to manual call points. Maintain minimum 500mm clear access.",priority:"P2 — Within 1 month",on:"n"},
   "7.12":  {action:"Test all emergency lighting units and replace failed luminaires. Arrange 3-hour discharge test.",priority:"P2 — Within 1 month",on:"n"},
   "7.11a": {action:"Improve internal illumination of escape routes. Install emergency lighting per BS 5266-1:2016.",priority:"P2 — Within 1 month",on:"n"},
   "7.11b": {action:"Improve external illumination of final exit areas to enable safe exit in darkness.",priority:"P2 — Within 1 month",on:"n"},
@@ -176,9 +177,9 @@ const SMART_ACTIONS = {
   "1.18":  {action:"Implement physical separation between ignition sources and combustibles. Photograph non-compliance.",priority:"P2 — Within 1 month",on:"n"},
   "1.19":  {action:"Implement fire controls in cooking area: suppression, fire blanket, thermal cut-offs, extraction cleaning.",priority:"P2 — Within 1 month",on:"n"},
   "7.2":   {action:"Review travel distances against ADB Vol 2 Table 3. Add routes or detection where limits are exceeded.",priority:"P2 — Within 1 month",on:"n"},
-  "8.9":   {action:"Establish weekly fire alarm call point test programme and record in log book. Arrange 6-monthly service.",priority:"P2 — Within 1 month",on:"n"},
+  "9.9":   {action:"Establish weekly fire alarm call point test programme and record in log book. Arrange 6-monthly service.",priority:"P2 — Within 1 month",on:"n"},
   "1.9":   {action:"Remove accumulated combustible waste. Implement weekly housekeeping inspection regime.",priority:"P3 — Within 3 months",on:"n"},
-  "9.8":   {action:"Introduce monthly visual checks for all portable fire extinguishers.",priority:"P3 — Within 3 months",on:"n"},
+  "10.8":  {action:"Introduce monthly visual checks for all portable fire extinguishers.",priority:"P3 — Within 3 months",on:"n"},
   "6.5":   {action:"Arrange evacuation drill within 3 months. Record date, time, evacuation time and issues.",priority:"P3 — Within 3 months",on:"n"},
   "2.1":   {action:"Introduce a programme of PAT appropriate to the risk level and frequency of use.",priority:"P3 — Within 3 months",on:"n"},
   "R2.3":  {action:"Arrange suitable fire safety management training for the Responsible Person from IFPO or IFE.",priority:"P3 — Within 3 months",on:"n"},
@@ -193,10 +194,10 @@ const SMART_ACTIONS = {
   "6.1":   {action:"Prepare a written fire safety policy statement signed by the Responsible Person. Review annually and after any material change to the building or use.",priority:"P2 — Within 1 month",on:"n"},
   "6.8":   {action:"Display the fire evacuation procedure prominently at all exits, staff rooms and the alarm panel. Produce translated versions for non-English speaking staff.",priority:"P2 — Within 1 month",on:"n"},
   "6.10":  {action:"Establish and maintain a fire safety log book. Record all tests, drills, maintenance and inspections. Must be available for inspection by the fire authority.",priority:"P3 — Within 3 months",on:"n"},
-  "3.11":  {action:"Commission a fire-stopping contractor to seal all cable, pipe and duct penetrations through compartment walls and floors. Photograph and document all works.",priority:"P2 — Within 1 month",on:"n"},
-  "3.12":  {action:"Commission a specialist survey of cavity barriers within roof spaces and concealed voids. Install or replace as required. Document with drawn survey.",priority:"P2 — Within 1 month",on:"n"},
-  "8.1":   {action:"Commission a fire alarm design review to BS 5839-1:2017. Upgrade detection category to ensure fire is detected early enough for safe escape across all areas.",priority:"P1 — Immediate",on:"n"},
-  "9.6":   {action:"Commission a portable extinguisher siting survey. Ensure CO2 provided for electrical risks; ABF foam for liquid fuel. Placement per BS 5306-8:2012.",priority:"P2 — Within 1 month",on:"n"},
+  "8.11":  {action:"Commission a fire-stopping contractor to seal all cable, pipe and duct penetrations through compartment walls and floors. Photograph and document all works.",priority:"P2 — Within 1 month",on:"n"},
+  "8.12":  {action:"Commission a specialist survey of cavity barriers within roof spaces and concealed voids. Install or replace as required. Document with drawn survey.",priority:"P2 — Within 1 month",on:"n"},
+  "9.1":   {action:"Commission a fire alarm design review to BS 5839-1:2017. Upgrade detection category to ensure fire is detected early enough for safe escape across all areas.",priority:"P1 — Immediate",on:"n"},
+  "10.6":  {action:"Commission a portable extinguisher siting survey. Ensure CO2 provided for electrical risks; ABF foam for liquid fuel. Placement per BS 5306-8:2012.",priority:"P2 — Within 1 month",on:"n"},
   "P1.3a": {action:"Engage with the Building Safety Regulator. Register the building and appoint an Accountable Person as required by the Building Safety Act 2022.",priority:"P1 — Immediate",on:"y"},
   "P1.5":  {action:"Review automatic detection coverage against BS 5839-1 LD1 or LD2. Install interlinked detection in all sleeping areas and circulation routes per RRO 2005 Article 13.",priority:"P1 — Immediate",on:"y"},
   "7.14":  {action:"Commission a structural survey of all external metal escape staircases by a chartered structural engineer. Implement all remedial works identified.",priority:"P2 — Within 1 month",on:"n"},
@@ -209,6 +210,23 @@ const SMART_ACTIONS = {
   "2.4":   {action:"Commission an Electrical Installation Condition Report (EICR) from a competent electrical contractor registered with NICEIC, NAPIT or ECA. This is a legal requirement for landlords and strongly recommended for all commercial premises. Priority: arrange assessment within 1 month.",priority:"P2 — Within 1 month",on:"Not Conducted"},
   "2.9":   {action:"Implement fire safety controls for EV charging: ensure chargers are off a dedicated circuit with RCD protection, are not left unattended during charging, and that the area has appropriate detection. Seek specialist advice from a competent electrical engineer.",priority:"P2 — Within 1 month",on:"n"},
   "2.10":  {action:"Implement fire safety controls for battery storage/charging: segregate batteries from combustible materials, use a designated charging area with fire detection, never charge damaged or swollen batteries, and review manufacturer guidance on storage and disposal.",priority:"P2 — Within 1 month",on:"y"},
+  "8.2":   {action:"Commission a smoke control or compartmentation survey. Identify gaps in smoke containment between floors and spaces. Implement smoke seals and management controls immediately.",priority:"P2 — Within 1 month",on:"y"},
+  "8.6":   {action:"Improve fire door signage throughout. All fire doors must carry 'FIRE DOOR KEEP SHUT' or 'FIRE DOOR KEEP LOCKED' signs per BS EN ISO 7010:2019 F019/F020.",priority:"P3 — Within 3 months",on:"n"},
+  "8.7":   {action:"Remove or permanently seal ventilation grilles or openings in fire doors. Grilles that compromise fire integrity must be removed and the opening made good to the original fire rating.",priority:"P1 — Immediate",on:"y"},
+  "5.8":   {action:"Remediate refuge point deficiencies. Refuge areas must be adequately protected, have two-way intercom communication, be clearly identified, and be unobstructed at all times.",priority:"P2 — Within 1 month",on:"n"},
+  "7.3":   {action:"Review exit provision against ADB Vol 2 / BS 9999 for current occupancy. Widen, add or unblock exits to meet the minimum requirements for the number of occupants.",priority:"P1 — Immediate",on:"n"},
+  "7.4":   {action:"Widen escape corridors and stairways to comply with minimum widths. Alternatively, reduce occupancy or provide additional escape routes.",priority:"P1 — Immediate",on:"n"},
+  "7.15c": {action:"Communicate the assembly point location to all occupants via induction, fire procedure notices and evacuation drills. Display assembly point sign at exit points.",priority:"P3 — Within 3 months",on:"n"},
+  "9.2":   {action:"Provide break-glass manual call points at all storey exits and final exits to allow any person to raise the alarm without risk. Install per BS 5839-1:2017 Clause 20.",priority:"P1 — Immediate",on:"n"},
+  "9.3":   {action:"Review alarm sounder coverage throughout the building. Additional sounders or visual alarm devices (VADs) may be required to ensure the alarm is perceivable in all areas including toilets, plant rooms and any sleeping risk areas.",priority:"P1 — Immediate",on:"n"},
+  "9.6":   {action:"Review cause-and-effect programming with the alarm contractor. Ensure partial alarm zones align with the adopted evacuation strategy (simultaneous, phased or investigate-and-confirm).",priority:"P2 — Within 1 month",on:"n"},
+  "9.8":   {action:"Upgrade the fire alarm system to include a standby battery capable of at least 24 hours standby followed by 30 minutes alarm, per BS 5839-1:2017 Clause 26.",priority:"P2 — Within 1 month",on:"n"},
+  "9.12":  {action:"Implement false alarm management measures: introduce an unwanted fire signal (UFS) action plan, consider detector zoning, add anti-tamper guards and review catering/steam areas.",priority:"P3 — Within 3 months",on:"n"},
+  "9.13":  {action:"Relocate fire alarm control panel (FACP) to a position accessible to the fire service on arrival, typically adjacent to the main entrance. Confirm location with local fire authority.",priority:"P2 — Within 1 month",on:"n"},
+  "9.14":  {action:"Commission an inspection of the Automatic Opening Vent (AOV) or smoke control system to confirm integration with the fire alarm. Ensure automatic activation tested per BS EN 12101.",priority:"P2 — Within 1 month",on:"n"},
+  "10.7":  {action:"Reposition firefighting equipment to ensure it is accessible, unobstructed and clearly signed. Maximum travel distance to a portable extinguisher: 30m (BS 5306-8:2012).",priority:"P2 — Within 1 month",on:"n"},
+  "10.8":  {action:"Introduce monthly visual checks for all portable fire extinguishers by the responsible person. Record checks in the fire safety log.",priority:"P3 — Within 3 months",on:"n"},
+  "10.9":  {action:"Arrange annual service of all portable fire extinguishers by a competent contractor to BS 5306-3. Schedule extended service (5-year overhaul) for applicable extinguisher types.",priority:"P2 — Within 1 month",on:"n"},
 };
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
@@ -500,10 +518,10 @@ const FRA_SECTIONS = [
     {ref:"5.5",q:"If yes - what evacuation aids are available?",t:"multi",opts:["Evacuation Chair","Evacuation Sledge / Mat","Carry Chair or Stretcher","Evacuation Lift","None","N/A"],required:false},
     {ref:"5.6",q:"Is it foreseeable that people unfamiliar with the building will be present?",t:"yn",required:true},
     {ref:"5.7",q:"If yes - what steps are taken to ensure the safe evacuation of unfamiliar visitors?",t:"text",required:false},
-    {ref:"5.8",q:"Where refuge points are provided, are they suitably protected and accessible?",t:"ynna",required:false},
+    {ref:"5.8",q:"Where refuge points are provided, are they suitably protected and accessible?",t:"ynna",required:false,subNo:{fields:[{ref:"5.8a",q:"Describe what remediation is required to bring refuge points to an acceptable standard:",t:"textarea",ph:"e.g. Refuge intercom not tested, wheelchair space obstructed, refuge not clearly signed..."}]}},
   ]},
   {id:7,title:"Means of Escape",short:"Escape Routes",questions:[
-    {ref:"7.1",q:"What evacuation strategy applies to this building?",t:"select",opts:["Simultaneous (full evacuation)","Phased Evacuation","Stay Put (defend in place)","Other"],required:true,noCamera:true},
+    {ref:"7.1",q:"What evacuation strategy applies to this building?",t:"select",opts:["Simultaneous (full evacuation)","Phased Evacuation","Stay Put (defend in place)","Other"],required:true,noCamera:true,sub:{on:"Other",fields:[{ref:"7.1a",q:"Please specify the evacuation strategy in place:",t:"textarea",ph:"e.g. Zoned evacuation — floor 1 evacuates while floors 2-4 shelter in place. Managed by fire wardens."}]}},
     {ref:"7.2",q:"Do escape route travel distances fall within the limits set out in applicable guidance?",t:"yn",required:true,noCamera:true,g:"ADB Vol 2 Table 3: single direction 18m max; multiple directions 45m max (non-sprinklered)."},
     {ref:"7.3",q:"Are there sufficient final exits in both number and clear width for the occupancy of this building?",t:"yn",required:true,g:"Minimum clear widths (ADB/BS 9999): 750mm for up to 60 persons; 850mm for up to 110 persons; 1050mm for up to 220 persons.",widthCheck:true},
     {ref:"7.4",q:"Are escape corridors and stairways wide enough to accommodate all occupants?",t:"yn",required:true,g:"Minimum corridor: 1000mm general; 1200mm where wheelchair users expected. Stair widths: 1000mm minimum for up to 150 persons.",widthCheck:true},
@@ -521,54 +539,54 @@ const FRA_SECTIONS = [
     {ref:"7.15a",q:"Is a formal fire assembly point designated for this building?",t:"yn",required:true},
     {ref:"7.15b",q:"State the location of the assembly point.",t:"text",required:true},
     {ref:"7.15c",q:"Is the assembly point location known to all occupants?",t:"yn",required:true},
-    {ref:"7.16",q:"Describe the arrangements used to confirm that all occupants, including visitors, have evacuated.",t:"text",required:true},
+    {ref:"7.16",q:"Describe the arrangements used to confirm that all occupants, including visitors, have evacuated.",t:"text",required:true,ph:"e.g. Roll call taken at assembly point by floor warden. Visitor sign-in register checked. Permanent staff list held by Site Manager. Fire service notified if persons unaccounted for."},
     {ref:"7.17",q:"Are PEEPs in place for all occupants who may not be able to self-evacuate unaided?",t:"yn",required:true,g:"PEEPs are a legal requirement where mobility-impaired or vulnerable persons are present."},
-    {ref:"7.18",q:"Where PEEPs are required - are suitable refuge areas provided and clearly signed?",t:"ynna",required:false},
+    {ref:"7.18",q:"Where PEEPs are required - are suitable refuge areas provided and clearly signed?",t:"ynna",required:false,subNo:{fields:[{ref:"7.18a",q:"What alternative arrangements are in place for evacuating persons who cannot self-evacuate?",t:"textarea",ph:"e.g. Evacuation chair stored on each floor, trained warden assigned, buddy system in place, stay-put policy with enhanced detection..."},{ref:"7.18b",q:"Are these alternative arrangements considered sufficient for the persons at risk?",t:"yn",required:false}]}},
     {ref:"7.19",q:"Do all final exits lead to a confirmed place of ultimate safety - an open space or public road?",t:"yn",required:true},
   ]},
   {id:8,title:"Fire Doors and Compartmentation",short:"Fire Doors",questions:[
-    {ref:"3.1",q:"Are there building features that could cause fire to spread more rapidly than expected?",t:"yn",required:true},
-    {ref:"3.2",q:"Could smoke travel between spaces, floors or compartments in a way that presents a risk to life?",t:"yn",required:true},
-    {ref:"3.3",q:"Where suspended or false ceilings are present, have fire-stopping measures been incorporated?",t:"ynna",required:false},
-    {ref:"3.4",q:"Are fire-rated doors installed where required, properly specified, fitted and maintained?",t:"ynna",required:true},
-    {ref:"3.5",q:"Do the self-closing mechanisms on all fire doors operate effectively and reliably?",t:"ynna",required:true,g:"Open each fire door to 90 degrees and release. It must close fully and latch under its own power."},
-    {ref:"3.6",q:"Are fire doors clearly identified with appropriate signage and kept closed when not in use?",t:"ynna",required:true},
-    {ref:"3.7",q:"Do any fire doors have ventilation grilles or openings that significantly reduce their effectiveness?",t:"ynna",required:false},
-    {ref:"3.8",q:"Do final exit doors and doors on escape routes swing open in the direction of escape travel?",t:"yn",required:true},
-    {ref:"3.9",q:"Are the door gaps within acceptable tolerances - maximum 3mm at sides/top, maximum 8mm at threshold?",t:"yn",required:true},
-    {ref:"3.10",q:"Are intumescent strips and cold smoke seals present and in good condition on all required doors?",t:"yn",required:true},
-    {ref:"3.11",q:"Are all service penetrations through compartment walls and floors correctly fire-stopped?",t:"yn",required:true},
-    {ref:"3.12",q:"Are cavity barriers installed and in good condition within concealed spaces and roof spaces?",t:"yn",required:true},
-    {ref:"3.13",q:"Where fire-rated glazing is installed, is it correctly specified, certified and free from damage?",t:"ynna",required:false},
+    {ref:"8.1",q:"Are there building features that could cause fire to spread more rapidly than expected?",t:"yn",required:true,g:"Look for: unprotected structural openings, missing fire-stopping around pipes/cables, unprotected voids above suspended ceilings, open-plan layouts without compartmentation, timber frame construction without protective linings. Any 'yes' should trigger a compartmentation survey."},
+    {ref:"8.2",q:"Could smoke travel between spaces, floors or compartments in a way that presents a risk to life?",t:"yn",required:true},
+    {ref:"8.3",q:"Where suspended or false ceilings are present, have fire-stopping measures been incorporated?",t:"ynnutd",required:false},
+    {ref:"8.4",q:"Are fire-rated doors installed where required, properly specified, fitted and maintained?",t:"ynna",required:true,opts2:["Assessed nominal fire doors","Assessed notional fire doors"],opts2Label:"Door specification assessed:"},
+    {ref:"8.5",q:"Do the self-closing mechanisms on all fire doors operate effectively and reliably?",t:"ynna",required:true,g:"Open each fire door to 90 degrees and release. It must close fully and latch under its own power. Check: self-closer not propped/overridden, door not dragging on floor, latch engaging on closing."},
+    {ref:"8.6",q:"Are fire doors clearly identified with appropriate signage and kept closed when not in use?",t:"ynna",required:true},
+    {ref:"8.7",q:"Do any fire doors have ventilation grilles or openings that significantly reduce their effectiveness?",t:"ynna",required:false},
+    {ref:"8.8",q:"Do final exit doors and doors on escape routes swing open in the direction of escape travel?",t:"yn",required:true},
+    {ref:"8.9",q:"Are the door gaps within acceptable tolerances - maximum 3mm at sides/top, maximum 8mm at threshold?",t:"yn",required:true},
+    {ref:"8.10",q:"Are intumescent strips and cold smoke seals present and in good condition on all required doors?",t:"yn",required:true},
+    {ref:"8.11",q:"Are all service penetrations through compartment walls and floors correctly fire-stopped?",t:"yn",required:true},
+    {ref:"8.12",q:"Are cavity barriers installed and in good condition within concealed spaces and roof spaces?",t:"ynnv",required:true},
+    {ref:"8.13",q:"Where fire-rated glazing is installed, is it correctly specified, certified and free from damage?",t:"ynna",required:false,g:"Look for: CE/UKCA marking on glazing units, correct fire-rating label (e.g. EI30, E30), undamaged beading and frames, no cracks or chips to glass, integrity maintained at perimeter. Unrated glazing in a fire-rated partition is a deficiency."},
   ]},
   {id:9,title:"Fire Detection and Alarm",short:"Detection",questions:[
-    {ref:"8.1",q:"Would a fire be detected quickly enough for the alarm to be raised before escape routes are compromised?",t:"yn",required:true},
-    {ref:"8.2",q:"Can an alarm be raised by any person discovering a fire without putting themselves at risk?",t:"yn",required:true},
-    {ref:"8.3",q:"Is the fire warning signal capable of being perceived throughout the entire building?",t:"yn",required:true},
-    {ref:"8.4",q:"Is a fire alarm system installed and confirmed to be in working order?",t:"ynna",required:true},
-    {ref:"8.5",q:"Specify the category and standard of the fire alarm system installed (e.g. BS 5839-1 Category L2).",t:"text",required:true},
-    {ref:"8.6",q:"Is the alarm system cause-and-effect configuration consistent with the evacuation strategy adopted?",t:"ynna",required:true},
-    {ref:"8.7",q:"Is the fire alarm system connected to and monitored by a third-party Alarm Receiving Centre (ARC)?",t:"ynna",required:false},
-    {ref:"8.8",q:"Does the alarm system have a standby power supply for mains failure?",t:"ynna",required:true},
-    {ref:"8.9",q:"Is the alarm subject to daily visual checks, weekly call point tests and at least 6-monthly servicing?",t:"ynna",required:true},
-    {ref:"8.10",q:"Identify the contractor responsible for periodic inspection and servicing of the alarm system.",t:"text",required:true},
-    {ref:"8.11",q:"Are all manual call points readily visible, clearly identified and free from obstruction?",t:"ynna",required:true},
-    {ref:"8.12",q:"Are appropriate measures in place to minimise the occurrence of false or unwanted fire signals?",t:"ynna",required:true},
-    {ref:"8.13",q:"Is the fire alarm control panel located in a suitable position accessible to the fire service on arrival?",t:"yn",required:true},
-    {ref:"8.14",q:"Where AOV or mechanical smoke control systems are installed, are they integrated with the fire alarm?",t:"ynna",required:false},
+    {ref:"9.1",q:"Would a fire be detected quickly enough for the alarm to be raised before escape routes are compromised?",t:"yn",required:true},
+    {ref:"9.2",q:"Can an alarm be raised by any person discovering a fire without putting themselves at risk?",t:"yn",required:true},
+    {ref:"9.3",q:"Is the fire warning signal capable of being perceived throughout the entire building?",t:"yn",required:true},
+    {ref:"9.4",q:"Is a fire alarm system installed and confirmed to be in working order?",t:"ynna",required:true},
+    {ref:"9.5",q:"Specify the category and standard of the fire alarm system installed (e.g. BS 5839-1 Category L2).",t:"text",required:true,g:"Look for: a label or certificate on the fire alarm control panel (FACP) showing the BS 5839-1 category (e.g. L1, L2, M). L1 = detectors throughout; L2 = escape routes and high-risk areas; M = manual call points only. Ask to see the latest commissioning or service certificate."},
+    {ref:"9.6",q:"Is the alarm system cause-and-effect configuration consistent with the evacuation strategy adopted?",t:"ynna",required:true},
+    {ref:"9.7",q:"Is the fire alarm system connected to and monitored by a third-party Alarm Receiving Centre (ARC)?",t:"ynna",required:false},
+    {ref:"9.8",q:"Does the alarm system have a standby power supply for mains failure?",t:"ynna",required:true},
+    {ref:"9.9",q:"Is the alarm subject to daily visual checks, weekly call point tests and at least 6-monthly servicing?",t:"ynna",required:true},
+    {ref:"9.10",q:"Identify the contractor responsible for periodic inspection and servicing of the alarm system.",t:"contractor",required:true},
+    {ref:"9.11",q:"Are all manual call points readily visible, clearly identified and free from obstruction?",t:"ynna",required:true},
+    {ref:"9.12",q:"Are appropriate measures in place to minimise the occurrence of false or unwanted fire signals?",t:"ynna",required:true},
+    {ref:"9.13",q:"Is the fire alarm control panel located in a suitable position accessible to the fire service on arrival?",t:"yn",required:true},
+    {ref:"9.14",q:"Where Automatic Opening Vent (AOV) or mechanical smoke control systems are installed, are they integrated with the fire alarm?",t:"ynna",required:false},
   ]},
   {id:10,title:"Firefighting Equipment",short:"Firefighting",questions:[
-    {ref:"9.1",q:"Is an automatic sprinkler or water suppression system installed in the building?",t:"yn",required:true},
-    {ref:"9.2",q:"If yes - is the system tested and inspected at intervals specified in the maintenance contract?",t:"ynna",required:false},
-    {ref:"9.3",q:"Are dry or wet rising mains installed within the building for fire service use?",t:"yn",required:true},
-    {ref:"9.4",q:"If yes - does a contractor carry out a 6-monthly visual inspection and annual pressure test?",t:"ynna",required:false},
-    {ref:"9.5",q:"Describe the types and distribution of portable extinguishers provided within the building.",t:"text",required:true},
-    {ref:"9.6",q:"Is the type, number and distribution of portable extinguishers appropriate for the identified fire risks?",t:"yn",required:true},
-    {ref:"9.7",q:"Is firefighting equipment sited in accessible, visible locations with clear identification signage?",t:"yn",required:true},
-    {ref:"9.8",q:"Are portable extinguishers checked visually each month by a responsible person?",t:"yn",required:true},
-    {ref:"9.9",q:"Is all firefighting equipment serviced at the required intervals by a competent contractor?",t:"yn",required:true},
-    {ref:"9.10",q:"Identify the contractor responsible for maintenance and servicing of firefighting equipment.",t:"text",required:true},
-    {ref:"9.11",q:"Where kitchen facilities are present, are fire blankets provided in accessible locations at the point of use?",t:"ynna",required:false},
+    {ref:"10.1",q:"Is an automatic sprinkler or water suppression system installed in the building?",t:"yn",required:true,g:"What to look for: sprinkler heads on ceilings/walls, a sprinkler control valve set (typically in a cupboard or plantroom), a flow test connection, and a current maintenance certificate. Where not installed, consider whether the building risk profile warrants one."},
+    {ref:"10.2",q:"If yes - is the system tested and inspected at intervals specified in the maintenance contract?",t:"ynna",required:false},
+    {ref:"10.3",q:"Are dry or wet rising mains (risers) installed within the building for fire service use?",t:"yn",required:true,g:"What to look for: inlet breeching connections at street level (wet riser pumps in plantroom), outlet landing valves on each floor within protected stairwells, and identification plates. Rising mains are typically required in buildings over 18m (60ft)."},
+    {ref:"10.4",q:"Are the risers adequately maintained, accessible, identified and tested in accordance with BS 9990?",t:"ynna",required:false},
+    {ref:"10.5",q:"Record the types and quantities of portable fire extinguishers provided across the building.",t:"extinguisher",required:true},
+    {ref:"10.6",q:"Is the type, number and distribution of portable extinguishers appropriate for the identified fire risks?",t:"yn",required:true},
+    {ref:"10.7",q:"Is firefighting equipment sited in accessible, visible locations with clear identification signage?",t:"yn",required:true},
+    {ref:"10.8",q:"Are portable extinguishers checked visually each month by a responsible person?",t:"yn",required:true},
+    {ref:"10.9",q:"Is all firefighting equipment serviced at the required intervals by a competent contractor?",t:"yn",required:true,g:"Portable extinguishers require annual service by a competent person (BS 5306-3). Extended service required every 5 years."},
+    {ref:"10.10",q:"Identify the contractor responsible for maintenance and servicing of firefighting equipment.",t:"contractor",required:true},
+    {ref:"10.11",q:"Where cooking facilities, oil-fired equipment or battery charging areas are present — are fire blankets provided at the point of use?",t:"ynna",required:false,g:"Fire blankets are specifically relevant to kitchens, catering areas, oil-fired boiler rooms, and lithium-ion battery charging stations. They are not required as general provision throughout all premises."},
   ]},
   {id:11,title:"Fire Safety Management and Training",short:"Management",questions:[
     {ref:"6.1",q:"Is a written fire safety policy document in place and available to all relevant persons?",t:"yn",required:true},
@@ -806,6 +824,8 @@ const isAnswered = (q, ans={}) => {
   if (q.t==="floorarea") return !!(ans.floorArea||ans.floors);
   if (q.t==="occupantcount") return !!(ans.ans);
   if (q.t==="textarea")  return !!(ans.ans||"").trim();
+  if (q.t==="extinguisher") return (ans.extinguishers||[]).length>0;
+  if (q.t==="contractor") return !!(ans.contractorName||ans.ans||"").trim();
   return !!ans.ans;
 };
 const isMissed  = (q, ans) => q.required && !isAnswered(q, ans||{});
@@ -1396,6 +1416,43 @@ const OCC_TYPES=[
   {cat:"Mixed Use",icon:"🏗",sub:"Multiple uses within building"},
   {cat:"Other",icon:"📋",sub:"Describe below"},
 ];
+const EXTINGUISHER_TYPES = [
+  "Water","Water Mist","Foam (AFFF)","CO2","Dry Powder","Wet Chemical","Clean Agent (FM-200/Novec)","Lithium-ion / EV Battery","Fire Blanket"
+];
+function ExtinguisherInventory({state={},upd}) {
+  const items = state.extinguishers||[];
+  const add = () => upd({extinguishers:[...items,{type:"CO2",qty:1,area:""}]});
+  const remove = i => upd({extinguishers:items.filter((_,j)=>j!==i)});
+  const change = (i,k,v) => {const n=[...items];n[i]={...n[i],[k]:v};upd({extinguishers:n});};
+  return (
+    <div style={{marginBottom:14}}>
+      {items.length===0&&<div style={{padding:"12px 16px",background:"#161B22",borderRadius:8,border:"1px dashed #30363D",color:"#6E7681",fontSize:13,textAlign:"center",marginBottom:10}}>No extinguishers recorded yet. Tap below to add.</div>}
+      {items.map((item,i)=>(
+        <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 60px 1fr 32px",gap:8,marginBottom:8,alignItems:"end"}}>
+          <div>
+            {i===0&&<div style={{fontSize:10,fontWeight:700,color:"#8B949E",marginBottom:3,textTransform:"uppercase"}}>Type</div>}
+            <select className="qc-sel" value={item.type} onChange={e=>change(i,"type",e.target.value)}>
+              {EXTINGUISHER_TYPES.map(t=><option key={t} value={t}>{t}</option>)}
+            </select>
+          </div>
+          <div>
+            {i===0&&<div style={{fontSize:10,fontWeight:700,color:"#8B949E",marginBottom:3,textTransform:"uppercase"}}>Qty</div>}
+            <input className="qc-inp" type="number" min="1" value={item.qty||1} onChange={e=>change(i,"qty",parseInt(e.target.value)||1)} style={{textAlign:"center",padding:"10px 6px"}}/>
+          </div>
+          <div>
+            {i===0&&<div style={{fontSize:10,fontWeight:700,color:"#8B949E",marginBottom:3,textTransform:"uppercase"}}>Area / Zone</div>}
+            <input className="qc-inp" placeholder="e.g. Reception, Floor 2" value={item.area||""} onChange={e=>change(i,"area",e.target.value)}/>
+          </div>
+          <div>
+            {i===0&&<div style={{fontSize:10,marginBottom:3}}>&nbsp;</div>}
+            <button onClick={()=>remove(i)} style={{width:32,height:44,borderRadius:8,border:"1px solid #30363D",background:"#1C2128",color:"#E8773A",cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center"}}>x</button>
+          </div>
+        </div>
+      ))}
+      <button onClick={add} style={{width:"100%",padding:"10px 16px",borderRadius:8,border:"1px dashed #30363D",background:"none",color:"#E8773A",fontSize:13,fontWeight:700,cursor:"pointer",marginTop:4}}>+ Add Extinguisher</button>
+    </div>
+  );
+}
 function PostcodeLookup({state={},onChange}) {
   const [pc,setPc]=React.useState("");
   const [results,setResults]=React.useState([]);
@@ -1499,6 +1556,78 @@ function FloorAreaInput({state={},onChange,premisesAddress=""}) {
   );
 }
 
+
+
+// ─── ASSESSMENT REVIEW PANEL ───────────────────────────────────────────
+function AssessmentReviewPanel({a, answers, ALL_SECTIONS, dispatch, setAns}) {
+  const [open, setOpen] = React.useState(false);
+  const [editRef, setEditRef] = React.useState(null);
+  const [editVal, setEditVal] = React.useState("");
+  const advMode = a.advancedMode||false;
+  const totalFlags = Object.values(answers).filter(v=>v&&v.flagged).length;
+  const totalAns = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers,advMode).filter(q=>isAnswered(q,answers[q.ref]||{})).length,0);
+  const totalQ = ALL_SECTIONS.reduce((n,s)=>n+visibleQs(s,answers,advMode).length,0);
+  const saveEdit = (ref, newAns) => { setAns(ref, {ans: newAns}); setEditRef(null); };
+  return (
+    <div style={{margin:"0 0 2px",borderBottom:"1px solid #30363D"}}>
+      <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",padding:"12px 16px",background:"#161B22",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:10,color:"#F0F6FC"}}>
+        <span style={{fontSize:18}}>&#128203;</span>
+        <div style={{flex:1,textAlign:"left"}}>
+          <div style={{fontSize:14,fontWeight:700,fontFamily:"'Nunito',sans-serif"}}>Review &amp; Amend Assessment</div>
+          <div style={{fontSize:11,color:"#8B949E"}}>{totalAns}/{totalQ} answered &middot; {totalFlags} finding{totalFlags!==1?"s":""} flagged &mdash; tap to review before generating PDF</div>
+        </div>
+        <span style={{color:"#8B949E",fontSize:16,transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}>&#9660;</span>
+      </button>
+      {open && (
+        <div style={{background:"#0D1117",maxHeight:"65vh",overflowY:"auto"}}>
+          {ALL_SECTIONS.filter(s=>s.id>0).map(sec=>{
+            const qs = visibleQs(sec, answers, advMode);
+            if(qs.length===0) return null;
+            return (
+              <div key={sec.id} style={{borderBottom:"1px solid #21262D"}}>
+                <div style={{padding:"8px 16px",background:"#161B22",fontSize:11,fontWeight:700,color:"#E8773A",textTransform:"uppercase",letterSpacing:"0.5px"}}>{sec.short||sec.title}</div>
+                {qs.map(q=>{
+                  const st = answers[q.ref]||{};
+                  const isAns = isAnswered(q, st);
+                  const isFl = st.flagged;
+                  const ansVal = st.ans;
+                  const displayAns = q.t==="extinguisher" ? ((st.extinguishers||[]).map(function(e){return (e.area||"?")+": "+e.type+" x"+e.qty;}).join(", ")||"—") : q.t==="contractor" ? (st.contractorName||"—") : q.t==="multi" ? ((st.sel||[]).join(", ")||"—") : (ansVal||"—");
+                  return (
+                    <div key={q.ref} style={{padding:"10px 16px",borderBottom:"1px solid #21262D",display:"flex",gap:10,alignItems:"flex-start"}}>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:"flex",gap:6,alignItems:"center",marginBottom:3}}>
+                          <span style={{fontSize:10,fontWeight:700,color:"#6E7681",flexShrink:0}}>{q.ref}</span>
+                          {isFl&&<span style={{fontSize:9,fontWeight:700,background:"rgba(192,57,43,.2)",color:"#E8773A",padding:"1px 5px",borderRadius:3}}>FLAGGED</span>}
+                          {!isAns&&q.required&&<span style={{fontSize:9,fontWeight:700,background:"rgba(245,158,11,.15)",color:"#FCD34D",padding:"1px 5px",borderRadius:3}}>REQUIRED</span>}
+                        </div>
+                        <div style={{fontSize:12,color:"#F0F6FC",marginBottom:3,lineHeight:1.4}}>{q.q}</div>
+                        {editRef===q.ref ? (
+                          <div style={{display:"flex",gap:6,marginTop:6}}>
+                            <input style={{flex:1,padding:"6px 10px",background:"#1C2128",border:"1px solid #30363D",borderRadius:6,color:"#F0F6FC",fontSize:12}} value={editVal} onChange={e=>setEditVal(e.target.value)} autoFocus/>
+                            <button onClick={()=>saveEdit(q.ref,editVal)} style={{padding:"6px 10px",background:"#E8773A",border:"none",borderRadius:6,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>Save</button>
+                            <button onClick={()=>setEditRef(null)} style={{padding:"6px 10px",background:"#30363D",border:"none",borderRadius:6,color:"#8B949E",fontSize:12,cursor:"pointer"}}>&#10005;</button>
+                          </div>
+                        ) : (
+                          <div style={{fontSize:12,color:isAns?"#8B949E":"#6E7681",fontStyle:isAns?"normal":"italic"}}>{displayAns}</div>
+                        )}
+                      </div>
+                      {editRef!==q.ref && (q.t==="text"||q.t==="textarea"||q.t==="yn"||q.t==="ynna"||q.t==="ynnutd"||q.t==="ynnv") && (
+                        <button onClick={()=>{setEditRef(q.ref);setEditVal(ansVal||"");}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid #30363D",background:"#1C2128",color:"#8B949E",fontSize:11,fontWeight:600,cursor:"pointer",flexShrink:0,marginTop:2}}>Edit</button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+          <div style={{padding:16,textAlign:"center"}}>
+            <button onClick={()=>setOpen(false)} style={{padding:"10px 24px",borderRadius:8,background:"#E8773A",border:"none",color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer"}}>&#10003; Done reviewing</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // ─── SUB-QUESTIONS COMPONENT ─────────────────────────────────────────────
 function SubQuestions({q, state, upd}) {
@@ -1769,12 +1898,14 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         )}
 
         {/* ANSWERS */}
-        {(q.t==="yn"||q.t==="ynna") && (
+        {(q.t==="yn"||q.t==="ynna"||q.t==="ynnutd"||q.t==="ynnv") && (
           <div className="big-ans">
             {[
               {v:"y",label:"Yes",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>},
               {v:"n",label:"No",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>},
-              ...(q.t==="ynna"?[{v:"na",label:"N/A",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>}]:[])
+              ...(q.t==="ynna"?[{v:"na",label:"N/A",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>}]:[]),
+              ...(q.t==="ynnutd"?[{v:"na",label:"N/A",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>},{v:"Unable to Determine",label:"Unable to Determine",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>}]:[]),
+              ...(q.t==="ynnv"?[{v:"na",label:"N/A",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>},{v:"Not Verifiable",label:"Not Verifiable",icon:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>}]:[])
             ].map(opt=>(
               <button key={opt.v} className={`big-btn ${ans===opt.v?opt.v:""}`}
                 onClick={()=>{playSound('click');handleAns(opt.v);}}>
@@ -1818,6 +1949,26 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           <textarea className="obs-box" style={{minHeight:100,marginBottom:14}} placeholder={q.ph||"Enter details…"} value={ans||""}
             onChange={e=>upd({ans:e.target.value||null})}/>
         )}
+        {q.t==="contractor" && (
+          <div style={{display:"grid",gap:10,marginBottom:14}}>
+            <div>
+              <div style={{fontSize:11,fontWeight:600,color:"#8B949E",marginBottom:4,textTransform:"uppercase",letterSpacing:"0.5px"}}>Contractor / Company</div>
+              <input className="qc-inp" placeholder="e.g. ABC Fire Protection Ltd" value={state.contractorName||""} onChange={e=>upd({contractorName:e.target.value||null,ans:e.target.value||null})}/>
+            </div>
+            <div>
+              <div style={{fontSize:11,fontWeight:600,color:"#8B949E",marginBottom:4,textTransform:"uppercase",letterSpacing:"0.5px"}}>Engineer / Contact Name</div>
+              <input className="qc-inp" placeholder="e.g. James Smith" value={state.engineerName||""} onChange={e=>upd({engineerName:e.target.value||null})}/>
+            </div>
+            <div>
+              <div style={{fontSize:11,fontWeight:600,color:"#8B949E",marginBottom:4,textTransform:"uppercase",letterSpacing:"0.5px"}}>Last Service Date</div>
+              <input className="qc-inp" type="date" value={state.lastServiceDate||""} onChange={e=>upd({lastServiceDate:e.target.value||null})} style={{colorScheme:"dark"}}/>
+            </div>
+            <button onClick={()=>upd({contractorName:"Not Serviced",engineerName:null,lastServiceDate:null,ans:"Not Serviced"})} style={{padding:"8px 16px",borderRadius:8,border:"1px solid #30363D",background:state.contractorName==="Not Serviced"?"rgba(192,57,43,.2)":"#1C2128",color:state.contractorName==="Not Serviced"?"#E8773A":"#8B949E",fontSize:12,fontWeight:700,cursor:"pointer",alignSelf:"flex-start"}}>Not Serviced</button>
+          </div>
+        )}
+        {q.t==="extinguisher" && (
+          <ExtinguisherInventory state={state} upd={upd}/>
+        )}
         {q.t==="occupantcount" && (
           <div style={{marginBottom:14}}>
             <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -1848,6 +1999,19 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         )}
 
+        {/* opts2 — additional classification buttons */}
+        {q.opts2 && ans && (
+          <div style={{marginTop:10,marginBottom:4}}>
+            {q.opts2Label && <div style={{fontSize:10,fontWeight:700,color:"#8B949E",textTransform:"uppercase",letterSpacing:"0.5px",marginBottom:6}}>{q.opts2Label}</div>}
+            <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+              {q.opts2.map(o=>{
+                const sel2 = state.opts2sel||[];
+                const on = sel2.includes(o);
+                return <button key={o} onClick={()=>{const n=on?sel2.filter(x=>x!==o):[...sel2,o];upd({opts2sel:n});}} style={{padding:"6px 12px",borderRadius:8,border:on?"1px solid #E8773A":"1px solid #30363D",background:on?"rgba(232,119,58,.12)":"#1C2128",color:on?"#E8773A":"#8B949E",fontSize:12,fontWeight:on?700:500,cursor:"pointer"}}>{o}</button>;
+              })}
+            </div>
+          </div>
+        )}
         {/* Sub-questions (conditional follow-ups) */}
         <SubQuestions q={q} state={state} upd={upd}/>
 
@@ -3885,6 +4049,9 @@ function CompleteScreen({state, dispatch}) {
               ↑ Share
             </button>
           </div>
+
+          {/* ASSESSMENT REVIEW PANEL */}
+          <AssessmentReviewPanel a={a} answers={answers} ALL_SECTIONS={ALL_SECTIONS} dispatch={dispatch} setAns={setAns}/>
 
           <div className="rpt-wrap">
 
