@@ -213,6 +213,7 @@ const SMART_ACTIONS = {
   "8.2":   {action:"Commission a smoke control or compartmentation survey. Identify gaps in smoke containment between floors and spaces. Implement smoke seals and management controls immediately.",priority:"P2 — Within 1 month",on:"y"},
   "8.6":   {action:"Improve fire door signage throughout. All fire doors must carry 'FIRE DOOR KEEP SHUT' or 'FIRE DOOR KEEP LOCKED' signs per BS EN ISO 7010:2019 F019/F020.",priority:"P3 — Within 3 months",on:"n"},
   "8.7":   {action:"Remove or permanently seal ventilation grilles or openings in fire doors. Grilles that compromise fire integrity must be removed and the opening made good to the original fire rating.",priority:"P1 — Immediate",on:"y"},
+  "5.4":   {action:"Prepare Personal Emergency Evacuation Plans (PEEPs) for all occupants identified as unable to self-evacuate unaided. Each PEEP must be personal, tested and reviewed regularly. Ensure adequate evacuation aids are available and wardens trained in their use. Ref: PAS 79-1:2020 and RRO 2005 Article 13.",priority:"P2 — Within 1 month",on:"n"},
   "5.8":   {action:"Remediate refuge point deficiencies. Refuge areas must be adequately protected, have two-way intercom communication, be clearly identified, and be unobstructed at all times.",priority:"P2 — Within 1 month",on:"n"},
   "7.3":   {action:"Review exit provision against ADB Vol 2 / BS 9999 for current occupancy. Widen, add or unblock exits to meet the minimum requirements for the number of occupants.",priority:"P1 — Immediate",on:"n"},
   "7.4":   {action:"Widen escape corridors and stairways to comply with minimum widths. Alternatively, reduce occupancy or provide additional escape routes.",priority:"P1 — Immediate",on:"n"},
@@ -511,7 +512,7 @@ const FRA_SECTIONS = [
     {ref:"4.6",q:"Are combustible items stored at least 10 metres from the building structure?",t:"ynna",required:true},
   ]},
   {id:6,title:"People at Risk",short:"People at Risk",questions:[
-    {ref:"5.1",q:"Which categories of person are present in or around the building?",t:"multi",opts:["Employees","Contractors","Lone Workers","Service Users","Visitors","General Public","Young Persons","Disabled Persons","Other"],required:true,noCamera:true},
+    {ref:"5.1",q:"Which categories of person are present in or around the building?",t:"multi",opts:["Employees","Contractors","Lone Workers","Service Users","Visitors","General Public","Young Persons","Disabled Persons","Other"],required:true,noCamera:true,sub:{on:"Other",fields:[{ref:"5.1a",q:"Please specify who else is present:",t:"text",ph:"e.g. Residents, patients, overnight guests, tenants, students…"}]}},
     {ref:"5.2",q:"Does the number of people typically present exceed the building's assessed maximum occupancy?",t:"yn",required:true},
     {ref:"5.3",q:"Are any occupants known to have a physical, sensory or cognitive condition affecting their ability to evacuate?",t:"yn",required:true,g:"Consider: mobility impairment, hearing or visual loss, mental health conditions, pregnancy, temporary injury, language barriers.",sub:{on:"y",fields:[{ref:"5.3a",q:"What arrangements are currently in place to assist these occupants in evacuation?",t:"textarea",ph:"e.g. PEEPs prepared, evacuation chairs on each floor, trained warden assigned to each individual"}]}},
     {ref:"5.4",q:"If yes - have Personal Emergency Evacuation Plans (PEEPs) or a GEEP been prepared?",t:"ynna",required:false},
@@ -1657,7 +1658,7 @@ function SubQuestions({q, state, upd}) {
   }
   // subNo — shown when ans === "n"
   var activeSub = null;
-  if (q.sub && ans === q.sub.on) activeSub = q.sub;
+  if (q.sub && (ans === q.sub.on || (Array.isArray(state.sel) && state.sel.includes(q.sub.on)))) activeSub = q.sub;
   else if (q.subNo && ans === "n") activeSub = q.subNo;
   if (!activeSub) return null;
   var isWarn = !!(q.subNo && ans === "n" && activeSub === q.subNo && activeSub.warnTitle);
@@ -1836,9 +1837,12 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
     const newAns = ans===v ? null : v;
     const sa=SMART_ACTIONS[q.ref];
     const sf=sa&&newAns&&((sa.on==="y"&&newAns==="y")||(sa.on==="n"&&newAns==="n")||(newAns===sa.on));
-    if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});setShowFlagAck(true);}else{upd({ans:newAns});}
+    const wasFlagged = !sf && flagged && sa && action === sa.action;
+    if(sf){upd({ans:newAns,flagged:true,action:action||sa.action,priority:sa.priority});setShowFlagAck(true);}
+    else if(wasFlagged){upd({ans:newAns,flagged:false,action:"",priority:SMART_ACTIONS[q.ref]?.priority||SECTION_PRIORITY[sectionId]||"P3 — Within 3 months"});}
+    else{upd({ans:newAns});}
     // Auto-advance after 350ms — suppress if sub-fields or warn triggered
-    const hasSubFields = q.sub && newAns === q.sub.on;
+    const hasSubFields = q.sub && (newAns === q.sub.on || (Array.isArray(state.sel) && state.sel.includes(q.sub.on)));
     const hasWarn = q.warn && newAns === q.warn.on;
     if (newAns && !note && !flagged && !sf && !hasSubFields && !hasWarn) {
       setTimeout(() => onNext(), 350);
