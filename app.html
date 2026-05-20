@@ -2269,6 +2269,30 @@ function UserBar({user,onSignOut,onUpgrade}){
   );
 }
 
+function downloadSampleReport() {
+  var d = new Date();
+  var reviewDate = new Date(d.getTime()+31536000000);
+  var fmt = function(dt){return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});};
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>Sample Fire Risk Assessment Report — Firesite by Bluejai</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#1a1a2e;background:#fff;}.page{max-width:210mm;margin:0 auto;padding:0;}.cover{background:#0D1117;color:#fff;padding:60px 48px 48px;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always;}.cover-logo{font-family:Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.5px;margin-bottom:48px;}.cover-logo span{color:#E25C2A;}.cover-badge{display:inline-block;background:#E25C2A;color:#fff;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:4px;margin-bottom:24px;}.cover-title{font-size:32px;font-weight:900;line-height:1.1;margin-bottom:16px;}.cover-sub{font-size:14px;color:rgba(240,246,252,.6);line-height:1.6;margin-bottom:48px;}.cover-meta{display:grid;grid-template-columns:1fr 1fr;gap:20px;}.cover-meta-item label{display:block;font-size:8px;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;font-weight:700;margin-bottom:4px;}.cover-meta-item span{font-size:13px;color:#F0F6FC;font-weight:600;}.risk-badge{background:rgba(226,92,42,.15);border:2px solid #E25C2A;border-radius:8px;padding:12px 20px;text-align:center;display:inline-block;}.risk-badge .rl{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;font-weight:700;}.risk-badge .rv{font-size:28px;font-weight:900;color:#E25C2A;}.section{padding:32px 48px;border-bottom:1px solid #e8ecf0;page-break-inside:avoid;}.section-num{font-size:8px;text-transform:uppercase;letter-spacing:2.5px;color:#E25C2A;font-weight:700;margin-bottom:6px;}.section-title{font-size:16px;font-weight:900;color:#0D1117;margin-bottom:16px;line-height:1.2;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#0D1117;color:#fff;font-size:9px;text-transform:uppercase;letter-spacing:1px;padding:8px 12px;text-align:left;}td{padding:8px 12px;font-size:10pt;border-bottom:1px solid #e8ecf0;}tr:nth-child(even) td{background:#f8f9fc;}.finding{background:#fff;border:1px solid #e8ecf0;border-radius:8px;margin-bottom:12px;overflow:hidden;page-break-inside:avoid;}.finding-header{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:11pt;}.finding-body{padding:12px 16px;border-top:1px solid #e8ecf0;font-size:10pt;color:#444;line-height:1.6;}.priority-high{background:#fff0ed;border-left:4px solid #E25C2A;}.priority-med{background:#fffbf0;border-left:4px solid #f59e0b;}.priority-low{background:#f0fdf4;border-left:4px solid #22c55e;}.p-badge{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px;white-space:nowrap;}.ph{background:#E25C2A;color:#fff;}.pm{background:#f59e0b;color:#fff;}.pl{background:#22c55e;color:#fff;}.signature-box{border:1px solid #ddd;border-radius:8px;padding:20px;margin-top:16px;}.watermark{text-align:center;padding:24px;color:#aaa;font-size:9px;letter-spacing:1px;border-top:1px solid #e8ecf0;}@media print{.cover{min-height:100vh;}}</style></head><body><div class="page">'
+  + '<div class="cover"><div><div class="cover-logo">Fire<span>site</span></div><div class="cover-badge">Sample Report &mdash; For Illustration Only</div><div class="cover-title">Fire Risk Assessment<br/>Meridian House</div><div class="cover-sub">14–18 Meridian Street, London, EC1A 2BT<br/>Mixed-use office premises &middot; 4 storeys &middot; 47 occupants</div></div><div><div class="cover-meta"><div class="cover-meta-item"><label>Assessed by</label><span>A. Bluejai CFIOSH</span></div><div class="cover-meta-item"><label>Assessment date</label><span>'+fmt(d)+'</span></div><div class="cover-meta-item"><label>Review date</label><span>'+fmt(reviewDate)+'</span></div><div class="cover-meta-item"><label>Overall risk rating</label><div class="risk-badge"><div class="rl">Overall Risk</div><div class="rv">MEDIUM</div></div></div></div></div></div>'
+  + '<div class="section"><div class="section-num">Section 01</div><div class="section-title">Premises &amp; Occupancy Details</div><table><thead><tr><th>Item</th><th>Detail</th></tr></thead><tbody><tr><td>Property name</td><td>Meridian House</td></tr><tr><td>Address</td><td>14–18 Meridian Street, London, EC1A 2BT</td></tr><tr><td>Use / occupancy type</td><td>Mixed-use commercial office, ground floor retail</td></tr><tr><td>Number of storeys</td><td>4 (plus basement plant room)</td></tr><tr><td>Approximate floor area</td><td>1,840 m²</td></tr><tr><td>Maximum occupancy</td><td>47 persons during normal working hours</td></tr><tr><td>Construction type</td><td>Steel frame, brick skin, composite floor decks</td></tr><tr><td>Building age</td><td>Circa 1994 (refurbished 2018)</td></tr><tr><td>Responsible person</td><td>J. Harrison, Managing Director</td></tr></tbody></table></div>'
+  + '<div class="section"><div class="section-num">Section 07</div><div class="section-title">Significant Findings &amp; Action Plan</div>'
+  + '<div class="finding priority-high"><div class="finding-header"><span>F-001 &middot; Third floor fire door &mdash; self-closer absent</span><span class="p-badge ph">HIGH</span></div><div class="finding-body"><strong>Observation:</strong> The fire door on the third-floor east corridor was found to have no self-closing device fitted. The door was wedged open during the assessment, negating its fire compartmentation function.<br/><br/><strong>Required action:</strong> Install a suitably rated self-closing device. Remove the door wedge immediately. Inspect all remaining fire doors and record findings.<br/><br/><strong>Regulatory reference:</strong> RRO 2005 Art.14 &middot; BS 8214:2016 &emsp; <strong>Target date:</strong> Within 14 days</div></div>'
+  + '<div class="finding priority-high"><div class="finding-header"><span>F-002 &middot; Basement emergency lighting not functional</span><span class="p-badge ph">HIGH</span></div><div class="finding-body"><strong>Observation:</strong> Three emergency luminaires in the basement plant room failed to illuminate during a simulated mains failure test. Battery packs appear depleted and no test records were available.<br/><br/><strong>Required action:</strong> Replace battery packs. Carry out a full 3-hour duration test. Implement a monthly flick-test programme with a written log.<br/><br/><strong>Regulatory reference:</strong> BS 5266-1:2016 &middot; Fire Safety Act 2021 &emsp; <strong>Target date:</strong> Within 14 days</div></div>'
+  + '<div class="finding priority-med"><div class="finding-header"><span>F-003 &middot; Inadequate fire extinguisher coverage, second floor</span><span class="p-badge pm">MEDIUM</span></div><div class="finding-body"><strong>Observation:</strong> The second floor open-plan office (approx. 460 m²) is served by a single 6 kg CO₂ extinguisher adjacent to the server room only. No water units provided for the general office area.<br/><br/><strong>Required action:</strong> Provide a minimum of two 6-litre water extinguishers at appropriate locations in accordance with BS 5306-8 travel distance guidance.<br/><br/><strong>Regulatory reference:</strong> BS 5306-8:2012 &emsp; <strong>Target date:</strong> Within 30 days</div></div>'
+  + '<div class="finding priority-low"><div class="finding-header"><span>F-004 &middot; Fire safety signage &mdash; refresh required</span><span class="p-badge pl">LOW</span></div><div class="finding-body"><strong>Observation:</strong> Several directional fire exit signs on the ground floor are faded. Two signs were partially obscured by temporary storage.<br/><br/><strong>Required action:</strong> Replace with ISO 7010 compliant photoluminescent alternatives. Remove obstructions. Include in next annual compliance review.<br/><br/><strong>Regulatory reference:</strong> RRO 2005 Art.14 &middot; ISO 7010 &emsp; <strong>Target date:</strong> Within 90 days</div></div>'
+  + '</div>'
+  + '<div class="section"><div class="section-num">Declaration</div><div class="section-title">Assessor Declaration</div><p style="font-size:10pt;color:#444;line-height:1.7;margin-bottom:16px;">I confirm that this fire risk assessment has been carried out in accordance with the Regulatory Reform (Fire Safety) Order 2005 and that to the best of my knowledge the information contained within this report accurately reflects the conditions observed at the time of the site visit.</p><div class="signature-box"><table style="margin:0;"><thead><tr><th>Assessor name</th><th>Qualifications</th><th>Date</th><th>Signature</th></tr></thead><tbody><tr><td>A. Bluejai CFIOSH</td><td>CFIOSH &middot; NEBOSH FD &middot; IFE Member</td><td>'+fmt(d)+'</td><td style="color:#aaa;font-style:italic;">[Signed]</td></tr></tbody></table></div></div>'
+  + '<div class="watermark">SAMPLE DOCUMENT &mdash; Generated by Firesite by Bluejai &middot; firesite.app &middot; This report is illustrative only and does not constitute a live fire risk assessment.</div>'
+  + '</div></body></html>';
+
+  var blob = new Blob([html],{type:'text/html'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download='Firesite-Sample-Report.html'; a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);},5000);
+}
+
 function Landing({dispatch, user, onSignOut, onUpgrade}) {
   var feats = [
     {
@@ -2314,6 +2338,10 @@ function Landing({dispatch, user, onSignOut, onUpgrade}) {
           <button className="btn btn-teal" style={{padding:"12px 24px",fontSize:14,fontWeight:700}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Start your assessment →</button>
           <button className="btn btn-ghost" style={{padding:"12px 24px",fontSize:14}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>View dashboard</button>
         </div>
+        <button onClick={downloadSampleReport} style={{marginTop:8,display:"flex",alignItems:"center",gap:8,background:"transparent",border:"none",padding:0,cursor:"pointer",color:"#E25C2A",fontSize:13,fontWeight:600,fontFamily:"'Nunito',sans-serif",textDecoration:"underline",textUnderlineOffset:3}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download sample report (PDF)
+        </button>
       </div>
       <div className="trust">
         {["RRO 2005","Fire Safety Act 2021","BS 5839","BS 5266","BS 8214","BS 9999","DSEAR 2002"].map(l=>(
@@ -2346,6 +2374,57 @@ function Landing({dispatch, user, onSignOut, onUpgrade}) {
             <div>
               <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:800,fontSize:16,color:"#F0F6FC",marginBottom:6}}>Two hours of report writing. Gone.</div>
               <div style={{fontSize:13,color:"rgba(240,246,252,.5)",lineHeight:1.7}}>The average FRA takes two to three hours to write up from notes. Firesite captures your assessment data, photos and action plan as you walk the building. Turn around reports the same day. Deliver to clients before you are back in the car.</div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      {/* ── SAMPLE REPORT SECTION ── */}
+      <div style={{background:"#0D1117",padding:"52px 20px",borderTop:"1px solid #21262D"}}>
+        <div style={{maxWidth:640,margin:"0 auto"}}>
+          <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"2.5px",color:"#E25C2A",marginBottom:12}}>See the output</div>
+          <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:800,color:"#F0F6FC",marginBottom:8,lineHeight:1.15}}>The report your client receives.</div>
+          <div style={{fontSize:14,color:"rgba(240,246,252,.5)",marginBottom:28,lineHeight:1.7}}>Professionally structured. Legally compliant. Branded with your identity. See exactly what Firesite produces.</div>
+          <div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:16,overflow:"hidden"}}>
+            <div style={{background:"#1C2128",padding:"28px 24px",borderBottom:"1px solid #21262D",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div>
+                <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"2px",color:"#E25C2A",marginBottom:6}}>Sample Fire Risk Assessment Report</div>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:18,fontWeight:800,color:"#F0F6FC",marginBottom:2}}>Meridian House, London</div>
+                <div style={{fontSize:12,color:"rgba(240,246,252,.4)"}}>Office &amp; mixed-use premises · 4 storeys · 47 occupants</div>
+              </div>
+              <div style={{background:"rgba(226,92,42,.1)",border:"1px solid rgba(226,92,42,.3)",borderRadius:10,padding:"8px 14px",textAlign:"center",flexShrink:0}}>
+                <div style={{fontSize:9,color:"#E25C2A",fontWeight:700,textTransform:"uppercase",letterSpacing:"1px",marginBottom:2}}>Risk</div>
+                <div style={{fontFamily:"'Nunito',sans-serif",fontSize:20,fontWeight:900,color:"#E25C2A"}}>MED</div>
+              </div>
+            </div>
+            <div style={{padding:"20px 24px"}}>
+              {[
+                {n:"01",title:"Premises & Occupancy",detail:"Purpose, occupancy, structure, access"},
+                {n:"02",title:"Fire Hazards & Sources of Ignition",detail:"Identified hazards, fuel sources, control measures"},
+                {n:"03",title:"Means of Escape",detail:"Travel distances, escape routes, door hardware"},
+                {n:"04",title:"Emergency Lighting",detail:"Coverage, emergency duration, test records"},
+                {n:"05",title:"Fire Detection & Warning",detail:"System type, call points, alarm audibility"},
+                {n:"06",title:"Firefighting Equipment",detail:"Extinguisher types, locations, service dates"},
+                {n:"07",title:"Significant Findings & Action Plan",detail:"12 findings · 4 high priority · 6 medium · 2 low"},
+                {n:"08",title:"Photo Evidence Appendix",detail:"23 annotated site photographs"},
+              ].map((s,i)=>(
+                <div key={s.n} style={{display:"flex",alignItems:"center",gap:14,padding:"10px 0",borderBottom:i<7?"1px solid #21262D":"none"}}>
+                  <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:"rgba(226,92,42,.5)",fontWeight:500,flexShrink:0,minWidth:20}}>{s.n}</span>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:13,fontWeight:700,color:"#F0F6FC",marginBottom:1}}>{s.title}</div>
+                    <div style={{fontSize:11,color:"rgba(240,246,252,.35)"}}>{s.detail}</div>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(226,92,42,.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+              ))}
+            </div>
+            <div style={{padding:"20px 24px",borderTop:"1px solid #21262D",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
+              <div style={{fontSize:13,color:"rgba(240,246,252,.4)"}}>Full 24-page report · Branded · PDF ready</div>
+              <button onClick={downloadSampleReport} style={{display:"flex",alignItems:"center",gap:8,background:"#E25C2A",border:"none",borderRadius:8,padding:"10px 18px",cursor:"pointer",color:"#fff",fontSize:13,fontWeight:700,fontFamily:"'Nunito',sans-serif"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download Sample Report
+              </button>
             </div>
           </div>
         </div>
