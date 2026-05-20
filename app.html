@@ -2190,25 +2190,18 @@ FS_AUTH.restore();
 
 /* ─ AUTH SCREEN ─ */
 function AuthScreen({onAuth}){
-  const[mode,setMode]=React.useState('login');
-  const[email,setEmail]=React.useState('');
   const[pw,setPw]=React.useState('');
-  const[name,setName]=React.useState('');
   const[err,setErr]=React.useState('');
-  const[busy,setBusy]=React.useState(false);
-  const go=async(e)=>{
-    e.preventDefault();setErr('');setBusy(true);
-    try{
-      let u;
-      if(mode==='login'){u=await FS_AUTH.login(email,pw);}
-      else{
-        if(!name.trim()){setErr('Please enter your name');setBusy(false);return;}
-        if(pw.length<6){setErr('Password needs 6+ characters');setBusy(false);return;}
-        u=await FS_AUTH.signup(email,pw,name);
-      }
+  const go=(e)=>{
+    e.preventDefault();
+    if(pw.trim()==='FIRETRAIL2026'){
+      var u={uid:'trial',email:'trial@firesite.app',name:'Trial Assessor',plan:'trial'};
+      FS_AUTH._u=u;
+      try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(x){}
       onAuth(u);
-    }catch(e){setErr(e.message||'Something went wrong');}
-    setBusy(false);
+    } else {
+      setErr('Incorrect access code. Please check with Bluejai.');
+    }
   };
   return(
     <div className="auth-wrap">
@@ -2217,31 +2210,17 @@ function AuthScreen({onAuth}){
           <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" alt=""/>
           <span className="auth-logo-text">Fire<span>site</span></span>
         </div>
-        <h2 className="auth-title">{mode==='login'?'Welcome back':'Create account'}</h2>
-        <p className="auth-sub">{mode==='login'?'Sign in to your assessments':'Free to start — no card needed'}</p>
+        <h2 className="auth-title">Trial Access</h2>
+        <p className="auth-sub">Enter your access code to begin</p>
         {err&&<div className="auth-error">{err}</div>}
         <form onSubmit={go}>
-          {mode==='signup'&&(
-            <div className="auth-field">
-              <label className="auth-label">Your Name</label>
-              <input className="auth-input" type="text" placeholder="Jane Smith" value={name} onChange={e=>setName(e.target.value)} required/>
-            </div>
-          )}
           <div className="auth-field">
-            <label className="auth-label">Email</label>
-            <input className="auth-input" type="email" placeholder="you@company.com" value={email} onChange={e=>setEmail(e.target.value)} required/>
+            <label className="auth-label">Access Code</label>
+            <input className="auth-input" type="text" placeholder="Enter access code" value={pw} onChange={e=>setPw(e.target.value.toUpperCase())} required autoFocus/>
           </div>
-          <div className="auth-field">
-            <label className="auth-label">Password</label>
-            <input className="auth-input" type="password" placeholder={mode==='signup'?'Min 6 characters':'Password'} value={pw} onChange={e=>setPw(e.target.value)} required/>
-          </div>
-          <button className="auth-btn" disabled={busy}>{busy?'Please wait...':(mode==='login'?'Sign In':'Create Account')}</button>
+          <button className="auth-btn" type="submit">Enter</button>
         </form>
-        <div className="auth-switch">
-          {mode==='login'
-            ?<span>No account? <a onClick={()=>{setMode('signup');setErr('');}}>Sign up free</a></span>
-            :<span>Have an account? <a onClick={()=>{setMode('login');setErr('');}}>Sign in</a></span>}
-        </div>
+        <p style={{marginTop:'1.2rem',fontSize:'0.78rem',color:'#8b949e',textAlign:'center'}}>Firesite — Bluejai Ltd &bull; Trial Build</p>
       </div>
     </div>
   );
@@ -4370,6 +4349,7 @@ function App(){
   return(
     <>
       <style dangerouslySetInnerHTML={{__html:CSS}}/>
+      {user&&user.plan==='trial'&&<div style={{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#E25C2A',color:'#fff',textAlign:'center',fontSize:'0.75rem',fontWeight:600,letterSpacing:'0.06em',padding:'5px 12px',display:'flex',alignItems:'center',justifyContent:'center',gap:'10px'}}>TRIAL BUILD &mdash; For evaluation purposes only &bull; Firesite by Bluejai</div>}
       {showPricing&&<PricingModal user={user} onClose={()=>setShowPricing(false)}/>}
       {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={()=>FS_AUTH.logout()} onUpgrade={()=>setShowPricing(true)}/>}
       {screen==="setup"&&<Setup state={state} dispatch={dispatch}/>}
