@@ -2197,6 +2197,7 @@ function AuthScreen({onAuth}){
       var u={uid:'trial',email:'trial@firesite.app',name:'Trial Assessor',plan:'trial'};
       FS_AUTH._u=u;
       try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(x){}
+      try{var st=JSON.parse(localStorage.getItem('firesite_v5f')||'{}');st.screen='landing';localStorage.setItem('firesite_v5f',JSON.stringify(st));}catch(x){}
       onAuth(u);
     } else {
       setErr('Incorrect access code. Please check with Bluejai.');
@@ -2269,62 +2270,89 @@ function UserBar({user,onSignOut,onUpgrade}){
 }
 
 function Landing({dispatch, user, onSignOut, onUpgrade}) {
+  var feats = [
+    {
+      n:"01",
+      title:"One question. Full focus.",
+      body:"Each question fills the screen — one at a time, no scrolling, no clutter. Work through 12 structured sections in logical order. Built to be used one-handed while walking the building.",
+      icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+    },
+    {
+      n:"02",
+      title:"Evidence captured on the spot.",
+      body:"One tap opens the rear camera. Photos attach directly to the question, flow into the relevant finding and build a full photo evidence appendix automatically. What you photographed is what your client sees.",
+      icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    },
+    {
+      n:"03",
+      title:"The action plan writes itself.",
+      body:"Answer No and Firesite pre-writes the corrective action for you. Review it, adjust the wording, set the priority level and assign a responsible person. A complete prioritised action plan ready before you leave site.",
+      icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    },
+    {
+      n:"04",
+      title:"A report that reflects your standard.",
+      body:"Branded cover with your logo, premises table, risk rating matrix, significant findings with embedded photos, prioritised action plan and signed assessor declaration — generated before you are back in the car.",
+      icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    },
+  ];
   return (
     <div className="land">
       <nav className="land-nav">
         <div style={{display:"flex",alignItems:"center",gap:8}}>
           <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
-          <span style={{fontFamily:"'Nunito',sans-serif",fontSize:17,fontWeight:700,color:"#0D1117"}}>Fire<em style={{color:"#C0392B",fontStyle:"normal"}}>site</em></span>
+          <span style={{fontFamily:"'Nunito',sans-serif",fontSize:17,fontWeight:700,color:"#F0F6FC"}}>Fire<em style={{color:"#E25C2A",fontStyle:"normal"}}>site</em></span>
         </div>
         <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
       </nav>
       <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="hero">
-        <div className="hero-ey">The trusted fire risk assessment platform</div>
+        <div className="hero-ey">The professional fire risk assessment platform</div>
         <h1 className="hero-h1">Professional fire risk<br/>assessments,<br/><em>built to stand up.</em></h1>
-        <p className="hero-p">Guided card-by-card questions built for fire risk assessors working on site. One question at a time. Photo capture. Auto-generated action plans. Branded reports.</p>
+        <p className="hero-p">Structured, site-ready assessments for independent fire risk assessors. Guided questions, automatic action plans, photo evidence and branded reports — all from your phone.</p>
         <div className="hero-btns">
-          <button className="btn btn-teal" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Set up your platform →</button>
-          <button className="btn btn-ghost" style={{padding:"11px 22px",fontSize:13}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Skip to demo</button>
+          <button className="btn btn-teal" style={{padding:"12px 24px",fontSize:14,fontWeight:700}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Start your assessment →</button>
+          <button className="btn btn-ghost" style={{padding:"12px 24px",fontSize:14}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>View dashboard</button>
         </div>
       </div>
       <div className="trust">
         {["RRO 2005","Fire Safety Act 2021","BS 5839","BS 5266","BS 8214","BS 9999","DSEAR 2002"].map(l=>(
-          <div key={l} className="ti"><span>✓</span>{l}</div>
+          <div key={l} className="ti"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>{l}</div>
         ))}
       </div>
-      <div style={{background:"#1C1C1C",padding:"40px 16px"}}>
+      <div style={{background:"#111820",padding:"52px 20px"}}>
         <div style={{maxWidth:640,margin:"0 auto"}}>
-          <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:"2px",color:"#C0392B",marginBottom:10}}>Built for the site visit</div>
-          <div style={{fontFamily:"'Nunito',sans-serif",fontSize:22,fontWeight:800,color:"#fff",marginBottom:6,lineHeight:1.1}}>The site visit is the easy part. The report should be too.</div>
-          <div style={{fontSize:13,color:"rgba(255,255,255,.45)",marginBottom:28,lineHeight:1.65}}>Designed for independent assessors and small consultancies who want to spend less time on admin and more time winning work.</div>
-          <div style={{display:"flex",flexDirection:"column",borderRadius:12,overflow:"hidden",border:"1px solid rgba(255,255,255,.07)"}}>
-            {[
-              {n:"01",ic:"📋",t:"One question. Full screen. No scrolling.",d:"Each question fills your screen with a clear Yes / No / N/A choice. Work through 12 sections in logical order without losing your place. Built to be used one-handed while walking around site.",col:"#C0392B"},
-              {n:"02",ic:"📷",t:"Evidence captured where you find it.",d:"One tap opens your rear camera. Photos attach directly to the question, flow into the relevant finding and populate a full photo evidence appendix. What you photographed on site is what your client sees in the report.",col:"#E05A1A"},
-              {n:"03",ic:"⚑",t:"Answer No. The action writes itself.",d:"Firesite pre-writes the corrective action text for every significant non-compliance. Review it, adjust if needed, set a priority and assign a responsible person. The action plan builds itself as you work.",col:"#C0392B"},
-              {n:"04",ic:"📄",t:"A report that reflects the quality of your work.",d:"Branded cover with your logo, premises table, risk matrix, significant findings with embedded photos, prioritised action plan and assessor declaration. Generated before you leave the building.",col:"#E05A1A"},
-            ].map((f,i)=>(
-              <div key={f.n} style={{display:"flex",gap:14,padding:"20px 18px",background:i%2===0?"rgba(255,255,255,.03)":"transparent",borderBottom:i<3?"1px solid rgba(255,255,255,.06)":"none",alignItems:"flex-start"}}>
-                <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:"rgba(255,255,255,.2)",paddingTop:3,flexShrink:0,width:20}}>{f.n}</div>
-                <div style={{width:34,height:34,borderRadius:8,background:f.col+"22",border:"1px solid "+f.col+"44",display:"flex",alignItems:"center",justifyContent:"center",fontSize:17,flexShrink:0}}>{f.ic}</div>
-                <div style={{flex:1}}>
-                  <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:700,fontSize:14,color:"#fff",marginBottom:4}}>{f.t}</div>
-                  <div style={{fontSize:12,color:"rgba(255,255,255,.45)",lineHeight:1.65}}>{f.d}</div>
+          <div style={{fontSize:10,fontWeight:700,textTransform:"uppercase",letterSpacing:"2.5px",color:"#E25C2A",marginBottom:12}}>Built for the site visit</div>
+          <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:800,color:"#F0F6FC",marginBottom:8,lineHeight:1.15}}>The site visit is the easy part.<br/>The report should be too.</div>
+          <div style={{fontSize:14,color:"rgba(240,246,252,.5)",marginBottom:36,lineHeight:1.7}}>Designed for independent assessors and small consultancies who need to turn around professional, legally compliant reports fast — without the admin overhead.</div>
+          <div style={{display:"flex",flexDirection:"column",gap:2}}>
+            {feats.map((f,i)=>(
+              <div key={f.n} style={{display:"flex",gap:20,padding:"24px 20px",background:i%2===0?"rgba(255,255,255,.03)":"transparent",borderRadius:i===0?"12px 12px 0 0":i===feats.length-1?"0 0 12px 12px":"0",border:"1px solid rgba(255,255,255,.07)",borderTop:i===0?"1px solid rgba(255,255,255,.07)":"none",alignItems:"flex-start"}}>
+                <div style={{width:52,height:52,borderRadius:12,background:"rgba(226,92,42,.1)",border:"1px solid rgba(226,92,42,.25)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  {f.icon}
+                </div>
+                <div style={{flex:1,paddingTop:2}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                    <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:"rgba(226,92,42,.6)",fontWeight:500}}>{f.n}</span>
+                    <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:800,fontSize:15,color:"#F0F6FC"}}>{f.title}</div>
+                  </div>
+                  <div style={{fontSize:13,color:"rgba(240,246,252,.5)",lineHeight:1.7}}>{f.body}</div>
                 </div>
               </div>
             ))}
           </div>
-          <div style={{marginTop:24,padding:"20px",background:"rgba(192,57,43,.1)",border:"1px solid rgba(192,57,43,.2)",borderRadius:12}}>
-            <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:800,fontSize:16,color:"#fff",marginBottom:6}}>Two hours of report writing. Gone.</div>
-            <div style={{fontSize:13,color:"rgba(255,255,255,.5)",lineHeight:1.7}}>The average FRA takes two to three hours to write up from notes. Firesite captures your assessment data, photos and action plan as you walk the building. Turn around reports the same day. Deliver to clients before you are back in the car.</div>
+          <div style={{marginTop:24,padding:"24px",background:"rgba(226,92,42,.08)",border:"1px solid rgba(226,92,42,.2)",borderRadius:12,display:"flex",gap:16,alignItems:"flex-start"}}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E25C2A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:2}}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div>
+              <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:800,fontSize:16,color:"#F0F6FC",marginBottom:6}}>Two hours of report writing. Gone.</div>
+              <div style={{fontSize:13,color:"rgba(240,246,252,.5)",lineHeight:1.7}}>The average FRA takes two to three hours to write up from notes. Firesite captures your assessment data, photos and action plan as you walk the building. Turn around reports the same day. Deliver to clients before you are back in the car.</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
 // ─── SETUP ────────────────────────────────────────────────────────
 function Setup({state, dispatch}) {
   const step = state.setupStep||0;
