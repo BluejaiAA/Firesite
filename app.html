@@ -2271,25 +2271,269 @@ function UserBar({user,onSignOut,onUpgrade}){
 
 function downloadSampleReport() {
   var d = new Date();
-  var reviewDate = new Date(d.getTime()+31536000000);
+  var rev = new Date(d.getTime()+31536000000);
   var fmt = function(dt){return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});};
-  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>Sample Fire Risk Assessment Report — Firesite by Bluejai</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#1a1a2e;background:#fff;}.page{max-width:210mm;margin:0 auto;padding:0;}.cover{background:#0D1117;color:#fff;padding:60px 48px 48px;min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;page-break-after:always;}.cover-logo{font-family:Arial,sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:-0.5px;margin-bottom:48px;}.cover-logo span{color:#E25C2A;}.cover-badge{display:inline-block;background:#E25C2A;color:#fff;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:4px;margin-bottom:24px;}.cover-title{font-size:32px;font-weight:900;line-height:1.1;margin-bottom:16px;}.cover-sub{font-size:14px;color:rgba(240,246,252,.6);line-height:1.6;margin-bottom:48px;}.cover-meta{display:grid;grid-template-columns:1fr 1fr;gap:20px;}.cover-meta-item label{display:block;font-size:8px;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;font-weight:700;margin-bottom:4px;}.cover-meta-item span{font-size:13px;color:#F0F6FC;font-weight:600;}.risk-badge{background:rgba(226,92,42,.15);border:2px solid #E25C2A;border-radius:8px;padding:12px 20px;text-align:center;display:inline-block;}.risk-badge .rl{font-size:8px;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;font-weight:700;}.risk-badge .rv{font-size:28px;font-weight:900;color:#E25C2A;}.section{padding:32px 48px;border-bottom:1px solid #e8ecf0;page-break-inside:avoid;}.section-num{font-size:8px;text-transform:uppercase;letter-spacing:2.5px;color:#E25C2A;font-weight:700;margin-bottom:6px;}.section-title{font-size:16px;font-weight:900;color:#0D1117;margin-bottom:16px;line-height:1.2;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#0D1117;color:#fff;font-size:9px;text-transform:uppercase;letter-spacing:1px;padding:8px 12px;text-align:left;}td{padding:8px 12px;font-size:10pt;border-bottom:1px solid #e8ecf0;}tr:nth-child(even) td{background:#f8f9fc;}.finding{background:#fff;border:1px solid #e8ecf0;border-radius:8px;margin-bottom:12px;overflow:hidden;page-break-inside:avoid;}.finding-header{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:11pt;}.finding-body{padding:12px 16px;border-top:1px solid #e8ecf0;font-size:10pt;color:#444;line-height:1.6;}.priority-high{background:#fff0ed;border-left:4px solid #E25C2A;}.priority-med{background:#fffbf0;border-left:4px solid #f59e0b;}.priority-low{background:#f0fdf4;border-left:4px solid #22c55e;}.p-badge{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:3px 8px;border-radius:4px;white-space:nowrap;}.ph{background:#E25C2A;color:#fff;}.pm{background:#f59e0b;color:#fff;}.pl{background:#22c55e;color:#fff;}.signature-box{border:1px solid #ddd;border-radius:8px;padding:20px;margin-top:16px;}.watermark{text-align:center;padding:24px;color:#aaa;font-size:9px;letter-spacing:1px;border-top:1px solid #e8ecf0;}@media print{.cover{min-height:100vh;}}</style></head><body><div class="page">'
-  + '<div class="cover"><div><div class="cover-logo">Fire<span>site</span></div><div class="cover-badge">Sample Report &mdash; For Illustration Only</div><div class="cover-title">Fire Risk Assessment<br/>Meridian House</div><div class="cover-sub">14–18 Meridian Street, London, EC1A 2BT<br/>Mixed-use office premises &middot; 4 storeys &middot; 47 occupants</div></div><div><div class="cover-meta"><div class="cover-meta-item"><label>Assessed by</label><span>A. Bluejai CFIOSH</span></div><div class="cover-meta-item"><label>Assessment date</label><span>'+fmt(d)+'</span></div><div class="cover-meta-item"><label>Review date</label><span>'+fmt(reviewDate)+'</span></div><div class="cover-meta-item"><label>Overall risk rating</label><div class="risk-badge"><div class="rl">Overall Risk</div><div class="rv">MEDIUM</div></div></div></div></div></div>'
-  + '<div class="section"><div class="section-num">Section 01</div><div class="section-title">Premises &amp; Occupancy Details</div><table><thead><tr><th>Item</th><th>Detail</th></tr></thead><tbody><tr><td>Property name</td><td>Meridian House</td></tr><tr><td>Address</td><td>14–18 Meridian Street, London, EC1A 2BT</td></tr><tr><td>Use / occupancy type</td><td>Mixed-use commercial office, ground floor retail</td></tr><tr><td>Number of storeys</td><td>4 (plus basement plant room)</td></tr><tr><td>Approximate floor area</td><td>1,840 m²</td></tr><tr><td>Maximum occupancy</td><td>47 persons during normal working hours</td></tr><tr><td>Construction type</td><td>Steel frame, brick skin, composite floor decks</td></tr><tr><td>Building age</td><td>Circa 1994 (refurbished 2018)</td></tr><tr><td>Responsible person</td><td>J. Harrison, Managing Director</td></tr></tbody></table></div>'
-  + '<div class="section"><div class="section-num">Section 07</div><div class="section-title">Significant Findings &amp; Action Plan</div>'
-  + '<div class="finding priority-high"><div class="finding-header"><span>F-001 &middot; Third floor fire door &mdash; self-closer absent</span><span class="p-badge ph">HIGH</span></div><div class="finding-body"><strong>Observation:</strong> The fire door on the third-floor east corridor was found to have no self-closing device fitted. The door was wedged open during the assessment, negating its fire compartmentation function.<br/><br/><strong>Required action:</strong> Install a suitably rated self-closing device. Remove the door wedge immediately. Inspect all remaining fire doors and record findings.<br/><br/><strong>Regulatory reference:</strong> RRO 2005 Art.14 &middot; BS 8214:2016 &emsp; <strong>Target date:</strong> Within 14 days</div></div>'
-  + '<div class="finding priority-high"><div class="finding-header"><span>F-002 &middot; Basement emergency lighting not functional</span><span class="p-badge ph">HIGH</span></div><div class="finding-body"><strong>Observation:</strong> Three emergency luminaires in the basement plant room failed to illuminate during a simulated mains failure test. Battery packs appear depleted and no test records were available.<br/><br/><strong>Required action:</strong> Replace battery packs. Carry out a full 3-hour duration test. Implement a monthly flick-test programme with a written log.<br/><br/><strong>Regulatory reference:</strong> BS 5266-1:2016 &middot; Fire Safety Act 2021 &emsp; <strong>Target date:</strong> Within 14 days</div></div>'
-  + '<div class="finding priority-med"><div class="finding-header"><span>F-003 &middot; Inadequate fire extinguisher coverage, second floor</span><span class="p-badge pm">MEDIUM</span></div><div class="finding-body"><strong>Observation:</strong> The second floor open-plan office (approx. 460 m²) is served by a single 6 kg CO₂ extinguisher adjacent to the server room only. No water units provided for the general office area.<br/><br/><strong>Required action:</strong> Provide a minimum of two 6-litre water extinguishers at appropriate locations in accordance with BS 5306-8 travel distance guidance.<br/><br/><strong>Regulatory reference:</strong> BS 5306-8:2012 &emsp; <strong>Target date:</strong> Within 30 days</div></div>'
-  + '<div class="finding priority-low"><div class="finding-header"><span>F-004 &middot; Fire safety signage &mdash; refresh required</span><span class="p-badge pl">LOW</span></div><div class="finding-body"><strong>Observation:</strong> Several directional fire exit signs on the ground floor are faded. Two signs were partially obscured by temporary storage.<br/><br/><strong>Required action:</strong> Replace with ISO 7010 compliant photoluminescent alternatives. Remove obstructions. Include in next annual compliance review.<br/><br/><strong>Regulatory reference:</strong> RRO 2005 Art.14 &middot; ISO 7010 &emsp; <strong>Target date:</strong> Within 90 days</div></div>'
-  + '</div>'
-  + '<div class="section"><div class="section-num">Declaration</div><div class="section-title">Assessor Declaration</div><p style="font-size:10pt;color:#444;line-height:1.7;margin-bottom:16px;">I confirm that this fire risk assessment has been carried out in accordance with the Regulatory Reform (Fire Safety) Order 2005 and that to the best of my knowledge the information contained within this report accurately reflects the conditions observed at the time of the site visit.</p><div class="signature-box"><table style="margin:0;"><thead><tr><th>Assessor name</th><th>Qualifications</th><th>Date</th><th>Signature</th></tr></thead><tbody><tr><td>A. Bluejai CFIOSH</td><td>CFIOSH &middot; NEBOSH FD &middot; IFE Member</td><td>'+fmt(d)+'</td><td style="color:#aaa;font-style:italic;">[Signed]</td></tr></tbody></table></div></div>'
-  + '<div class="watermark">SAMPLE DOCUMENT &mdash; Generated by Firesite by Bluejai &middot; firesite.app &middot; This report is illustrative only and does not constitute a live fire risk assessment.</div>'
-  + '</div></body></html>';
 
-  var blob = new Blob([html],{type:'text/html'});
+  var css = `
+    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{background:#f4f4f0;font-family:'Inter',Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .page{width:210mm;min-height:297mm;background:#fff;margin:0 auto 20px;position:relative;overflow:hidden;}
+    @media screen{.page{box-shadow:0 4px 32px rgba(0,0,0,.12);margin:24px auto;}}
+    @media print{body{background:#fff;}.page{margin:0;box-shadow:none;page-break-after:always;}}
+    .rh{height:10mm;border-bottom:0.5pt solid #e0e0e0;display:flex;align-items:center;justify-content:space-between;padding:0 14mm;position:relative;}
+    .rh-logo{font-family:'Inter',sans-serif;font-size:9pt;font-weight:700;color:#1a1a1a;letter-spacing:-0.3px;}
+    .rh-logo span{color:#E25C2A;}
+    .rh-title{font-size:7.5pt;color:#888;letter-spacing:0.3px;}
+    .rh-bar{position:absolute;bottom:0;left:14mm;width:22mm;height:2pt;background:#E25C2A;}
+    .rf{height:9mm;border-top:0.5pt solid #e0e0e0;display:flex;align-items:center;justify-content:space-between;padding:0 14mm;position:absolute;bottom:0;left:0;right:0;}
+    .rf-copy{font-size:7pt;color:#aaa;}
+    .rf-conf{font-size:7pt;color:#aaa;text-transform:uppercase;letter-spacing:0.5px;}
+    .rf-page{font-size:7pt;color:#aaa;}
+    .cover-band{height:92mm;background:#0F1923;position:relative;overflow:hidden;}
+    .cover-band::before{content:'';position:absolute;right:-10mm;top:0;width:55mm;height:100%;background:#E25C2A;opacity:.06;transform:skewX(-8deg);}
+    .cover-band::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:2.5pt;background:#E25C2A;}
+    .cover-band-inner{padding:12mm 14mm 10mm;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+    .cover-pretitle{font-family:'Inter',sans-serif;font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:rgba(255,255,255,.4);margin-bottom:6mm;}
+    .cover-main-title{font-family:'EB Garamond','Georgia',serif;font-size:30pt;font-weight:500;color:#fff;line-height:1.1;letter-spacing:-0.5px;}
+    .cover-property{font-family:'EB Garamond','Georgia',serif;font-size:21pt;font-weight:400;color:rgba(255,255,255,.7);line-height:1.2;margin-top:2mm;}
+    .cover-address{font-size:8pt;color:rgba(255,255,255,.38);margin-top:3.5mm;line-height:1.55;letter-spacing:0.1px;}
+    .cover-body{padding:9mm 14mm 12mm;}
+    .cover-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:0.5pt solid #e8e8e8;border-radius:2px;overflow:hidden;margin-bottom:6mm;}
+    .cover-meta-cell{padding:5mm 6mm;border-right:0.5pt solid #e8e8e8;}
+    .cover-meta-cell:last-child{border-right:none;}
+    .cml{font-size:6.5pt;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#bbb;margin-bottom:2.5mm;}
+    .cmv{font-size:9.5pt;font-weight:600;color:#1a1a1a;line-height:1.35;}
+    .cover-risk-row{display:flex;align-items:stretch;gap:0;border:0.5pt solid #e8e8e8;border-radius:2px;overflow:hidden;margin-bottom:6mm;}
+    .crrl{padding:5.5mm 6mm;flex:1;}
+    .crrl-label{font-size:6.5pt;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#bbb;margin-bottom:2.5mm;}
+    .crrl-desc{font-size:8.5pt;color:#555;line-height:1.6;}
+    .crrb{width:30mm;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:2mm;}
+    .crrb-lbl{font-size:6pt;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.35);}
+    .crrb-val{font-family:'EB Garamond','Georgia',serif;font-size:19pt;font-weight:500;color:#E25C2A;letter-spacing:1px;}
+    .sample-strip{background:#FFF8F5;border:0.5pt solid rgba(226,92,42,.4);border-radius:2px;padding:3mm 5mm;display:flex;align-items:center;gap:3mm;}
+    .ss-dot{width:5pt;height:5pt;border-radius:50%;background:#E25C2A;flex-shrink:0;}
+    .ss-txt{font-size:7pt;color:#b84a22;font-weight:500;line-height:1.5;}
+    .toc-body{padding:8mm 14mm 12mm;}
+    .toc-section-label{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;margin-bottom:4mm;margin-top:7mm;}
+    .toc-row{display:flex;align-items:baseline;padding:3.5mm 0;border-bottom:0.5pt dotted #eee;}
+    .toc-row:last-child{border-bottom:none;}
+    .toc-num{font-size:7.5pt;font-weight:700;color:#E25C2A;width:9mm;flex-shrink:0;}
+    .toc-title{font-size:9pt;color:#1a1a1a;flex:0 0 auto;padding-right:3mm;}
+    .toc-dots{flex:1;border-bottom:0.5pt dotted #ddd;margin-bottom:2pt;}
+    .toc-pg{font-size:8pt;color:#aaa;width:8mm;text-align:right;flex-shrink:0;}
+    .sb{padding:8mm 14mm 12mm;}
+    .sh{display:flex;align-items:flex-start;gap:4mm;margin-bottom:6mm;padding-bottom:4.5mm;border-bottom:0.5pt solid #ececec;}
+    .sh-num{font-size:7pt;font-weight:700;color:#E25C2A;text-transform:uppercase;letter-spacing:2px;min-width:14mm;padding-top:2.5pt;}
+    .sh-title{font-family:'EB Garamond','Georgia',serif;font-size:19pt;font-weight:500;color:#1a1a1a;line-height:1.12;}
+    .intro-p{font-size:9.5pt;color:#333;line-height:1.78;margin-bottom:6mm;}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-bottom:6mm;}
+    .stat-box{border:0.5pt solid #e8e8e8;border-radius:2px;padding:5mm;position:relative;overflow:hidden;}
+    .stat-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2.5pt;}
+    .sb-n{font-family:'EB Garamond','Georgia',serif;font-size:28pt;font-weight:500;line-height:1;}
+    .sb-lbl{font-size:7pt;color:#999;margin-top:1.5mm;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;}
+    .sb-sub{font-size:8pt;color:#666;margin-top:2mm;line-height:1.4;}
+    .rm-wrap{margin-bottom:6mm;}
+    .rm-lbl{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;margin-bottom:3mm;}
+    .rm-grid{display:grid;grid-template-columns:18mm repeat(5,1fr);gap:1.5pt;font-size:6pt;}
+    .rmc{display:flex;align-items:center;justify-content:center;border-radius:1px;height:9mm;}
+    .rma{color:#aaa;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;font-size:5.5pt;}
+    .rm1{background:#e8f5ed;color:#2a7a46;}
+    .rm2{background:#fef3c7;color:#92400e;}
+    .rm3{background:#fee2cc;color:#9a3412;}
+    .rm4{background:#fecaca;color:#991b1b;}
+    .rm5{background:#1a1a1a;color:#fff;}
+    .rma-row{font-size:5.5pt;color:#aaa;text-align:right;padding-right:2mm;}
+    .rm-active{outline:2pt solid #E25C2A;outline-offset:-1.5pt;font-weight:800;}
+    .dtt{width:100%;border-collapse:collapse;font-size:9pt;margin-bottom:6mm;}
+    .dtt td{padding:4mm 0;border-bottom:0.5pt solid #f2f2f2;vertical-align:top;}
+    .dtt td:first-child{color:#666;width:42%;font-weight:500;padding-right:5mm;}
+    .dtt td:last-child{color:#1a1a1a;}
+    .dtt tr:last-child td{border-bottom:none;}
+    .fb{margin-bottom:5mm;position:relative;padding-left:3.5mm;}
+    .fb::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2.5pt;border-radius:1pt;}
+    .fb-h::before{background:#E25C2A;}
+    .fb-m::before{background:#F59E0B;}
+    .fb-l::before{background:#22C55E;}
+    .fbi{border:0.5pt solid #e8e8e8;border-left:none;border-radius:0 2px 2px 0;}
+    .fbh{padding:4mm 5mm;display:flex;justify-content:space-between;align-items:flex-start;gap:3mm;background:#FAFAFA;}
+    .fbh-left{flex:1;}
+    .fb-ref-lbl{font-size:6.5pt;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#aaa;margin-bottom:1.5mm;}
+    .fb-title-text{font-size:9.5pt;font-weight:600;color:#1a1a1a;line-height:1.3;}
+    .fbadge{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:2.5pt 8pt;border-radius:2px;flex-shrink:0;margin-top:1pt;}
+    .fbadge-h{background:#E25C2A;color:#fff;}
+    .fbadge-m{background:#F59E0B;color:#fff;}
+    .fbadge-l{background:#22C55E;color:#fff;}
+    .fbb{padding:4mm 5mm;border-top:0.5pt solid #f0f0f0;}
+    .fbl{margin-bottom:3.5mm;}
+    .fbl-lbl{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#aaa;margin-bottom:1.5mm;}
+    .fbl-txt{font-size:8.5pt;color:#333;line-height:1.68;}
+    .fbf{padding:3mm 5mm;border-top:0.5pt solid #f0f0f0;display:flex;gap:7mm;background:#FAFAFA;flex-wrap:wrap;}
+    .fbf-item{font-size:7.5pt;}
+    .fbf-lbl{color:#aaa;font-weight:500;}
+    .fbf-val{color:#1a1a1a;font-weight:700;}
+    .decl-box{border:0.5pt solid #e8e8e8;border-radius:2px;padding:6mm;margin-bottom:5mm;}
+    .decl-txt{font-size:9pt;color:#444;line-height:1.78;margin-bottom:5mm;}
+    .sig-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border:0.5pt solid #e8e8e8;border-radius:2px;overflow:hidden;}
+    .sig-cell{padding:4.5mm 5mm;border-right:0.5pt solid #e8e8e8;}
+    .sig-cell:last-child{border-right:none;}
+    .sig-lbl{font-size:6.5pt;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#bbb;margin-bottom:2mm;}
+    .sig-val{font-size:8.5pt;font-weight:600;color:#1a1a1a;line-height:1.4;}
+    .sig-italic{font-size:8.5pt;color:#ccc;font-style:italic;}
+    .final-note{display:flex;align-items:flex-start;gap:4mm;margin-top:5mm;padding:4.5mm 5.5mm;background:#FFF8F5;border:0.5pt solid rgba(226,92,42,.35);border-radius:2px;}
+    .fn-dot{width:6pt;height:6pt;border-radius:50%;background:#E25C2A;flex-shrink:0;margin-top:1.5pt;}
+    .fn-txt{font-size:7.5pt;color:#b84a22;font-weight:500;line-height:1.6;}
+  `;
+
+  function rh(t){return '<div class="rh"><div class="rh-logo">Fire<span>site</span></div><div class="rh-title">'+t+'</div><div class="rh-bar"></div></div>';}
+  function rf(pg,tot){return '<div class="rf"><div class="rf-copy">Generated by Firesite &middot; firesite.app</div><div class="rf-conf">Confidential</div><div class="rf-page">'+pg+' of '+tot+'</div></div>';}
+
+  var fmt2 = function(dt){return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});};
+
+  // PAGE 1 — COVER
+  var p1 = '<div class="page">'
+    +'<div class="cover-band"><div class="cover-band-inner">'
+    +'<div class="cover-pretitle">Prepared under the Regulatory Reform (Fire Safety) Order 2005</div>'
+    +'<div><div class="cover-main-title">Fire Risk Assessment</div>'
+    +'<div class="cover-property">Meridian House</div>'
+    +'<div class="cover-address">14&ndash;18 Meridian Street &nbsp;&middot;&nbsp; London EC1A 2BT &nbsp;&middot;&nbsp; Mixed-use office &middot; 4 storeys &middot; 47 occupants</div></div>'
+    +'</div></div>'
+    +'<div class="cover-body">'
+    +'<div class="cover-meta-grid">'
+    +'<div class="cover-meta-cell"><div class="cml">Assessed by</div><div class="cmv">A. Bluejai CFIOSH<br/><span style="font-size:8pt;font-weight:400;color:#999;">NEBOSH Fire &middot; IFE Member</span></div></div>'
+    +'<div class="cover-meta-cell"><div class="cml">Assessment date</div><div class="cmv">'+fmt2(d)+'</div></div>'
+    +'<div class="cover-meta-cell"><div class="cml">Review due</div><div class="cmv">'+fmt2(rev)+'</div></div>'
+    +'</div>'
+    +'<div class="cover-risk-row">'
+    +'<div class="crrl"><div class="crrl-label">Overall Risk Rating</div><div class="crrl-desc">The premises presents a <strong>medium overall risk</strong>. Two high-priority findings require immediate attention. The building is suitable for continued occupation provided actions are addressed within the stated timescales.</div></div>'
+    +'<div class="crrb"><div class="crrb-lbl">Risk level</div><div class="crrb-val">MEDIUM</div></div>'
+    +'</div>'
+    +'<div class="sample-strip"><div class="ss-dot"></div><div class="ss-txt">SAMPLE DOCUMENT &mdash; For illustration purposes only. Generated by Firesite (firesite.app). This does not constitute a live fire risk assessment.</div></div>'
+    +'</div>'
+    +rf(1,5)+'</div>';
+
+  // PAGE 2 — TABLE OF CONTENTS
+  var tocRows = [
+    ['01','Executive Summary &amp; Key Statistics','3'],
+    ['02','Premises &amp; Occupancy Details','3'],
+    ['03','Fire Hazards &amp; Sources of Ignition','3'],
+    ['04','Means of Escape &amp; Travel Distances','3'],
+    ['05','Emergency Lighting','3'],
+    ['06','Fire Detection &amp; Warning Systems','3'],
+    ['07','Firefighting Equipment &amp; Provision','3'],
+    ['08','Fire Doors &amp; Compartmentation','3'],
+    ['09','Significant Findings &amp; Action Plan','4'],
+    ['10','Photo Evidence Appendix','4'],
+    ['11','Assessor Declaration &amp; Limitations','5'],
+  ];
+  var p2 = '<div class="page">'+rh('Fire Risk Assessment &mdash; Meridian House')
+    +'<div class="toc-body">'
+    +'<div style="margin-bottom:7mm;"><span style="font-family:'EB Garamond',Georgia,serif;font-size:22pt;font-weight:500;color:#1a1a1a;letter-spacing:-0.3px;">Contents</span></div>'
+    +'<div class="toc-section-label">Report Sections</div>'
+    +tocRows.map(function(r){return '<div class="toc-row"><span class="toc-num">'+r[0]+'</span><span class="toc-title">'+r[1]+'</span><span class="toc-dots"></span><span class="toc-pg">'+r[2]+'</span></div>';}).join('')
+    +'</div>'
+    +rf(2,5)+'</div>';
+
+  // PAGE 3 — EXECUTIVE SUMMARY
+  var matrixRows = [
+    ['Almost certain','rm3','rm4','rm4','rm5','rm5'],
+    ['Likely','rm2','rm3','rm4','rm4','rm5'],
+    ['Possible','rm1','rm2','rm3','rm4','rm4'],
+    ['Unlikely','rm1','rm1','rm2','rm3','rm3'],
+    ['Rare','rm1','rm1','rm1','rm2','rm2'],
+  ];
+  var matrixCols = ['Insignificant','Minor','Moderate','Major','Catastrophic'];
+  var p3 = '<div class="page">'+rh('Fire Risk Assessment &mdash; Meridian House')
+    +'<div class="sb">'
+    +'<div class="sh"><div class="sh-num">Executive Summary</div><div class="sh-title">Assessment Overview &amp; Key Statistics</div></div>'
+    +'<p class="intro-p">This fire risk assessment was carried out on '+fmt2(d)+' at Meridian House, 14&ndash;18 Meridian Street, London EC1A 2BT, in accordance with the Regulatory Reform (Fire Safety) Order 2005 and relevant British Standards. The premises comprises four storeys of mixed-use commercial office accommodation with ground-floor retail, accommodating a maximum of 47 persons.</p>'
+    +'<div class="stat-grid">'
+    +'<div class="stat-box" style="border-top:2.5pt solid #1a1a1a;"><div class="sb-n" style="color:#1a1a1a;">12</div><div class="sb-lbl">Total findings</div><div class="sb-sub">Across all assessed areas of the premises</div></div>'
+    +'<div class="stat-box" style="border-top:2.5pt solid #E25C2A;"><div class="sb-n" style="color:#E25C2A;">2</div><div class="sb-lbl">High priority</div><div class="sb-sub">Immediate action required — within 14 days</div></div>'
+    +'<div class="stat-box" style="border-top:2.5pt solid #F59E0B;"><div class="sb-n" style="color:#F59E0B;">6</div><div class="sb-lbl">Medium priority</div><div class="sb-sub">Action required within 30 days</div></div>'
+    +'<div class="stat-box" style="border-top:2.5pt solid #22C55E;"><div class="sb-n" style="color:#22C55E;">4</div><div class="sb-lbl">Low priority</div><div class="sb-sub">Action required within 90 days</div></div>'
+    +'</div>'
+    +'<div class="rm-wrap"><div class="rm-lbl">Risk Rating Matrix &mdash; Likelihood &times; Consequence</div>'
+    +'<div class="rm-grid">'
+    +'<div class="rmc rma"></div>'
+    +matrixCols.map(function(c){return '<div class="rmc rma" style="font-size:5.5pt;text-align:center;padding:0 1mm;">'+c+'</div>';}).join('')
+    +matrixRows.map(function(row,ri){
+      return '<div class="rmc rma rma-row">'+row[0]+'</div>'
+        +row.slice(1).map(function(cls,ci){
+          var active=(ri===2&&ci===2)?' rm-active':'';
+          return '<div class="rmc '+cls+active+'">'+( active?'&#9679;':'' )+'</div>';
+        }).join('');
+    }).join('')
+    +'</div>'
+    +'<div style="font-size:7pt;color:#888;margin-top:2.5mm;">&#9679; Current position: <strong>Possible likelihood &times; Moderate consequence = MEDIUM</strong></div>'
+    +'</div>'
+    +'</div>'
+    +rf(3,5)+'</div>';
+
+  // PAGE 4 — FINDINGS
+  function fb(ref,title,pri,obs,act,reg,tgt){
+    var pcls=pri==='HIGH'?'fb-h':pri==='MEDIUM'?'fb-m':'fb-l';
+    var bcls=pri==='HIGH'?'fbadge-h':pri==='MEDIUM'?'fbadge-m':'fbadge-l';
+    return '<div class="fb '+pcls+'">'
+      +'<div class="fbi">'
+      +'<div class="fbh"><div class="fbh-left"><div class="fb-ref-lbl">'+ref+'</div><div class="fb-title-text">'+title+'</div></div>'
+      +'<div class="fbadge '+bcls+'">'+pri+'</div></div>'
+      +'<div class="fbb">'
+      +'<div class="fbl"><div class="fbl-lbl">Observation</div><div class="fbl-txt">'+obs+'</div></div>'
+      +'<div class="fbl"><div class="fbl-lbl">Required Action</div><div class="fbl-txt">'+act+'</div></div>'
+      +'</div>'
+      +'<div class="fbf">'
+      +'<div class="fbf-item"><span class="fbf-lbl">Regulatory reference: </span><span class="fbf-val">'+reg+'</span></div>'
+      +'<div class="fbf-item"><span class="fbf-lbl">Target completion: </span><span class="fbf-val">'+tgt+'</span></div>'
+      +'</div>'
+      +'</div></div>';
+  }
+
+  var p4 = '<div class="page">'+rh('Fire Risk Assessment &mdash; Meridian House')
+    +'<div class="sb">'
+    +'<div class="sh"><div class="sh-num">Section 09</div><div class="sh-title">Significant Findings &amp; Action Plan</div></div>'
+    +fb('F-001','Third floor east corridor &mdash; fire door self-closer absent','HIGH',
+      'The fire door serving the third-floor east corridor adjacent to the staircase refuge area was found without a self-closing device. The door was held open with a wooden wedge during the site visit, rendering it ineffective as a compartmentation barrier and creating an unobstructed path for fire and smoke spread to the escape stair.',
+      'Remove the door wedge immediately. Source and install a suitably rated self-closing device conforming to BS EN 1154. Commission a fire door inspection of all compartmentation doors across all floors and document findings in the premises fire log.',
+      'RRO 2005 Art.14 &middot; BS 8214:2016 &middot; BS EN 1154','Within 14 days')
+    +fb('F-002','Basement plant room &mdash; emergency lighting non-functional','HIGH',
+      'Three emergency luminaires within the basement plant room failed to illuminate during manual simulation of mains failure. Battery backup units appear to have reached end of service life. No test log or maintenance record was produced on request at the time of assessment.',
+      'Replace battery packs in all three units with manufacturer-specified components. On reinstatement, conduct a full three-hour duration test and record results. Establish a monthly flick-test regime with a physical log kept on the premises. Arrange annual duration testing.',
+      'BS 5266-1:2016 &middot; Fire Safety Act 2021 &middot; BS EN 50172','Within 14 days')
+    +fb('F-003','Second floor open-plan office &mdash; insufficient extinguisher provision','MEDIUM',
+      'The second floor office (approx. 460 m&sup2;) is served by a single 6 kg CO&sup2; extinguisher sited exclusively at the server room enclosure. No water or water-mist extinguishers are provided across the general office floor area, contrary to BS 5306-8 travel distance guidance.',
+      'Supply a minimum of two 6-litre water extinguishers at suitable locations within the general office. Positioning should comply with the 30-metre travel distance guidance in BS 5306-8. Arrange commissioning inspection and record in the fire safety log.',
+      'BS 5306-8:2012 &middot; BS EN 3','Within 30 days')
+    +fb('F-004','Ground floor exit signage &mdash; photoluminescence degraded','LOW',
+      'Several directional exit signs on the ground floor corridor exhibit visible fading and fail to meet the required luminance threshold. Two signs are partially obscured by temporary storage stacked against the wall below them.',
+      'Replace affected signage with ISO 7010-E001 compliant photoluminescent alternatives. Remove all obstructions from sign sight-lines immediately. Include sign condition checks in the annual fire safety review.',
+      'RRO 2005 Art.14 &middot; ISO 7010 &middot; BS 5499-4','Within 90 days')
+    +'</div>'
+    +rf(4,5)+'</div>';
+
+  // PAGE 5 — DECLARATION
+  var p5 = '<div class="page">'+rh('Fire Risk Assessment &mdash; Meridian House')
+    +'<div class="sb">'
+    +'<div class="sh"><div class="sh-num">Section 11</div><div class="sh-title">Assessor Declaration &amp; Limitations</div></div>'
+    +'<div class="decl-box">'
+    +'<p class="decl-txt">I confirm that this fire risk assessment was carried out by a competent person in accordance with the Regulatory Reform (Fire Safety) Order 2005. The assessment reflects conditions observed at the premises at the time of the site visit on '+fmt2(d)+'. The responsible person is reminded that this assessment should be reviewed annually, or sooner if there is reason to suspect it is no longer valid, or following any significant change to the premises, occupancy, use, or fire safety systems.</p>'
+    +'<div class="sig-grid">'
+    +'<div class="sig-cell"><div class="sig-lbl">Full name</div><div class="sig-val">A. Bluejai</div></div>'
+    +'<div class="sig-cell"><div class="sig-lbl">Qualifications</div><div class="sig-val">CFIOSH &middot; NEBOSH Fire<br/><span style="font-size:8pt;font-weight:400;color:#999;">IFE Member No. 12847</span></div></div>'
+    +'<div class="sig-cell"><div class="sig-lbl">Date of assessment</div><div class="sig-val">'+fmt2(d)+'</div></div>'
+    +'<div class="sig-cell"><div class="sig-lbl">Signature</div><div class="sig-italic">[Signed on original]</div></div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="final-note"><div class="fn-dot"></div><div class="fn-txt">SAMPLE DOCUMENT &mdash; This report was generated by Firesite by Bluejai (firesite.app) for demonstration purposes only. It does not constitute a completed, site-specific or legally valid fire risk assessment.</div></div>'
+    +'</div>'
+    +rf(5,5)+'</div>';
+
+  var full = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><title>Fire Risk Assessment &mdash; Meridian House &mdash; Firesite</title><style>'+css+'</style></head><body>'+p1+p2+p3+p4+p5+'</body></html>';
+
+  var blob = new Blob([full],{type:'text/html'});
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
-  a.href=url; a.download='Firesite-Sample-Report.html'; a.click();
+  a.href=url; a.download='Firesite-Sample-FRA-Meridian-House.html'; a.click();
   setTimeout(function(){URL.revokeObjectURL(url);},5000);
 }
 
