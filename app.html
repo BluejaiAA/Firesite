@@ -2275,7 +2275,7 @@ function downloadSampleReport() {
   var fmt = function(dt){return dt.toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});};
 
   var css = `
-    @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
     *{box-sizing:border-box;margin:0;padding:0;}
     html,body{background:#f4f4f0;font-family:'Inter',Arial,sans-serif;font-size:10.5pt;color:#1a1a1a;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
     .page{width:210mm;min-height:297mm;background:#fff;margin:0 auto 20px;position:relative;overflow:hidden;}
@@ -2295,8 +2295,8 @@ function downloadSampleReport() {
     .cover-band::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:2.5pt;background:#E25C2A;}
     .cover-band-inner{padding:12mm 14mm 10mm;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
     .cover-pretitle{font-family:'Inter',sans-serif;font-size:7pt;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:rgba(255,255,255,.4);margin-bottom:6mm;}
-    .cover-main-title{font-family:"EB Garamond","Georgia",serif;font-size:30pt;font-weight:500;color:#fff;line-height:1.1;letter-spacing:-0.5px;}
-    .cover-property{font-family:"EB Garamond","Georgia",serif;font-size:21pt;font-weight:400;color:rgba(255,255,255,.7);line-height:1.2;margin-top:2mm;}
+    .cover-main-title{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:30pt;font-weight:500;color:#fff;line-height:1.1;letter-spacing:-0.5px;}
+    .cover-property{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:21pt;font-weight:400;color:rgba(255,255,255,.7);line-height:1.2;margin-top:2mm;}
     .cover-address{font-size:8pt;color:rgba(255,255,255,.38);margin-top:3.5mm;line-height:1.55;letter-spacing:0.1px;}
     .cover-body{padding:9mm 14mm 12mm;}
     .cover-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:0.5pt solid #e8e8e8;border-radius:2px;overflow:hidden;margin-bottom:6mm;}
@@ -2310,7 +2310,7 @@ function downloadSampleReport() {
     .crrl-desc{font-size:8.5pt;color:#555;line-height:1.6;}
     .crrb{width:30mm;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;gap:2mm;}
     .crrb-lbl{font-size:6pt;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.35);}
-    .crrb-val{font-family:"EB Garamond","Georgia",serif;font-size:19pt;font-weight:500;color:#E25C2A;letter-spacing:1px;}
+    .crrb-val{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:19pt;font-weight:500;color:#E25C2A;letter-spacing:1px;}
     .sample-strip{background:#FFF8F5;border:0.5pt solid rgba(226,92,42,.4);border-radius:2px;padding:3mm 5mm;display:flex;align-items:center;gap:3mm;}
     .ss-dot{width:5pt;height:5pt;border-radius:50%;background:#E25C2A;flex-shrink:0;}
     .ss-txt{font-size:7pt;color:#b84a22;font-weight:500;line-height:1.5;}
@@ -2325,12 +2325,12 @@ function downloadSampleReport() {
     .sb{padding:8mm 14mm 12mm;}
     .sh{display:flex;align-items:flex-start;gap:4mm;margin-bottom:6mm;padding-bottom:4.5mm;border-bottom:0.5pt solid #ececec;}
     .sh-num{font-size:7pt;font-weight:700;color:#E25C2A;text-transform:uppercase;letter-spacing:2px;min-width:14mm;padding-top:2.5pt;}
-    .sh-title{font-family:"EB Garamond","Georgia",serif;font-size:19pt;font-weight:500;color:#1a1a1a;line-height:1.12;}
+    .sh-title{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:19pt;font-weight:500;color:#1a1a1a;line-height:1.12;}
     .intro-p{font-size:9.5pt;color:#333;line-height:1.78;margin-bottom:6mm;}
     .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-bottom:6mm;}
     .stat-box{border:0.5pt solid #e8e8e8;border-radius:2px;padding:5mm;position:relative;overflow:hidden;}
     .stat-box::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2.5pt;}
-    .sb-n{font-family:"EB Garamond","Georgia",serif;font-size:28pt;font-weight:500;line-height:1;}
+    .sb-n{font-family:"Montserrat","Segoe UI",Arial,sans-serif;font-size:28pt;font-weight:500;line-height:1;}
     .sb-lbl{font-size:7pt;color:#999;margin-top:1.5mm;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;}
     .sb-sub{font-size:8pt;color:#666;margin-top:2mm;line-height:1.4;}
     .rm-wrap{margin-bottom:6mm;}
@@ -2439,7 +2439,7 @@ function downloadSampleReport() {
   ];
   var p2 = '<div class="page">'+rh('Fire Risk Assessment &mdash; Meridian House')
     +'<div class="toc-body">'
-    +'<div style="margin-bottom:7mm;"><span style="font-family:"EB Garamond",Georgia,serif;font-size:22pt;font-weight:500;color:#1a1a1a;letter-spacing:-0.3px;">Contents</span></div>'
+    +'<div style="margin-bottom:7mm;"><span style="font-family:"Montserrat",Georgia,serif;font-size:22pt;font-weight:500;color:#1a1a1a;letter-spacing:-0.3px;">Contents</span></div>'
     +'<div class="toc-section-label">Report Sections</div>'
     +tocRows.map(function(r){return '<div class="toc-row"><span class="toc-num">'+r[0]+'</span><span class="toc-title">'+r[1]+'</span><span class="toc-dots"></span><span class="toc-pg">'+r[2]+'</span></div>';}).join('')
     +'</div>'
@@ -3732,10 +3732,10 @@ function generatePDF(a, org) {
 <meta charset="UTF-8"/>
 <title>Fire Risk Assessment — ${a.premisesName||"Report"} — ${a.ref}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Plus Jakarta Sans',sans-serif;font-size:10pt;color:#0D1117;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .serif{font-family:'Cormorant Garamond',serif;}
+  body{font-family:'Inter',sans-serif;font-size:10pt;color:#0D1117;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .serif{font-family:'Montserrat',sans-serif;}
   .mono{font-family:'JetBrains Mono',monospace;}
 
   /* PAGE BREAKS */
@@ -3747,11 +3747,11 @@ function generatePDF(a, org) {
   .cover{background:${pr};padding:48px 44px 36px;position:relative;overflow:hidden;min-height:360px;}
   .cover::after{content:'';position:absolute;bottom:-40px;right:-40px;width:200px;height:200px;border-radius:50%;border:32px solid rgba(255,255,255,.05);}
   .cover-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:36px;position:relative;}
-  .cover-org{font-family:'Cormorant Garamond',serif;font-size:14pt;font-weight:700;color:#fff;}
+  .cover-org{font-family:'Montserrat',sans-serif;font-size:14pt;font-weight:700;color:#fff;}
   .cover-org-sub{font-size:8pt;color:rgba(255,255,255,.4);margin-top:2px;}
   .cover-rule{width:36px;height:2px;background:${ac};margin-bottom:10px;position:relative;}
   .cover-doc-type{font-size:7pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:${ac};margin-bottom:8px;position:relative;}
-  .cover-title{font-family:'Cormorant Garamond',serif;font-size:26pt;font-weight:700;color:#fff;line-height:1.1;position:relative;}
+  .cover-title{font-family:'Montserrat',sans-serif;font-size:26pt;font-weight:700;color:#fff;line-height:1.1;position:relative;}
   .cover-subtitle{font-size:14pt;opacity:.55;margin-top:4px;}
   .cover-stripe{height:3px;background:linear-gradient(90deg,${ac},transparent);}
   .cover-meta{display:grid;grid-template-columns:1fr 1fr;}
@@ -3765,7 +3765,7 @@ function generatePDF(a, org) {
 
   /* PAGE HEADER */
   .pg-hdr{background:${pr};padding:7px 16px;display:flex;justify-content:space-between;align-items:center;}
-  .pg-hdr-brand{font-family:'Cormorant Garamond',serif;font-size:10pt;font-weight:700;color:#fff;}
+  .pg-hdr-brand{font-family:'Montserrat',sans-serif;font-size:10pt;font-weight:700;color:#fff;}
   .pg-hdr-ref{font-family:'JetBrains Mono',monospace;font-size:7pt;color:rgba(255,255,255,.3);}
   .pg-hdr-doc{font-size:7pt;color:${ac};font-weight:600;margin-left:8px;}
 
@@ -3778,8 +3778,8 @@ function generatePDF(a, org) {
 
   /* SECTION HEADINGS */
   .sec-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #30363D;}
-  .sec-n{font-family:'Cormorant Garamond',serif;font-size:28pt;font-weight:700;color:#30363D;line-height:1;flex-shrink:0;}
-  .sec-t{font-family:'Cormorant Garamond',serif;font-size:14pt;font-weight:700;color:#0D1117;}
+  .sec-n{font-family:'Montserrat',sans-serif;font-size:28pt;font-weight:700;color:#30363D;line-height:1;flex-shrink:0;}
+  .sec-t{font-family:'Montserrat',sans-serif;font-size:14pt;font-weight:700;color:#0D1117;}
   .sec-l{font-size:6.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:${ac};margin-bottom:2px;}
 
   /* BODY TEXT */
@@ -4114,7 +4114,7 @@ ${actionItems.length > 0 ? actionItems.map(item => `
     </div>` : `
     <div style="text-align:center;padding:40px 20px;color:#9CA3AF;">
       <div style="font-size:32px;margin-bottom:10px;opacity:.3;">📷</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:16pt;color:#6B7280;margin-bottom:6px;">No photos recorded</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:16pt;color:#6B7280;margin-bottom:6px;">No photos recorded</div>
       <div style="font-size:9pt;">Add photos to questions during the assessment to populate this appendix.</div>
     </div>`}
   </div>
