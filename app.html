@@ -1234,12 +1234,12 @@ button,input,select,textarea{font-family:'Nunito',sans-serif;}
 
 /* LANDING */
 .land{min-height:100vh;background:#0D1117;overflow-y:auto;}
-.land-nav{background:rgba(248,249,252,.96);backdrop-filter:blur(16px);border-bottom:1px solid #30363D;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.land-nav{background:rgba(13,17,23,.96);backdrop-filter:blur(16px);border-bottom:1px solid #21262D;padding:0 16px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .hero{padding:44px 16px 36px;max-width:640px;margin:0 auto;}
-.hero-ey{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#C0392B;display:flex;align-items:center;gap:7px;margin-bottom:10px;}
-.hero-ey::before{content:'';width:14px;height:1px;background:#C0392B;}
+.hero-ey{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#E25C2A;display:flex;align-items:center;gap:7px;margin-bottom:10px;}
+.hero-ey::before{content:'';width:14px;height:1px;background:#E25C2A;}
 .hero-h1{font-family:'Nunito',sans-serif;font-size:clamp(32px,8vw,50px);font-weight:700;line-height:1.07;color:#F0F6FC;margin-bottom:12px;}
-.hero-h1 em{font-style:italic;color:#C0392B;}
+.hero-h1 em{font-style:italic;color:#E25C2A;}
 .hero-p{font-size:13px;color:#8B949E;line-height:1.7;max-width:420px;margin-bottom:22px;}
 .hero-btns{display:flex;gap:8px;flex-wrap:wrap;}
 .trust{background:#161B22;border-top:1px solid #30363D;border-bottom:1px solid #30363D;padding:10px 16px;display:flex;gap:0;overflow-x:auto;}
@@ -2307,9 +2307,9 @@ function Landing({dispatch, user, onSignOut, onUpgrade}) {
       </nav>
       <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
       <div className="hero">
-        <div className="hero-ey">The professional fire risk assessment platform</div>
-        <h1 className="hero-h1">Professional fire risk<br/>assessments,<br/><em>built to stand up.</em></h1>
-        <p className="hero-p">Structured, site-ready assessments for independent fire risk assessors. Guided questions, automatic action plans, photo evidence and branded reports — all from your phone.</p>
+        <div className="hero-ey">Built for fire risk assessors. Used on site.</div>
+        <h1 className="hero-h1">Every finding.<br/>Every photo.<br/><em>Every report.</em></h1>
+        <p className="hero-p">Firesite guides you through a full fire risk assessment, question by question, while you walk the building. Auto-generated action plans. Photo evidence. Branded PDF reports — ready before you leave site.</p>
         <div className="hero-btns">
           <button className="btn btn-teal" style={{padding:"12px 24px",fontSize:14,fontWeight:700}} onClick={()=>dispatch({type:"GO",screen:"setup"})}>Start your assessment →</button>
           <button className="btn btn-ghost" style={{padding:"12px 24px",fontSize:14}} onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>View dashboard</button>
