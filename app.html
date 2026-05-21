@@ -4251,7 +4251,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
       <div style={{background:`linear-gradient(135deg,${pr} 0%,${pr}DD 100%)`,padding:"24px 16px 20px",position:"relative",overflow:"hidden"}}>
         
         <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:6}}>
-          <div style={{fontSize:18}} className="pop">🏆</div>
+          <div style={{fontSize:18}} className="pop" style={{width:32,height:32,borderRadius:16,background:"rgba(255,255,255,0.12)",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M17.66 11.2c-.23-.3-.51-.56-.77-.82-.67-.6-1.43-1.03-2.07-1.66C13.33 7.26 13 4.85 13.95 3c-.95.23-1.78.75-2.49 1.32-2.59 2.08-3.61 5.75-2.39 8.9.04.1.08.2.08.33 0 .22-.15.42-.35.5-.23.1-.47.04-.66-.12a.58.58 0 01-.14-.17c-.75-1.1-1-2.4-.88-3.68-1.43 1.3-2.16 3.3-2.07 5.2.04.6.12 1.2.32 1.78.18.56.45 1.08.78 1.56 1.34 1.94 3.55 3.17 5.96 3.18 2.61.01 5.01-1.44 6.22-3.7 1.16-2.16.97-4.89-.42-6.89z" fill="white"/></svg></div>
           <div>
             <div style={{fontFamily:"'Nunito',sans-serif",fontSize:15,fontWeight:700,color:"#fff",lineHeight:1.2,marginBottom:2}}>
               {a.premisesName||a.ref||"Assessment"}
@@ -4276,7 +4276,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
 
       {/* Tab bar */}
       <div className="tab-nav" style={{background:"#fff",borderBottom:"1px solid #30363D",top:50}}>
-        {[["overview","📊 Overview"],["actions","⚑ Actions"],["report","📄 Report"]].map(([k,l])=>(
+        {[["overview","Overview"],["actions","Actions"],["report","Report"]].map(([k,l])=>(
           <button key={k} className="tnb" onClick={()=>setTab(k)} style={{
             background:tab===k?pr:"transparent",
             color:tab===k?"#fff":"#6B7280",
@@ -4371,10 +4371,10 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
           {/* CTAs */}
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
             <button className="btn btn-dark btn-full" style={{background:pr,padding:13,fontSize:13,fontWeight:700,borderRadius:9}} onClick={()=>setTab("report")}>
-              📄 Preview & Generate Report
+              Preview & Generate Report
             </button>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-              <button className="btn btn-ghost btn-full" style={{padding:10}} onClick={()=>setTab("actions")}>⚑ Action Plan</button>
+              <button className="btn btn-ghost btn-full" style={{padding:10}} onClick={()=>setTab("actions")}>Action Plan</button>
               <button className="btn btn-ghost btn-full" style={{padding:10}} onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>← Edit</button>
             </div>
           </div>
@@ -4391,7 +4391,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
 
           {actionItems.length===0 ? (
             <div style={{textAlign:"center",padding:"40px 20px",color:"#6E7681"}}>
-              <div style={{fontSize:32,marginBottom:10,opacity:.3}}>⚑</div>
+              <div style={{fontSize:0,marginBottom:10,opacity:.3}}></div>
               <div style={{fontFamily:"'Nunito',sans-serif",fontSize:17,marginBottom:5,color:"#6B7280"}}>No items flagged</div>
               <div style={{fontSize:12}}>Flag questions during the assessment to build your action plan</div>
             </div>
@@ -4408,7 +4408,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
                         {ac2.priority&&<span className="act-tag" style={{color:pColor(ac2.priority),background:pBg(ac2.priority)}}>{ac2.priority.split(" — ")[0]}</span>}
                         {ac2.responsible&&<span className="act-tag">{ac2.responsible}</span>}
                         {ac2.targetDate&&<span className="act-tag">Due: {fmtDate(ac2.targetDate)}</span>}
-                        {ac2.photos.length>0&&<span className="act-tag">📷 {ac2.photos.length}</span>}
+                        {ac2.photos.length>0&&<span className="act-tag">{ac2.photos.length}</span>}
                       </div>
                       {/* Photos on action item */}
                       {ac2.photos.length>0&&(
@@ -4727,7 +4727,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
                   </>
                 ) : (
                   <div style={{textAlign:"center",padding:"30px 20px",color:"#6E7681"}}>
-                    <div style={{fontSize:28,marginBottom:8,opacity:.3}}>📷</div>
+                    <div style={{fontSize:28,marginBottom:8,opacity:0}}></div>
                     <div style={{fontFamily:"'Nunito',sans-serif",fontSize:15,color:"#6B7280",marginBottom:5}}>No photos recorded</div>
                     <div style={{fontSize:11}}>Add photos to questions during the assessment to populate this appendix. Photos appear both here and inline within the relevant finding in Section D.</div>
                   </div>
