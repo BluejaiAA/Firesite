@@ -4168,7 +4168,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
   const answered = Object.values(answers).filter(v=>v&&(v.ans||(v.sel&&v.sel.length>0))).length;
   const flagged  = Object.values(answers).filter(v=>v?.flagged).length;
   const firstName= org.assessor?.split(" ")[0]||null;
-    const risk = (a.answers&&a.answers["SF.9"]&&a.answers["SF.9"].ans)||"";
+    const risk = (a.answers&&a.answers["SF.9"]&&a.answers["SF.9"].ans)||a.riskRating||"";
 
   // All flagged action items with photos
   const actionItems = Object.entries(answers)
