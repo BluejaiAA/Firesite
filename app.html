@@ -321,12 +321,12 @@ const SECTION_INTROS = {
   4:  {icon:"bolt", colour:"#D97706", text:"Ask to see the EICR and PAT records. Check for visible cable or equipment defects.", mins:3},
   5:  {icon:"lock", colour:"#374151", text:"Consider the likelihood of deliberate fire-raising. Assess external fuel loads, lighting and CCTV.", mins:2},
   6:  {icon:"group", colour:"#C0392B", text:"Identify all persons present, paying attention to those needing additional assistance to evacuate.", mins:3},
-  7:  {icon:"🚪", colour:"#059669", text:"Walk every escape route to the final exit. Test every door. Do not rely on plans — check what is actually there.", mins:5},
+  7:  {icon:"door", colour:"#059669", text:"Walk every escape route to the final exit. Test every door. Do not rely on plans — check what is actually there.", mins:5},
   8:  {icon:"door", colour:"#DC2626", text:"Use a gap gauge to test door tolerances. Check self-closers under load from 90°. Look for wedges or props.", mins:4},
   9:  {icon:"alarm", colour:"#C0392B", text:"Test the fire alarm if possible. Check the log book for weekly test records. Review the latest service certificate.", mins:3},
-  10: {icon:"🧯", colour:"#D97706", text:"Check service labels, gauges and positions. Confirm extinguisher types match the identified fire risks.", mins:3},
-  11: {icon:"📋", colour:"#374151", text:"Ask to see the fire safety log book and training evidence. Good management significantly reduces risk.", mins:4},
-  12: {icon:"⚖️", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
+  10: {icon:"extinguisher", colour:"#D97706", text:"Check service labels, gauges and positions. Confirm extinguisher types match the identified fire risks.", mins:3},
+  11: {icon:"clipboard", colour:"#374151", text:"Ask to see the fire safety log book and training evidence. Good management significantly reduces risk.", mins:4},
+  12: {icon:"risk", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
 };
 const BUILDING_PRESETS = {
  standard:{label:"Standard Commercial / Office",mandatoryRefs:[],extraQuestions:[],note:""},
@@ -1383,7 +1383,7 @@ function AddressFinder({value, onChange}) {
         <input style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 44px 12px 14px",fontSize:14,color:"#374151",outline:"none",fontFamily:"'Nunito',sans-serif"}}
           placeholder="Enter postcode (e.g. EC2V 4QS) or address..."
           value={query} onChange={e=>handleInput(e.target.value)}/>
-        <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}>&#128269;</button>
+        <button style={{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",background:"#C0392B",border:"none",borderRadius:6,width:28,height:28,color:"#fff",cursor:"pointer",fontSize:13}} onClick={()=>search(query)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
       </div>
       {loading&&<div style={{fontSize:11,color:"#6E7681",padding:"6px 12px"}}>Looking up address...</div>}
       {error&&<div style={{fontSize:11,color:"#6E7681",padding:"6px 12px"}}>{error}</div>}
@@ -1510,7 +1510,7 @@ function OccupancyPicker({state={},onChange}) {
         {OCC_TYPES.map(t=>(
           <button key={t.cat} onClick={()=>upd({occupancyCat:t.cat,ans:t.cat})}
             style={{padding:"11px 10px",borderRadius:10,border:cat===t.cat?"2px solid #C0392B":"2px solid #30363D",background:cat===t.cat?"#FDF3EE":"#1C2128",cursor:"pointer",textAlign:"center",fontFamily:"'Nunito',sans-serif"}}>
-            <div style={{fontSize:22,marginBottom:5}}>{t.icon}</div>
+            <div style={{fontSize:22,marginBottom:5,display:"none"}}>{t.icon}</div>
             <div style={{fontSize:11,fontWeight:600,color:cat===t.cat?"#C0392B":"#374151"}}>{t.cat}</div>
             <div style={{fontSize:9,color:"#6E7681",marginTop:1}}>{t.sub}</div>
           </button>
@@ -1573,7 +1573,7 @@ function AssessmentReviewPanel({a, answers, ALL_SECTIONS, dispatch, setAns}) {
   return (
     <div style={{margin:"0 0 2px",borderBottom:"1px solid #30363D"}}>
       <button onClick={()=>setOpen(o=>!o)} style={{width:"100%",padding:"12px 16px",background:"#161B22",border:"none",cursor:"pointer",display:"flex",alignItems:"center",gap:10,color:"#F0F6FC"}}>
-        <span style={{fontSize:18}}>&#128203;</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
         <div style={{flex:1,textAlign:"left"}}>
           <div style={{fontSize:14,fontWeight:700,fontFamily:"'Nunito',sans-serif"}}>Review &amp; Amend Assessment</div>
           <div style={{fontSize:11,color:"#8B949E"}}>{totalAns}/{totalQ} answered &middot; {totalFlags} finding{totalFlags!==1?"s":""} flagged &mdash; tap to review before generating PDF</div>
@@ -2056,7 +2056,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
         {/* Action panel */}
         {flagged && (
           <div className="act-panel">
-            <div className="act-lbl"><span>📋</span> Action Plan Entry</div>
+            <div className="act-lbl">Action Plan Entry</div>
             <textarea className="act-ta" placeholder="Describe the action required…"
               value={action} onChange={e=>upd({action:e.target.value})}/>
             <div className="act-grid">
