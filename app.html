@@ -4156,8 +4156,6 @@ navigator.clipboard.writeText(text+"\n"+window.location.href).then(function(){al
 
 function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
-  const answers = a ? a.answers : {};
-  const setAns = (ref, patch) => { const now = new Date(); const ts = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0'); dispatch({type:'ANS', ref, patch, ts}); };
   if (!a) return null;
 
   const {org} = state;
@@ -4166,6 +4164,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
   const [tab, setTab] = useState("overview");
 
   const answers  = a.answers||{};
+  const setAns = (ref, patch) => { const now = new Date(); const ts = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0'); dispatch({type:'ANS', ref, patch, ts}); };
   const answered = Object.values(answers).filter(v=>v&&(v.ans||(v.sel&&v.sel.length>0))).length;
   const flagged  = Object.values(answers).filter(v=>v?.flagged).length;
   const firstName= org.assessor?.split(" ")[0]||null;
