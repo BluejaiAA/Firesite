@@ -4257,7 +4257,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
               {a.premisesName||a.ref||"Assessment"}
             </div>
             <div style={{fontSize:11,color:"rgba(255,255,255,.45)"}}>
-              {answered} answered · {flagged} flagged · {a.completedAt||"Just now"}
+              {answered} answered · {flagged} flagged · {a.completedAt?new Date(a.completedAt).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"Just now"}
             </div>
           </div>
         </div>
