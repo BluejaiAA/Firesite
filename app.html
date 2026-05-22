@@ -159,6 +159,8 @@ const SKIP_LOGIC = {
   "9.7":   { parent:"9.4",   showWhen:"y" },
   "10.2":  { parent:"10.1",  showWhen:"y" },
   "10.4":  { parent:"10.3",  showWhen:"y" },
+  "AD.9a": { parent: "AD.8", hideWhen: "New assessment — no previous FRA exists" },
+  "AD.9b": { parent: "AD.8", hideWhen: "New assessment — no previous FRA exists" },
 };
 
 // ─── PRIORITY BY SECTION ──────────────────────────────────────────
@@ -447,7 +449,7 @@ const SCOPE_SECTION = {id:0.5,title:"Assessment Scope & Limitations",short:"Scop
   {ref:"SC.2",q:"Were there any areas that could not be inspected?",t:"yn",required:true,g:"Common examples: locked plant rooms, occupied residential units, inaccessible roof spaces, areas under construction.",sub:{on:"y",fields:[{ref:"SC.2a",q:"List the areas not inspected and the reason for each",t:"textarea",ph:"e.g. Roof void — hatch locked, no access available. Basement plant room — key unavailable. To be reviewed on next visit."}]}},
 
   {ref:"SC.4",q:"Did you identify any issues during this assessment that are outside the scope of a standard FRA and require a specialist to investigate?",t:"yn",required:false,g:"Examples include: a complex smoke control or ventilation system requiring an engineering specialist; structural questions affecting fire spread; an explosion risk from chemicals or flammable gases (under DSEAR regulations); or any other matter requiring specialist expertise beyond fire risk assessment. Record these here so they can be flagged in the report as items requiring further investigation.",sub:{on:"y",fields:[{ref:"SC.4a",q:"Describe the issue and what type of specialist is recommended",t:"textarea",ph:"e.g. The pressurisation system serving the protected staircase could not be verified as functional — recommend inspection by a specialist smoke control engineer. \n\ne.g. Asbestos-containing materials suspected in roof void — recommend asbestos survey before further work."}]}},
-  {ref:"SC.5",q:"Describe the methodology used to carry out this assessment.",t:"textarea",required:true,ph:"e.g. The assessment was carried out by physical walk-through inspection of all accessible areas of the premises, interview with the Responsible Person, review of relevant documentation including fire safety records and maintenance certificates, and assessment of occupant characteristics.",g:"PAS 79-1:2020 Clause 6.3 requires the methodology to be recorded. A complete methodology should cover:\n\n1. Inspection method — physical walk-through of all accessible areas, noting areas not accessed\n2. Documentation review — which records were examined\n3. Interview — who was spoken to (e.g. Responsible Person, building manager)\n4. Assessment approach — how risk was evaluated (e.g. likelihood × consequence)\n\nExample answer: \'The assessment was conducted by way of a physical walk-through inspection of all areas accessible at the time of the visit, a review of fire safety documentation presented by the client, and an interview with the Responsible Person. Risk was assessed by considering the likelihood of fire occurring and the likely consequences for life safety, informed by the guidance in PAS 79-1:2020.\'"},
+  {ref:"SC.5",q:"Describe the methodology used to carry out this assessment.",t:"textarea",required:true,defaultVal:"This assessment was conducted by way of a physical walk-through inspection of all areas of the premises accessible at the time of the visit. Fire safety documentation was reviewed including maintenance records, training records and fire alarm logs. Discussion took place with the Responsible Person and/or their representative. The risk was evaluated using a structured risk-based approach, considering likelihood of ignition, fire spread potential, and the consequences for occupants.",ph:"e.g. Walk-through inspection, documentation review, interview with Responsible Person...",g:"PAS 79-1:2020 Clause 6.3: include inspection method, documentation reviewed, persons spoken to, risk evaluation approach."},
  ]};
 
 const FINDINGS_SECTION = {id:12.5,title:"Significant Findings & Conclusions",short:"Findings",
@@ -471,15 +473,16 @@ const FRA_SECTIONS = [
   {id:1,title:"Premises Details",short:"Premises",questions:[
     {ref:"P1.1",q:"State the full address of the premises under assessment.",t:"address",required:true,postcodeLookup:true},
     {ref:"P1.2",q:"What is the primary use and occupancy of the premises?",t:"occupancy",required:true},
-    {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true,g:"These figures are used to calculate occupancy density and inform assessment findings. Floor area should be Gross Internal Area (GIA) — total internal floor space across all levels. Record each figure separately below."},
+    {ref:"P1.3",q:"State the approximate floor area and number of floors.",t:"floorarea",required:true,g:"Record the Gross Internal Area (GIA) in m², and the number of storeys above ground and any basement / sub-ground levels separately."},
     {ref:"P1.3a",q:"Does the building exceed 18 metres in height? If yes, does it fall under the Building Safety Act 2022 higher-risk regime?",t:"yn",required:true,g:"Buildings over 18m (approx 7 storeys) are subject to additional requirements under the Building Safety Act 2022."},
     {ref:"P1.3b",q:"Are there any basement or sub-ground floor levels?",t:"yn",required:true,g:"Basements significantly affect compartmentation strategy, smoke control and means of escape design. A 'No' answer will remove basement-specific questions from the assessment.",sub:{on:"y",fields:[{ref:"P1.3b_detail",q:"State the number of basement levels and their primary use",t:"textarea",ph:"e.g. One basement level used as storage. / e.g. Two sub-ground levels: lower ground used as restaurant kitchen; basement used as plant room."}]}},
-    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"occupantcount",required:true,g:"Enter the maximum number of people who may be present at any one time across all floors, including staff, visitors and contractors. This figure is used to check the adequacy of means of escape — exit widths, travel distances and stair capacity. Include all shifts if applicable."},
+    {ref:"P1.4",q:"What is the approximate maximum number of occupants at any one time?",t:"occupantcount",required:true,noIcons:true,g:"Enter the maximum number of people who may be present at any one time across all floors, including staff, visitors and contractors. This figure is used to check the adequacy of means of escape — exit widths, travel distances and stair capacity. Include all shifts if applicable."},
     {ref:"P1.5",q:"Are any parts of the premises used for sleeping accommodation?",t:"yn",required:true,g:"Sleeping risk fundamentally changes fire protection requirements. Automatic detection to BS 5839 is likely required throughout."},
-    {ref:"P1.6",q:"Describe the construction type and approximate age of the building.",t:"text",required:false},
+    {ref:"P1.6",q:"Describe the construction type and approximate age of the building.",t:"text",required:false,photo:true,ph:"e.g. 1970s steel-framed office block with brick cavity walls and flat concrete roof"},
+    {ref:"P1.6a",q:"Internal construction (wall linings, ceilings, floors, insulation).",t:"text",required:false,ph:"e.g. Plasterboard walls and ceilings throughout, suspended tile ceiling in offices, timber floor joists to upper levels"},
+    {ref:"P1.6b",q:"External construction (outer walls, roof type, cladding).",t:"text",required:false,photo:true,ph:"e.g. Brick outer leaf with cavity wall insulation, flat EPDM rubber roof, uPVC fascias"},
     {ref:"P1.7",q:"Have there been any recent alterations, extensions or changes of use to the building?",t:"yn",required:false,g:"Material changes may invalidate previous assessments and affect compartmentation and means of escape. Includes new partitioning, change of use, new plant, or any building works.",sub:{on:"y",fields:[{ref:"P1.7a",q:"Describe the alterations, extensions or changes of use",t:"textarea",ph:"e.g. New partitioning to first floor creating additional office pods — completed approx. 6 months ago. / e.g. Ground floor converted from retail to restaurant use 12 months ago, new kitchen extraction installed."},{ref:"P1.7b",q:"Were the works subject to Building Regulations approval?",t:"yn"}]}},
     {ref:"P1.8",q:"Is the building listed or within a conservation area?",t:"yn",required:false,g:"Listed status can restrict alterations to fire doors, compartmentation and other fire precautions. Historic England may need to be consulted before remedial works are carried out.\n\nHow to check: Search the National Heritage List for England (NHLE) at historicengland.org.uk/listing/the-list using the postcode or address. Also check the Local Planning Authority website — conservation area boundaries are shown on the local plan maps. Ask the Responsible Person — they should know if the property is listed.\n\nGrades: Grade I = exceptional interest; Grade II* = particularly important; Grade II = nationally important (approx. 92% of all listed buildings).",sub:{on:"y",fields:[{ref:"P1.8a",q:"State the listing grade and any known restrictions on works",t:"textarea",ph:"e.g. Grade II listed. Local authority conservation officer to be consulted before any alterations to fire doors or external fabric. Intumescent strips must be period-appropriate or concealed."}]}},
-    {ref:"P1.9",q:"Is a current fire risk assessment already in place for these premises?",t:"yn",required:false,g:"Establishes whether this is a new or review assessment. PAS 79-1:2020 recommends FRAs are reviewed at least annually, or sooner following any material change, incident, or enforcement notice.",sub:{on:"y",fields:[{ref:"P1.9a",q:"Date of last assessment",t:"text",ph:"DD/MM/YYYY"},{ref:"P1.9b",q:"Assessor name and organisation",t:"text",ph:"e.g. J. Smith, SafeFire Consulting Ltd"},{ref:"P1.9c",q:"Has the previous FRA been reviewed by the Responsible Person within the last 12 months?",t:"yn"},{ref:"P1.9d",q:"Are there any outstanding actions or recommendations from the previous FRA not yet completed?",t:"yn"},{ref:"P1.9d_detail",q:"List the outstanding actions (complete only if Yes above)",t:"textarea",ph:"e.g. 1. Install fire door self-closer to first floor kitchen — not yet completed.\n2. Replace missing emergency lighting fitting in rear corridor — outstanding.\n3. Compartmentation survey to loft void — no action taken."}]}},
 
   ]},
   {id:2,title:"Responsible Person",short:"Resp. Person",questions:[
@@ -492,18 +495,18 @@ const FRA_SECTIONS = [
     {ref:"R2.5",q:"Are fire safety responsibilities clearly documented and communicated to all relevant persons?",t:"yn",required:true,g:"Relevant persons includes employees, contractors, visitors and members of the public. Evidence includes a fire safety policy, staff handbook or induction records.",noCamera:true},
   ]},
   {id:3,title:"Ignition Sources and Fuel Load",short:"Ignition + Fuel",questions:[
-    {ref:"1.1",q:"Describe the main fuel sources identified within the building.",t:"text",required:true,g:"Look for: paper/cardboard, furniture, waste, floor coverings, flammable liquids, timber, textiles."},
+    {ref:"1.1",q:"Describe the main fuel sources identified within the building.",t:"text",required:true,photo:true,g:"Look for: paper/cardboard, furniture, waste, floor coverings, flammable liquids, timber, textiles. Note any significant or unusual fuel loads."},
     {ref:"1.2",q:"Could conditions within the premises give rise to a flammable or explosive atmosphere?",t:"yn",required:true,g:"Consider: LPG storage, solvent-based products, fuel storage, spray painting. If yes, a formal DSEAR assessment is required."},
     {ref:"1.3",q:"If yes to 1.2 - has a formal DSEAR assessment been completed?",t:"ynna",required:false},
     {ref:"1.4",q:"If yes to 1.3 - have the findings and actions been fully acted upon?",t:"ynna",required:false},
     {ref:"1.5",q:"Are flammable liquids, gases and combustible materials handled and stored safely?",t:"ynna",required:true},
-    {ref:"1.6",q:"Are substances hazardous to fire safety managed with appropriate storage and handling controls?",t:"ynna",required:true},
-    {ref:"1.7",q:"Are space heaters guarded, stable, and kept clear of combustibles?",t:"ynna",required:true},
+    {ref:"1.6",q:"Are substances hazardous to fire safety managed with appropriate storage and handling controls?",t:"ynna",required:true,ph:"e.g. Flammable solvents in locked metal cabinet, LPG stored externally, COSHH assessments in place",g:"Look for: flammable liquids, aerosols, LPG cylinders. Check for appropriate storage cabinets, separation from ignition sources, and COSHH assessment evidence."},
+    {ref:"1.7",q:"Are all fixed and portable heating appliances (including space heaters, fan heaters, radiant heaters, gas fires and convectors) guarded where necessary, stable, and kept clear of combustibles?",t:"ynna",required:true,g:"Check: no portable heaters in sleeping risk areas; 500mm combustible clearance maintained; heaters not left unattended; ratings appropriate for room size."},
     {ref:"1.8",q:"Is upholstered furniture in acceptable condition with no exposed foam?",t:"ynna",required:false},
     {ref:"1.9",q:"Is the building kept reasonably free from accumulated waste and unnecessary combustible material?",t:"yn",required:true,g:"Check: stairwells, plant rooms, roof spaces, under-stair cupboards, loading bays and external areas."},
     {ref:"1.10",q:"Is smoking permitted on site?",t:"yn",required:true,g:"Discarded smoking materials are a leading cause of fire.",sub:{on:"y",fields:[{ref:"1.10a",q:"Are appropriate fire-safe receptacles provided in designated smoking areas?",t:"yn",ph:""},{ref:"1.10b",q:"Was the smoking policy being observed at the time of this assessment?",t:"yn",ph:""}]}},
     {ref:"1.13",q:"Is a mains gas supply present in the building?",t:"yn",required:true},
-    {ref:"1.14",q:"If yes - are gas appliances serviced annually by a Gas Safe registered engineer?",t:"ynna",required:false},
+    {ref:"1.14",q:"If yes - are gas appliances serviced annually by a Gas Safe registered engineer?",t:"ynna",required:false,sub:{on:"y",fields:[{ref:"1.14a",q:"Name of engineer / company who carried out the most recent gas service",t:"text",ph:"e.g. J Smith Gas Services, Gas Safe Reg No. 123456"},{ref:"1.14b",q:"Date of most recent gas service",t:"text",ph:"DD/MM/YYYY"}]}},
     {ref:"1.15",q:"Is an oil-based heating or fuel supply present?",t:"yn",required:false},
     {ref:"1.16",q:"If yes - are oil-fired appliances inspected annually by an OFTEC contractor?",t:"ynna",required:false},
     {ref:"1.17",q:"Are portable or plug-in heating devices in use anywhere within the premises?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"1.17a",q:"Are suitable control measures in place for portable heating devices?",t:"multi",opts:["PAT testing in place","EICR covers portable heaters","Written policy and user guidance in place","Devices are of an approved type","None of the above"],ph:""}]}},
@@ -544,7 +547,7 @@ const FRA_SECTIONS = [
   ]},
   {id:7,title:"Means of Escape",short:"Escape Routes",questions:[
     {ref:"7.1",q:"What evacuation strategy applies to this building?",t:"select",opts:["Simultaneous (full evacuation)","Phased Evacuation","Stay Put (defend in place)","Other"],required:true,noCamera:true,sub:{on:"Other",fields:[{ref:"7.1a",q:"Please specify the evacuation strategy in place:",t:"textarea",ph:"e.g. Zoned evacuation — floor 1 evacuates while floors 2-4 shelter in place. Managed by fire wardens."}]}},
-    {ref:"7.2",q:"Do escape route travel distances fall within the limits set out in applicable guidance?",t:"yn",required:true,noCamera:true,g:"ADB Vol 2 Table 3: single direction 18m max; multiple directions 45m max (non-sprinklered)."},
+    {ref:"7.2",q:"Do escape route travel distances fall within the limits set out in applicable guidance for this building type?",t:"yn",required:true,noCamera:true,g:"Travel distances vary by building use. General limits (non-sprinklered):\n• Office/Commercial (ADB Vol 2 Table 3): single direction 18m, multiple exits 45m\n• Warehouse/Industrial: single direction 25m, multiple exits 45m\n• Housing/Flats (ADB Vol 1): refer to floor-by-floor guidance\n• HMO/Care Home: refer to specific sleeping-risk guidance\n• School (BB100): single direction 15m, multiple exits 45m\nAlways check the guidance applicable to your specific building type."},
     {ref:"7.3",q:"Are there sufficient final exits in both number and clear width for the occupancy of this building?",t:"yn",required:true,g:"Minimum clear widths (ADB/BS 9999): 750mm for up to 60 persons; 850mm for up to 110 persons; 1050mm for up to 220 persons.",widthCheck:true},
     {ref:"7.4",q:"Are escape corridors and stairways wide enough to accommodate all occupants?",t:"yn",required:true,g:"Minimum corridor: 1000mm general; 1200mm where wheelchair users expected. Stair widths: 1000mm minimum for up to 150 persons.",widthCheck:true},
     {ref:"7.5",q:"If one escape route is unavailable, is an alternative accessible from all parts of the building?",t:"yn",required:true},
@@ -1591,28 +1594,39 @@ function ExtinguisherInventory({state={},upd}) {
     </div>
   );
 }
-function PostcodeLookup({state={},onChange}) {
-  const [pc,setPc]=React.useState("");
-  const [results,setResults]=React.useState([]);
-  const [loading,setLoading]=React.useState(false);
-  const [err,setErr]=React.useState("");
+function PostcodeLookup({state={}, onChange}){
+  const[pc,setPc]=React.useState("");
+  const[loading,setLoading]=React.useState(false);
+  const[err,setErr]=React.useState("");
+  const[lookedUp,setLookedUp]=React.useState(false);
+  const currentAns=(state.ans||"").trim();
+  const[showManual,setShowManual]=React.useState(!!currentAns);
   const lookup=()=>{
     const clean=pc.replace(/\s/g,"").toUpperCase();
-    if(clean.length<3){setErr("Enter a valid UK postcode");return;}
-    setLoading(true);setErr("");setResults([]);
-    fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(clean)).then(r=>r.json()).then(d=>{setLoading(false);if(d.status===200&&d.result){setResults([d.result]);}else{setErr("Not found - enter manually below");}}).catch(()=>{setLoading(false);setErr("Lookup unavailable - enter manually");});
+    if(clean.length<3){setErr("Please enter a valid UK postcode.");return;}
+    setLoading(true);setErr("");
+    fetch("https://api.postcodes.io/postcodes/"+encodeURIComponent(clean))
+      .then(r=>r.json()).then(d=>{
+        setLoading(false);
+        if(d.status===200&&d.result){
+          const r=d.result;
+          if(!currentAns)onChange({...state,ans:"\n"+r.postcode+(r.admin_district?", "+r.admin_district:""),postcode:r.postcode});
+          setLookedUp(true);setShowManual(true);
+        }else{setErr("Postcode not found — type address manually.");setShowManual(true);}
+      }).catch(()=>{setLoading(false);setErr("Lookup unavailable — type address manually.");setShowManual(true);});
   };
-  const sel=(r)=>{const addr=(r.postcode||"")+(r.admin_district?", "+r.admin_district:"");onChange({...state,ans:addr,postcode:r.postcode});setResults([]);setPc(r.postcode||"");};
+  if(showManual||currentAns){return(<div>
+    <textarea className="fi" rows={4} placeholder={"e.g.\nUnit 5, Example Building\n12 High Street\nMaidstone\nKent\nME14 1LX"} value={state.ans||""} onChange={e=>onChange({...state,ans:e.target.value})} style={{resize:"vertical",fontFamily:"Montserrat,sans-serif",fontSize:14,lineHeight:1.6,width:"100%"}}/>
+    {lookedUp&&<div style={{fontSize:11,color:"#E74C3C",marginTop:4}}>Postcode area found — please add building name/number and street above.</div>}
+    {!lookedUp&&<div style={{fontSize:11,color:"#8B949E",marginTop:4}}>Enter the full premises address — building name/number, street, town, county and postcode.</div>}
+  </div>);}
   return(<div>
     <div style={{display:"flex",gap:8,marginBottom:8}}>
-      <input style={{flex:1,background:"#21262D",border:"2px solid #30363D",borderRadius:10,padding:"11px 14px",fontSize:14,fontWeight:700,color:"#F0F6FC",outline:"none",letterSpacing:1,textTransform:"uppercase"}} placeholder="Postcode" value={pc} onChange={e=>{setPc(e.target.value.toUpperCase());setErr("");}} onKeyDown={e=>e.key==="Enter"&&lookup()}/>
-      <button onClick={lookup} style={{padding:"11px 18px",borderRadius:10,background:"#E8773A",color:"#fff",fontWeight:700,fontSize:13,border:"none",cursor:"pointer",flexShrink:0}}>{loading?"...":"Find"}</button>
+      <input style={{flex:1,background:"#21262D",border:"2px solid rgba(255,255,255,.1)",borderRadius:10,padding:"12px 14px",color:"#F0F6FF",fontSize:15,fontFamily:"Montserrat,sans-serif"}} placeholder="Type postcode (e.g. ME14 1LX) then tap Look up" value={pc} onChange={e=>setPc(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();lookup();}}}/>
+      <button className="btn btn-teal" style={{padding:"12px 16px",fontSize:13,fontWeight:700,borderRadius:10,flexShrink:0}} onClick={lookup} disabled={loading} type="button">{loading?"Searching...":"Look up"}</button>
     </div>
-    {err&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8}}>{err}</div>}
-    {results.length>0&&<div style={{background:"#161B22",border:"1px solid #30363D",borderRadius:10,marginBottom:8,overflow:"hidden"}}>
-      {results.map((r,i)=><div key={i} onClick={()=>sel(r)} style={{padding:"10px 14px",cursor:"pointer",color:"#F0F6FC",fontSize:13,display:"flex",gap:8}}><strong>{r.postcode}</strong><span style={{color:"#8B949E"}}>{r.admin_district||""}</span></div>)}
-    </div>}
-    <textarea className="obs-box" style={{minHeight:90,marginBottom:0}} placeholder="Full address including postcode..." value={state.ans||""} onChange={e=>onChange({...state,ans:e.target.value||null})}/>
+    <button type="button" onClick={()=>setShowManual(true)} style={{background:"none",border:"none",color:"#8B949E",fontSize:12,cursor:"pointer",textDecoration:"underline",padding:0}}>Type address manually instead</button>
+    {err&&<div style={{fontSize:12,color:"#F87171",marginTop:6}}>{err}</div>}
   </div>);
 }
 function VoiceNoteBtn({voiceNote,onSave}) {
@@ -1662,41 +1676,28 @@ function OccupancyPicker({state={},onChange}) {
 }
 
 // ─── FLOOR AREA INPUT ─────────────────────────────────────────────
-function FloorAreaInput({state={},onChange,premisesAddress=""}) {
-  const upd=p=>onChange({...state,...p,ans:(p.floorArea||state.floorArea||"")+"m2 - "+(p.floors||state.floors||"")+" floor(s)"});
-  const mapsUrl=premisesAddress?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(premisesAddress):"https://www.google.com/maps";
-  return(
-    <div>
-      <div style={{display:"flex",gap:10,marginBottom:12}}>
-        <div style={{flex:1}}>
-          <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Floor area</div>
-          <input type="number" min="0" step="50"
-            style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Montserrat',sans-serif"}}
-            placeholder="850" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value})}/>
-          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>m2 gross internal</div>
-        </div>
-        <div style={{flex:1}}>
-          <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Number of floors</div>
-          <input type="number" min="1" step="1"
-            style={{width:"100%",background:"#1C2128",border:"2px solid #30363D",borderRadius:10,padding:"12px 14px",fontSize:18,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Montserrat',sans-serif"}}
-            placeholder="4" value={state.floors||""} onChange={e=>upd({floors:e.target.value})}/>
-          <div style={{textAlign:"center",fontSize:10,fontWeight:600,color:"#6E7681",marginTop:2}}>floors above ground</div>
-        </div>
+function FloorAreaInput({state={}, onChange, premisesAddress=""}){
+  const upd=p=>onChange({...state,...p,ans:(p.floorArea||state.floorArea||"")+"m²-"+(p.aboveGroundFloors||state.aboveGroundFloors||"")+"fl-"+(p.belowGroundFloors||state.belowGroundFloors||"0")+"below"});
+  return(<div>
+    <div style={{display:"flex",gap:10,marginBottom:8,flexWrap:"wrap"}}>
+      <div style={{flex:1,minWidth:90}}>
+        <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Floor area (m² GIA)</div>
+        <input type="number" min="0" step="50" style={{width:"100%",border:"2px solid #30363D",borderRadius:10,padding:"12px 8px",fontSize:16,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Montserrat',sans-serif"}} placeholder="850" value={state.floorArea||""} onChange={e=>upd({floorArea:e.target.value})}/>
+        <div style={{textAlign:"center",fontSize:10,color:"#6B7280",marginTop:2}}>total gross internal area</div>
       </div>
-      <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
-        style={{display:"flex",alignItems:"center",gap:8,width:"100%",padding:"12px 14px",borderRadius:10,border:"2px solid #30363D",background:"#1C2128",color:"#374151",fontSize:12,fontWeight:600,cursor:"pointer",textDecoration:"none",justifyContent:"center",fontFamily:"'Montserrat',sans-serif"}}>
-        Open in Google Maps to measure
-      </a>
-      <div style={{fontSize:10,color:"#6E7681",lineHeight:1.5,marginTop:8,padding:"9px 12px",background:"#1C2128",borderRadius:8,border:"1px solid #30363D"}}>
-        In Google Maps: right-click the building roof outline then Measure distance. Trace the perimeter and multiply by number of floors.
+      <div style={{flex:1,minWidth:75}}>
+        <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Floors above ground</div>
+        <input type="number" min="1" step="1" style={{width:"100%",border:"2px solid #30363D",borderRadius:10,padding:"12px 8px",fontSize:16,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Montserrat',sans-serif"}} placeholder="2" value={state.aboveGroundFloors||""} onChange={e=>upd({aboveGroundFloors:e.target.value})}/>
+        <div style={{textAlign:"center",fontSize:10,color:"#6B7280",marginTop:2}}>storeys above ground</div>
+      </div>
+      <div style={{flex:1,minWidth:75}}>
+        <div style={{fontSize:9,fontWeight:700,textTransform:"uppercase",letterSpacing:.6,color:"#6B7280",marginBottom:6}}>Below ground levels</div>
+        <input type="number" min="0" step="1" style={{width:"100%",border:"2px solid #30363D",borderRadius:10,padding:"12px 8px",fontSize:16,fontWeight:600,color:"#1C1C1C",outline:"none",textAlign:"center",fontFamily:"'Montserrat',sans-serif"}} placeholder="0" value={state.belowGroundFloors||"0"} onChange={e=>upd({belowGroundFloors:e.target.value})}/>
+        <div style={{textAlign:"center",fontSize:10,color:"#6B7280",marginTop:2}}>basement levels</div>
       </div>
     </div>
-  );
+  </div>);
 }
-
-
-
-// ─── ASSESSMENT REVIEW PANEL ───────────────────────────────────────────
 function AssessmentReviewPanel({a, answers, ALL_SECTIONS, dispatch, setAns}) {
   const [open, setOpen] = React.useState(false);
   const [editRef, setEditRef] = React.useState(null);
@@ -1926,10 +1927,11 @@ function CardToolbar({q,note,showNote,setShowNote,flagged,handleFlag,photosArr,c
   );
 }
 
-function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev, showMissed, sectionId, recentPersons=[], onRememberPerson}) {
+function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev, showMissed, sectionId, recentPersons=[], onRememberPerson, defaultResponsible=""}) {
   const {ans=null, note="", flagged=false, sel=[], photos=[],
          action="", priority="P3 — Within 3 months",
          responsible="", targetDate="", actionStatus="pending"} = state;
+  const effResp = responsible || defaultResponsible;
 
   const [showNote,  setShowNote]  = useState(!!note);
   const [showGuide, setShowGuide] = useState(false);
@@ -2087,7 +2089,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
           </div>
         )}
         {q.t==="textarea" && (
-          <textarea className="obs-box" style={{minHeight:100,marginBottom:14}} placeholder={q.ph||"Enter details…"} value={ans||""}
+          <textarea className="obs-box" style={{minHeight:100,marginBottom:14}} placeholder={q.ph||"Enter details…"} value={ans!=null?ans:(q.defaultVal||"")}
             onChange={e=>upd({ans:e.target.value||null})}/>
         )}
         {q.t==="contractor" && (
@@ -3267,12 +3269,21 @@ function ClientSetup({state, dispatch}) {
                   <select className="fs" value={a.buildingPreset||"standard"} onChange={e=>upd({buildingPreset:e.target.value})}>
                     <option value="standard">Standard Commercial / Office</option>
                     <option value="hmo">HMO / Houses in Multiple Occupation</option>
-                    <option value="care_home">Care Home / Residential Care</option>
-                    <option value="hotel">Hotel / Guest Accommodation</option>
+                    <option value="residential">Residential Dwelling / Block of Flats</option>
+                    <option value="care_home">Care Home / Supported Living</option>
+                    <option value="school">School / Educational Establishment</option>
                     <option value="higher_risk">Higher-Risk Building (BSA 2022, 18m+)</option>
-                    <option value="warehouse">Warehouse / Industrial</option>
-                    <option value="school">School / Educational</option>
+                    <option value="warehouse">Warehouse / Industrial / Storage</option>
+                    <option value="healthcare">Healthcare / Hospital / GP Surgery</option>
+                    <option value="retail">Retail / Shop / Showroom</option>
+                    <option value="hotel">Hotel / Guest House / B&amp;B</option>
+                    <option value="builders_merchant">Builders Merchant / Trade Counter</option>
+                    <option value="community">Community Hall / Village Hall / Church</option>
+                    <option value="leisure">Leisure / Sports / Entertainment Venue</option>
+                    <option value="mixed_use">Mixed-Use Building</option>
+                    <option value="other">Other (specify below)</option>
                   </select></div>
+                {(a.buildingPreset||"standard")==="other"&&<div className="fg"><label className="fl">Please specify building type</label><input className="fi" placeholder="e.g. Builders Merchant, GP Surgery, Sports Centre..." value={a.buildingPresetOther||""} onChange={e=>upd({buildingPresetOther:e.target.value})}/></div>}
                 <div className="fg span2"><label className="fl">Assessment type</label>
                   <select className="fs" value={a.reviewType||"new"} onChange={e=>upd({reviewType:e.target.value})}>
                     <option value="new">New assessment</option>
@@ -3298,7 +3309,6 @@ function ClientSetup({state, dispatch}) {
                 <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 120px 28px",gap:6,marginBottom:6,alignItems:"center"}}>
                   <input className="fi" style={{fontSize:11}} placeholder="Action description" value={item.description||""} onChange={e=>{const arr=[...(a.previousActionsStatus||[])];arr[i]={...arr[i],description:e.target.value};upd({previousActionsStatus:arr});}}/>
                   <select className="fs" style={{fontSize:11}} value={item.status||"outstanding"} onChange={e=>{const arr=[...(a.previousActionsStatus||[])];arr[i]={...arr[i],status:e.target.value};upd({previousActionsStatus:arr});}}>
-                    <option value="completed">Completed</option>
                     <option value="outstanding">Outstanding</option>
                     <option value="deferred">Deferred</option>
                     <option value="superseded">Superseded</option>
@@ -3838,7 +3848,7 @@ function Assessment({state, dispatch}) {
         {/* ── QUESTION CARD ── */}
         {mode==="card" && curQ && (
           <>
-            <QuestionCard
+            <QuestionCard key={curQ.ref}
               q={curQ}
               qIdx={qIdx}
               totalVisible={vqs.length}
@@ -3848,7 +3858,7 @@ function Assessment({state, dispatch}) {
               onPrev={goPrevQ}
               showMissed={showMissed}
               sectionId={curSec.id}
-              recentPersons={org.recentPersons||[]}
+              recentPersons={org.recentPersons||[]} defaultResponsible={state.a.rpName||""}
               onRememberPerson={rememberPerson}
             />
             <div className="q-footer">
