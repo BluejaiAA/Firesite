@@ -5069,7 +5069,7 @@ function App(){
   const[showOrgSettings,setShowOrgSettings]=React.useState(false);
   useEffect(()=>{const a=()=>dispatch({type:"SET_ONLINE",v:true}),b=()=>dispatch({type:"SET_ONLINE",v:false});window.addEventListener("online",a);window.addEventListener("offline",b);return()=>{window.removeEventListener("online",a);window.removeEventListener("offline",b);};},[]);
   useEffect(()=>FS_AUTH.onStateChange(u=>setUser(u)),[]);
-  useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s)}});}catch(e){};},[]);
+  useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s),screen:'dashboard',activeId:null}});}catch(e){};},[]);
   useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));}catch(e){};},[state]);
   if(!user)return <AuthScreen onAuth={u=>setUser(u)}/>;
   const{screen}=state;
