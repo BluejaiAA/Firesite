@@ -513,7 +513,7 @@ const FRA_SECTIONS = [
   ]},
   {id:4,title:"Electrical Safety",short:"Electrical",questions:[
     {ref:"2.1",q:"Are portable electrical appliances subject to a regular aprogramme of Electrical Equipment Testing (EET — formerly PAT, also referred to as ITEE)?",t:"yn",required:true},
-    {ref:"2.2",q:"At what interval is PAT currently carried out?",t:"select",opts:["Annually","1-2 Years","2-3 Years","3 Years+","Not conducted","N/A"],required:false},
+    {ref:"2.2",q:"At what interval is EET (Electrical Equipment Testing) currently carried out?",t:"select",opts:["Annually","1-2 Years","2-3 Years","3 Years+","Not conducted","N/A"],required:false},
     {ref:"2.3",q:"Is the fixed electrical installation tested periodically by a competent electrical engineer?",t:"ynna",required:true,g:"Ask to see the most recent EICR. Offices: every 5 years. Industrial: every 3 years.",sub:{on:"y",fields:[{ref:"2.3a",q:"Name of electrical engineer or company who undertook the EICR",t:"text",ph:"Name, Company"},{ref:"2.3b",q:"Date the EICR was completed",t:"text",ph:"DD/MM/YYYY"},{ref:"2.3c",q:"EICR certificate reference (if available)",t:"text",ph:"Optional"}]}},
     {ref:"2.4",q:"How long ago was the most recent EICR carried out?",t:"select",opts:["Under 3 Years","3-5 Years","Over 5 Years","Not Conducted","N/A"],required:true},
     {ref:"2.5",q:"Have all C1, C2, C3 and FI items from the latest EICR been properly resolved?",t:"ynna",required:true},
