@@ -28,6 +28,17 @@ navigator.serviceWorker.register("/sw.js",{scope:"/"})
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script type="module">
+  import{initializeApp}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+  import{getFirestore,doc,setDoc,getDoc,collection,query,where,getDocs,deleteDoc}from"https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+  window.firebase_app={initializeApp};
+  window.firebase_auth={getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged};
+  window.firebase_firestore={getFirestore,doc,setDoc,getDoc,collection,query,where,getDocs,deleteDoc};
+  window._fbReady=true;
+  window.dispatchEvent(new Event('fbready'));
+  console.log('[Firesite] Firebase SDK loaded');
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body,#root{height:100%;width:100%;}
@@ -2173,33 +2184,96 @@ function goStripe(plan,email){
   window.location.href=url+(email?'?prefilled_email='+encodeURIComponent(email):'');
 }
 
-/* ─ FIREBASE AUTH STUB ─ Replace with real Firebase when ready ─ */
+/* ─ FIREBASE AUTH — Live ─ */
+const _fbApp=(()=>{
+  const{initializeApp}=window.__fbMod_app||{};
+  const{getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged}=window.__fbMod_auth||{};
+  const{getFirestore,doc,setDoc,getDoc}=window.__fbMod_fs||{};
+  return{initializeApp,getAuth,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut,onAuthStateChanged,getFirestore,doc,setDoc,getDoc};
+})();
 
-/* ═══════════════════════════════════════════════════════════════
-   BACKEND: Firebase Auth + Firestore — replace FS_AUTH below
-   ═══════════════════════════════════════════════════════════════
-   1. firebase.google.com → New Project "Firesite"
-   2. Authentication → Enable Email/Password
-   3. Firestore → Create database (europe-west2, production mode)
-   4. Project Settings → Web App → copy firebaseConfig
-   5. Replace FS_AUTH with Firebase SDK calls (see README)
-   ═══════════════════════════════════════════════════════════════ */
+const firebaseConfig={apiKey:"AIzaSyC4KzgJrabcJGkKAHjOAaG94dw4Aonkjqk",authDomain:"firesiteapp.firebaseapp.com",projectId:"firesiteapp",storageBucket:"firesiteapp.firebasestorage.app",messagingSenderId:"1080992840856",appId:"1:1080992840856:web:a558a67d96f9efcf8964ed"};
+
+let _fbAppInst=null,_fbAuth=null,_fbDb=null;
+function _initFB(){
+  if(_fbAppInst)return;
+  try{
+    const fi=window.firebase_app,fa=window.firebase_auth,ff=window.firebase_firestore;
+    if(fi&&fi.initializeApp){_fbAppInst=fi.initializeApp(firebaseConfig);_fbAuth=fa.getAuth(_fbAppInst);_fbDb=ff.getFirestore(_fbAppInst);console.log('[Firesite] Firebase initialised');}
+  }catch(e){console.warn('[FB] init failed',e);}
+}
+window.addEventListener('fbready',()=>{_initFB();});
+
 const FS_AUTH={
   _u:null,_cbs:[],
-  onStateChange(cb){cb(this._u);this._cbs.push(cb);return()=>{};},
+  onStateChange(cb){
+    cb(this._u);
+    this._cbs.push(cb);
+    _initFB();
+    if(_fbAuth&&window.firebase_auth){
+      const{onAuthStateChanged}=window.firebase_auth;
+      onAuthStateChanged(_fbAuth,async(fbUser)=>{
+        if(fbUser){
+          const u={uid:fbUser.uid,email:fbUser.email,name:fbUser.displayName||fbUser.email.split('@')[0],plan:'free'};
+          if(_fbDb&&window.firebase_firestore){
+            try{const{doc,getDoc}=window.firebase_firestore;const snap=await getDoc(doc(_fbDb,'users',fbUser.uid));if(snap.exists())Object.assign(u,snap.data());}catch(e){}
+          }
+          this._u=u;try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+          this._cbs.forEach(c=>c(u));
+        }else{
+          this._u=null;this._cbs.forEach(c=>c(null));
+        }
+      });
+    }
+    return()=>{};
+  },
   async login(email,pw){
-    const u={uid:'u_'+btoa(email).substring(0,8),email,name:email.split('@')[0],plan:'free'};
-    this._u=u;this._cbs.forEach(c=>c(u));
-    try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
-    return u;
+    _initFB();
+    if(_fbAuth&&window.firebase_auth){
+      try{
+        const{signInWithEmailAndPassword}=window.firebase_auth;
+        const cred=await signInWithEmailAndPassword(_fbAuth,email,pw);
+        const fbUser=cred.user;
+        const u={uid:fbUser.uid,email:fbUser.email,name:fbUser.displayName||fbUser.email.split('@')[0],plan:'free'};
+        if(_fbDb&&window.firebase_firestore){
+          try{const{doc,getDoc}=window.firebase_firestore;const snap=await getDoc(doc(_fbDb,'users',fbUser.uid));if(snap.exists())Object.assign(u,snap.data());}catch(e){}
+        }
+        this._u=u;this._cbs.forEach(c=>c(u));
+        try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+        return u;
+      }catch(e){throw new Error(e.code==='auth/invalid-credential'||e.code==='auth/wrong-password'?'Incorrect email or password.':e.code==='auth/user-not-found'?'No account found with that email.':e.code==='auth/too-many-requests'?'Too many attempts — please wait a moment.':e.message);}
+    }else{
+      const u={uid:'u_'+btoa(email).substring(0,8),email,name:email.split('@')[0],plan:'free'};
+      this._u=u;this._cbs.forEach(c=>c(u));
+      try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+      return u;
+    }
   },
   async signup(email,pw,name){
-    const u={uid:'u_'+Date.now(),email,name:name||email.split('@')[0],plan:'free'};
-    this._u=u;this._cbs.forEach(c=>c(u));
-    try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
-    return u;
+    _initFB();
+    if(_fbAuth&&window.firebase_auth){
+      try{
+        const{createUserWithEmailAndPassword}=window.firebase_auth;
+        const cred=await createUserWithEmailAndPassword(_fbAuth,email,pw);
+        const fbUser=cred.user;
+        const u={uid:fbUser.uid,email:fbUser.email,name:name||fbUser.email.split('@')[0],plan:'free'};
+        if(_fbDb&&window.firebase_firestore){
+          try{const{doc,setDoc}=window.firebase_firestore;await setDoc(doc(_fbDb,'users',fbUser.uid),{email:u.email,name:u.name,plan:'free',createdAt:new Date().toISOString()});}catch(e){}
+        }
+        this._u=u;this._cbs.forEach(c=>c(u));
+        try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+        return u;
+      }catch(e){throw new Error(e.code==='auth/email-already-in-use'?'An account with that email already exists.':e.code==='auth/weak-password'?'Password must be at least 6 characters.':e.message);}
+    }else{
+      const u={uid:'u_'+Date.now(),email,name:name||email.split('@')[0],plan:'free'};
+      this._u=u;this._cbs.forEach(c=>c(u));
+      try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(e){}
+      return u;
+    }
   },
   async logout(){
+    _initFB();
+    if(_fbAuth&&window.firebase_auth){try{const{signOut}=window.firebase_auth;await signOut(_fbAuth);}catch(e){}}
     this._u=null;this._cbs.forEach(c=>c(null));
     try{localStorage.removeItem('fs_u');}catch(e){}
   },
