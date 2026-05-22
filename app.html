@@ -89,7 +89,18 @@ body{overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Montserra
 .user-plan.free{background:rgba(255,255,255,.06);color:#8B949E;}
 .user-plan.starter{background:rgba(0,191,165,.12);color:#00BFA5;}
 .user-plan.pro{background:rgba(192,57,43,.15);color:#E74C3C;}
-.user-signout{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-left:2px;}</style>
+.user-signout{background:none;border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.35);border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer;font-family:'Montserrat',sans-serif;margin-left:2px;}
+@media(max-width:480px){
+  .auth-wrap{padding:0;align-items:flex-end;background:#0D1117;}
+  .auth-box{border-radius:20px 20px 0 0;padding:28px 20px 40px;max-width:100%;border-left:none;border-right:none;border-bottom:none;}
+  .auth-title{font-size:19px;}
+  .auth-input{font-size:16px;} /* stops iOS zoom on focus */
+  .auth-btn{padding:16px;font-size:16px;}
+  .user-bar{padding:5px 10px;gap:5px;}
+  .user-em{font-size:11px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .user-plan{display:none;}
+}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
@@ -1312,6 +1323,123 @@ button,input,select,textarea{font-family:'Montserrat',sans-serif;}
   .q-next{font-size:14px;}
 }
 
+
+/* ═══════════════════════════════════════════════════
+   COMPREHENSIVE MOBILE STYLES — max-width: 480px
+   ═══════════════════════════════════════════════════ */
+
+/* ─ AUTH SCREEN ─ */
+@media(max-width:480px){
+  .auth-wrap{padding:16px;align-items:flex-end;}
+  .auth-box{border-radius:20px 20px 0 0;padding:28px 20px 36px;max-width:100%;}
+  .auth-title{font-size:19px;}
+  .auth-sub{font-size:13px;}
+  .auth-input{font-size:16px;padding:14px 12px;} /* 16px prevents iOS zoom */
+  .auth-btn{padding:16px;font-size:16px;}
+  .auth-label{font-size:11px;}
+}
+
+/* ─ USER BAR ─ */
+@media(max-width:480px){
+  .user-bar{padding:6px 12px;gap:6px;flex-wrap:nowrap;overflow:hidden;}
+  .user-em{font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .user-av{width:28px;height:28px;font-size:11px;flex-shrink:0;}
+  .user-plan{display:none;}
+  .user-signout{font-size:11px;padding:5px 8px;white-space:nowrap;flex-shrink:0;}
+}
+
+/* ─ TOP NAV (tnav) ─ */
+@media(max-width:480px){
+  .tnav{height:46px;padding:0 10px;gap:6px;}
+  .tn-title{font-size:13px!important;}
+  .tn-sub{font-size:10px;}
+  .tn-back{font-size:12px;padding:6px 8px;min-height:36px;}
+  .mode-badge{font-size:10px;padding:3px 7px;}
+}
+
+/* ─ DASHBOARD ─ */
+@media(max-width:480px){
+  .dash-body{padding:12px 10px;}
+  .dash-hdr{padding:14px 12px 10px;}
+  .dash-title{font-size:20px;}
+  .dash-sub{font-size:12px;}
+  .new-btn{padding:8px 14px;font-size:13px;}
+  .heatmap{grid-template-columns:1fr!important;gap:10px;}
+  .heat-card{padding:14px 12px;}
+  .heat-label{font-size:10px;}
+  .heat-name{font-size:15px;}
+  .heat-continue{padding:8px 14px;font-size:13px;}
+  .stats-row{gap:8px;}
+  .stat-box{padding:10px 8px;}
+  .stat-val{font-size:20px;}
+  .stat-lbl{font-size:10px;}
+  .acard{padding:12px 12px;}
+  .acard-name{font-size:14px;}
+  .acard-ref{font-size:10px;}
+  .acard-btn{padding:7px 12px;font-size:12px;}
+  .g2{grid-template-columns:1fr;}
+  .act-grid{grid-template-columns:1fr;}
+}
+
+/* ─ ASSESSMENT / QUESTION CARD ─ */
+@media(max-width:480px){
+  .qc-wrap{padding:0;}
+  .qc-question{font-size:17px!important;line-height:1.4;}
+  .qc-guidance{font-size:12px;}
+  .big-btn{padding:15px 14px!important;font-size:15px!important;min-height:52px;border-radius:12px;}
+  .ctb{padding:8px 10px;gap:6px;}
+  .ctb-btn{padding:6px 10px;font-size:12px;min-height:36px;}
+  .q-next{font-size:13px!important;padding:13px 16px;}
+  .q-prev{font-size:13px;}
+  .q-nav{padding:10px 12px;gap:8px;}
+  .note-ta{font-size:14px;}
+  .flag-modal{padding:16px 14px;}
+}
+
+/* ─ SECTION CARDS / SETUP ─ */
+@media(max-width:480px){
+  .sec-card{padding:14px 12px;}
+  .sec-card-title{font-size:15px;}
+  .setup-wrap{padding:12px 10px;}
+  .setup-field input,.setup-field select,.setup-field textarea{font-size:16px;} /* prevent iOS zoom */
+  .setup-field label{font-size:11px;}
+}
+
+/* ─ COMPLETE SCREEN ─ */
+@media(max-width:480px){
+  .complete-wrap{padding:0;}
+  .rpt-page{padding:12px 10px!important;}
+  .rpt-nav{padding:8px 10px;}
+  .tab-bar{gap:4px;padding:8px 10px;}
+  .tab-btn{font-size:12px;padding:7px 10px;}
+}
+
+/* ─ ORG SETTINGS MODAL ─ */
+@media(max-width:480px){
+  .price-sheet{padding:20px 14px 40px;}
+  .price-sheet-title{font-size:17px;}
+}
+
+/* ─ MODALS / OVERLAYS ─ */
+@media(max-width:480px){
+  .price-overlay{align-items:flex-end;}
+  .price-sheet{border-radius:20px 20px 0 0;max-height:85vh;}
+  .pm-plan{padding:12px 10px;}
+  .pm-name{font-size:14px;}
+  .pm-price{font-size:17px;}
+}
+
+/* ─ GENERAL TOUCH TARGETS ─ */
+@media(max-width:480px){
+  button,a,.big-btn,.ctb-btn,.q-next,.acard-btn,.auth-btn{
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  /* Prevent text size adjust on orientation change */
+  body{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  /* Better scrolling */
+  .dash-scroll,.stabs,.qc-wrap{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+}
 `;
 
 // ─── LOGO DROP ────────────────────────────────────────────────────
