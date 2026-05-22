@@ -4,18 +4,18 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"/><title>Firesite by Bluejai Safety Solutions</title>
-<meta name="theme-color" content="#0D1117"/>
+<meta name="theme-color" content="#0D1117"/>hh
 <meta name="apple-mobile-web-app-title" content="Firehsite"/>
 <meta name="application-name" content="Firesite"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="description" content="Professional fire risk assessment platform for assessors on site."/>
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png"/>
+<link rel="apple-touch-icon" href="icon192.png"/>
 <link rel="manifest" id="pwa-manifest"/>
 <script>
 (function(){
-var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/app.html",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
+var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/app.html",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"icon192.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"icon192.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
 @media(max-width:480px){.page{width:100%!important;padding:16px 12px!important;}.cover-meta{grid-template-columns:1fr!important;}.abadge{font-size:10px!important;padding:2px 7px!important;}.findings-table{font-size:12px!important;}.findings-table td,.findings-table th{padding:6px 8px!important;}}
 var mb=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
 document.getElementById("pwa-manifest").href=URL.createObjectURL(mb);
@@ -2429,7 +2429,7 @@ function AuthScreen({onAuth}){
     <div className="auth-wrap">
       <div className="auth-box">
         <div className="auth-logo">
-          <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" alt=""/>
+          <img src="icon192.png" alt=""/>
           <span className="auth-logo-text">Fire<span>site</span></span>
         </div>
         <h2 className="auth-title">{mode==='login'?'Sign in to your workspace':'Create your account'}</h2>
@@ -2944,7 +2944,7 @@ function Landing({dispatch, user, onSignOut, onUpgrade, onSettings}) {
     <div className="land">
       <nav className="land-nav">
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
+          <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="icon192.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
           <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:17,fontWeight:700,color:"#F0F6FC"}}>Fire<em style={{color:"#E25C2A",fontStyle:"normal"}}>site</em></span>
         </div>
         <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
@@ -3177,7 +3177,7 @@ function Setup({state, dispatch}) {
   return (
     <div className="setup-wrap">
       <div style={{background:pr,padding:"0 16px",height:46,display:"flex",alignItems:"center",gap:9,borderBottom:"1px solid rgba(255,255,255,.06)"}}>
-        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
+        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="icon192.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
         <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:14,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em> — Setup</span>
         <div style={{marginLeft:"auto",display:"flex",gap:4}}>
           {STEPS.map((_,i)=><div key={i} style={{height:4,width:i===step?14:4,borderRadius:2,background:i<=step?ac:"rgba(255,255,255,.12)",transition:"all .25s"}}/>)}
@@ -3368,7 +3368,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   return (
     <div className="dash">
       <div className="tnav dk" style={{background:pr}}>
-        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
+        <div className="tn-gem" style={{background:"transparent",padding:0,overflow:"hidden"}}><img src="icon192.png" style={{width:"100%",height:"100%",objectFit:"contain",display:"block",background:"transparent",borderRadius:4}}/></div>
         <div className="tn-mid">
           <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:15,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em></span>
           {org.name&&<span style={{fontSize:9,color:"rgba(255,255,255,.28)",marginLeft:4}}>· {org.name}</span>}
