@@ -2283,19 +2283,19 @@ FS_AUTH.restore();
 
 /* ─ AUTH SCREEN ─ */
 function AuthScreen({onAuth}){
+  const[mode,setMode]=React.useState('login');
+  const[email,setEmail]=React.useState('');
   const[pw,setPw]=React.useState('');
+  const[nm,setNm]=React.useState('');
   const[err,setErr]=React.useState('');
-  const go=(e)=>{
-    e.preventDefault();
-    if(pw.trim()==='FIRETRAIL2026'){
-      var u={uid:'trial',email:'trial@firesite.app',name:'Trial Assessor',plan:'trial'};
-      FS_AUTH._u=u;
-      try{localStorage.setItem('fs_u',JSON.stringify(u));}catch(x){}
-      try{var st=JSON.parse(localStorage.getItem('firesite_v5f')||'{}');st.screen='landing';localStorage.setItem('firesite_v5f',JSON.stringify(st));}catch(x){}
+  const[busy,setBusy]=React.useState(false);
+  const go=async(e)=>{
+    e.preventDefault();setErr('');setBusy(true);
+    try{
+      const u=mode==='login'?await FS_AUTH.login(email,pw):await FS_AUTH.signup(email,pw,nm);
       onAuth(u);
-    } else {
-      setErr('Incorrect access code. Please check with Bluejai.');
-    }
+    }catch(ex){setErr(ex.message);}
+    finally{setBusy(false);}
   };
   return(
     <div className="auth-wrap">
@@ -2304,22 +2304,33 @@ function AuthScreen({onAuth}){
           <img src="https://raw.githubusercontent.com/BluejaiAA/Firesite/main/firesite_logo.png" alt=""/>
           <span className="auth-logo-text">Fire<span>site</span></span>
         </div>
-        <h2 className="auth-title">Trial Access</h2>
-        <p className="auth-sub">Enter your access code to begin</p>
+        <h2 className="auth-title">{mode==='login'?'Sign in to your workspace':'Create your account'}</h2>
+        <p className="auth-sub">{mode==='login'?'Professional fire risk assessment platform':'Start your free account today'}</p>
         {err&&<div className="auth-error">{err}</div>}
         <form onSubmit={go}>
+          {mode==='signup'&&(
+            <div className="auth-field">
+              <label className="auth-label">Full Name</label>
+              <input className="auth-input" type="text" placeholder="Jane Smith" value={nm} onChange={e=>setNm(e.target.value)} required/>
+            </div>
+          )}
           <div className="auth-field">
-            <label className="auth-label">Access Code</label>
-            <input className="auth-input" type="text" placeholder="Enter access code" value={pw} onChange={e=>setPw(e.target.value.toUpperCase())} required autoFocus/>
+            <label className="auth-label">Email</label>
+            <input className="auth-input" type="email" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)} required autoFocus/>
           </div>
-          <button className="auth-btn" type="submit">Enter</button>
+          <div className="auth-field">
+            <label className="auth-label">Password</label>
+            <input className="auth-input" type="password" placeholder={mode==='signup'?'Min 6 characters':'Your password'} value={pw} onChange={e=>setPw(e.target.value)} required/>
+          </div>
+          <button className="auth-btn" type="submit" disabled={busy}>{busy?(mode==='login'?'Signing in...':'Creating account...'):(mode==='login'?'Sign In':'Create Account')}</button>
         </form>
-        <p style={{marginTop:'1.2rem',fontSize:'0.78rem',color:'#8b949e',textAlign:'center'}}>Firesite — Bluejai Ltd &bull; Trial Build</p>
+        <p className="auth-switch">
+          {mode==='login'?<>Don't have an account? <a onClick={()=>{setMode('signup');setErr('');}}>Sign up free</a></>:<>Already have an account? <a onClick={()=>{setMode('login');setErr('');}}>Sign in</a></>}
+        </p>
       </div>
     </div>
   );
 }
-
 /* ─ PRICING MODAL ─ */
 function PricingModal({user,onClose}){
   const cur=user&&user.plan||'free';
@@ -2349,15 +2360,106 @@ function PricingModal({user,onClose}){
 }
 
 /* ─ USER BAR ─ */
-function UserBar({user,onSignOut,onUpgrade}){
+
+/* ─ ORG SETTINGS MODAL ─ */
+function OrgSettingsModal({state,dispatch,user,onClose}){
+  const o=state.org;
+  const ac=o.accentColor||'#C0392B';
+  const[form,setForm]=React.useState({
+    name:o.name||'',assessor:o.assessor||'',jobTitle:o.jobTitle||'',quals:o.quals||'',
+    email:o.email||'',phone:o.phone||'',address:o.address||'',website:o.website||'',
+    assessType:o.assessType||'Type 1 — Non-Intrusive',
+    accentColor:o.accentColor||'#C0392B',refPrefix:o.refPrefix||'FRA',
+    disclaimer:o.disclaimer||'',reportFooter:o.reportFooter||''
+  });
+  const[saved,setSaved]=React.useState(false);
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const save=()=>{
+    dispatch({type:'SET_ORG',p:form});
+    if(window._fbDb&&window.firebase_firestore&&user){
+      try{
+        const{doc,setDoc}=window.firebase_firestore;
+        setDoc(doc(window._fbDb,'users',user.uid),{org:form},{merge:true});
+      }catch(e){}
+    }
+    setSaved(true);setTimeout(()=>setSaved(false),2000);
+  };
+  const fld=(label,key,type='text',placeholder='')=>(
+    <div style={{marginBottom:14}}>
+      <label style={{display:'block',fontSize:11,fontWeight:700,color:'#8B949E',textTransform:'uppercase',letterSpacing:.5,marginBottom:5}}>{label}</label>
+      <input type={type} value={form[key]} onChange={e=>set(key,e.target.value)} placeholder={placeholder}
+        style={{width:'100%',padding:'10px 12px',background:'#21262D',border:'1.5px solid rgba(255,255,255,.1)',borderRadius:8,color:'#F0F6FC',fontSize:14,fontFamily:"'Nunito',sans-serif",outline:'none'}}/>
+    </div>
+  );
+  return(
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.75)',backdropFilter:'blur(6px)',zIndex:500,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={onClose}>
+      <div style={{background:'#161B22',border:'1px solid rgba(255,255,255,.08)',borderRadius:'20px 20px 0 0',width:'100%',maxWidth:520,maxHeight:'90vh',overflowY:'auto',padding:'24px 20px 40px'}} onClick={e=>e.stopPropagation()}>
+        <div style={{width:40,height:4,background:'rgba(255,255,255,.2)',borderRadius:2,margin:'0 auto 20px'}}/>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:20}}>
+          <div>
+            <div style={{fontFamily:"'Nunito',sans-serif",fontSize:18,fontWeight:900,color:'#F0F6FC'}}>Organisation Settings</div>
+            <div style={{fontSize:12,color:'#8B949E',marginTop:2}}>Appears on all generated reports</div>
+          </div>
+          <button onClick={onClose} style={{background:'none',border:'none',color:'#8B949E',fontSize:20,cursor:'pointer',padding:'4px 8px'}}>x</button>
+        </div>
+
+        <div style={{fontSize:11,fontWeight:700,color:ac,textTransform:'uppercase',letterSpacing:.8,marginBottom:12}}>Assessor Details</div>
+        {fld('Assessor Name','assessor','text','Jane Smith MIFS')}
+        {fld('Job Title','jobTitle','text','Fire Risk Assessor')}
+        {fld('Qualifications / Memberships','quals','text','MIFS, FIFSM, FRACC')}
+
+        <div style={{fontSize:11,fontWeight:700,color:ac,textTransform:'uppercase',letterSpacing:.8,margin:'20px 0 12px'}}>Organisation</div>
+        {fld('Company Name','name','text','Smith Fire Safety Ltd')}
+        {fld('Email','email','email','info@smithfiresafety.co.uk')}
+        {fld('Phone','phone','tel','+44 7700 900000')}
+        {fld('Website','website','text','www.smithfiresafety.co.uk')}
+
+        <div style={{fontSize:11,fontWeight:700,color:ac,textTransform:'uppercase',letterSpacing:.8,margin:'20px 0 12px'}}>Report Settings</div>
+        <div style={{marginBottom:14}}>
+          <label style={{display:'block',fontSize:11,fontWeight:700,color:'#8B949E',textTransform:'uppercase',letterSpacing:.5,marginBottom:5}}>Assessment Type</label>
+          <select value={form.assessType} onChange={e=>set('assessType',e.target.value)}
+            style={{width:'100%',padding:'10px 12px',background:'#21262D',border:'1.5px solid rgba(255,255,255,.1)',borderRadius:8,color:'#F0F6FC',fontSize:14,fontFamily:"'Nunito',sans-serif",outline:'none'}}>
+            <option>Type 1 — Non-Intrusive</option>
+            <option>Type 2 — Sampling</option>
+            <option>Type 3 — Intrusive</option>
+            <option>Type 4 — Enhanced Intrusive</option>
+          </select>
+        </div>
+        {fld('Report Reference Prefix','refPrefix','text','FRA')}
+        <div style={{marginBottom:14}}>
+          <label style={{display:'block',fontSize:11,fontWeight:700,color:'#8B949E',textTransform:'uppercase',letterSpacing:.5,marginBottom:5}}>Accent Colour</label>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <input type="color" value={form.accentColor} onChange={e=>set('accentColor',e.target.value)}
+              style={{width:44,height:36,padding:2,background:'#21262D',border:'1.5px solid rgba(255,255,255,.1)',borderRadius:8,cursor:'pointer'}}/>
+            <span style={{fontSize:13,color:'#8B949E'}}>{form.accentColor}</span>
+          </div>
+        </div>
+        <div style={{marginBottom:14}}>
+          <label style={{display:'block',fontSize:11,fontWeight:700,color:'#8B949E',textTransform:'uppercase',letterSpacing:.5,marginBottom:5}}>Disclaimer (optional)</label>
+          <textarea value={form.disclaimer} onChange={e=>set('disclaimer',e.target.value)} rows={3} placeholder="This report is prepared solely for the use of..." 
+            style={{width:'100%',padding:'10px 12px',background:'#21262D',border:'1.5px solid rgba(255,255,255,.1)',borderRadius:8,color:'#F0F6FC',fontSize:13,fontFamily:"'Nunito',sans-serif",outline:'none',resize:'vertical'}}/>
+        </div>
+
+        <button onClick={save}
+          style={{width:'100%',padding:'14px',background:saved?'#238636':`linear-gradient(135deg,${ac},#E67E22)`,color:'#fff',border:'none',borderRadius:10,fontFamily:"'Nunito',sans-serif",fontSize:16,fontWeight:800,cursor:'pointer',transition:'all .3s',marginTop:8}}>
+          {saved?'Saved!':'Save Settings'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function UserBar({user,onSignOut,onUpgrade,onSettings}){
   const plan=user&&user.plan||'free';
   const planLabel={free:'Free',starter:'Starter',pro:'Pro',enterprise:'Enterprise'};
   const init=((user&&(user.name||user.email))||'?').substring(0,2).toUpperCase();
   return(
     <div className="user-bar">
       <div className="user-av">{init}</div>
-      <div className="user-em">{user&&user.email}</div>
-      <span className={"user-plan "+plan} onClick={onUpgrade}>{planLabel[plan]||'Free'} ↑</span>
+      <div className="user-em">{user&&(user.name||user.email)}</div>
+      <button className="user-signout" onClick={onSettings} title="Settings" style={{background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.1)',borderRadius:8,padding:'5px 10px',color:'#8B949E',cursor:'pointer',fontSize:14}}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
       <button className="user-signout" onClick={onSignOut}>Sign out</button>
     </div>
   );
@@ -2683,7 +2785,7 @@ function downloadSampleReport() {
   setTimeout(function(){URL.revokeObjectURL(url);},5000);
 }
 
-function Landing({dispatch, user, onSignOut, onUpgrade}) {
+function Landing({dispatch, user, onSignOut, onUpgrade, onSettings}) {
   var feats = [
     {
       n:"01",
@@ -2719,7 +2821,7 @@ function Landing({dispatch, user, onSignOut, onUpgrade}) {
         </div>
         <button className="btn btn-teal btn-sm" onClick={()=>dispatch({type:"GO",screen:"setup"})}>Get Started →</button>
       </nav>
-      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
+      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade} onSettings={onSettings}/>
       <div className="hero">
         <div className="hero-ey">Built for fire risk assessors. Used on site.</div>
         <h1 className="hero-h1">Reports that<br/>reflect your<br/><em>standard.</em></h1>
@@ -3093,7 +3195,7 @@ function ClientSetup({state, dispatch}) {
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────────────
-function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
+function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   const {org, assessments} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
@@ -3147,7 +3249,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade}) {
         <button className="btn btn-ghost btn-sm" style={{borderColor:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.3)"}} onClick={()=>dispatch({type:"EDIT_ORG"})}>⚙</button>
       </div>
 
-      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade}/>
+      <UserBar user={user} onSignOut={onSignOut} onUpgrade={onUpgrade} onSettings={onSettings}/>
       <div className="dash-scroll">
         <div className="dash-body">
 
@@ -4836,20 +4938,23 @@ function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
   const[showPricing,setShowPricing]=React.useState(false);
+  const[showOrgSettings,setShowOrgSettings]=React.useState(false);
   useEffect(()=>{const a=()=>dispatch({type:"SET_ONLINE",v:true}),b=()=>dispatch({type:"SET_ONLINE",v:false});window.addEventListener("online",a);window.addEventListener("offline",b);return()=>{window.removeEventListener("online",a);window.removeEventListener("offline",b);};},[]);
   useEffect(()=>FS_AUTH.onStateChange(u=>setUser(u)),[]);
   useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s)}});}catch(e){};},[]);
   useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));}catch(e){};},[state]);
   if(!user)return <AuthScreen onAuth={u=>setUser(u)}/>;
   const{screen}=state;
+  const signOut=()=>FS_AUTH.logout();
+  const openSettings=()=>setShowOrgSettings(true);
   return(
     <>
       <style dangerouslySetInnerHTML={{__html:CSS}}/>
-      {user&&user.plan==='trial'&&<div style={{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#161B22',color:'#8B949E',textAlign:'center',fontSize:'0.7rem',fontWeight:500,letterSpacing:'0.06em',padding:'3px 12px',borderBottom:'1px solid #30363D'}}>Firesite by Bluejai — Beta Preview</div>}
       {showPricing&&<PricingModal user={user} onClose={()=>setShowPricing(false)}/>}
-      {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={()=>FS_AUTH.logout()} onUpgrade={()=>setShowPricing(true)}/>}
+      {showOrgSettings&&<OrgSettingsModal state={state} dispatch={dispatch} user={user} onClose={()=>setShowOrgSettings(false)}/>}
+      {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={signOut} onUpgrade={()=>setShowPricing(true)} onSettings={openSettings}/>}
       {screen==="setup"&&<Setup state={state} dispatch={dispatch}/>}
-      {screen==="dashboard"&&<Dashboard state={state} dispatch={dispatch} user={user} onSignOut={()=>FS_AUTH.logout()} onUpgrade={()=>setShowPricing(true)}/>}
+      {screen==="dashboard"&&<Dashboard state={state} dispatch={dispatch} user={user} onSignOut={signOut} onUpgrade={()=>setShowPricing(true)} onSettings={openSettings}/>}
       {screen==="client-setup"&&<ClientSetup state={state} dispatch={dispatch}/>}
       {screen==="assessment"&&<Assessment state={state} dispatch={dispatch}/>}
       {screen==="complete"&&<CompleteScreen state={state} dispatch={dispatch} ALL_SECTIONS={ALL_PDF_SECTIONS_BASE}/>}
