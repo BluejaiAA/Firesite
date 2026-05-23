@@ -261,6 +261,137 @@ window._SMART_ACT = SMART_ACTIONS;
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
 
+
+// ─── BLUEJAI HELPERS (v2.0) ─────────────────────────────────────────────
+function calcNextReview(riskRating, assessmentDate){
+  const base = assessmentDate ? new Date(assessmentDate) : new Date();
+  const months = riskRating === "High" ? 12 : riskRating === "Medium" ? 24 : 36;
+  base.setMonth(base.getMonth() + months);
+  return base.toISOString().split("T")[0];
+}
+function downloadICS(a, org){
+  const dt = (a.nextReview || calcNextReview(a.riskRating, a.assessmentDate));
+  const d = dt.replace(/-/g,"");
+  const uid = "bluejai-" + (a.ref||a.id) + "@bluejai.co.uk";
+  const stamp = new Date().toISOString().replace(/[-:.]/g,"").substring(0,15)+"Z";
+  const title = "FRA Review Due: " + (a.premisesName || a.ref);
+  const desc = "Fire Risk Assessment review due for " + (a.premisesName||"") + ". Ref: " + (a.ref||"") + ". Conducted by " + ((org&&org.assessor)||"Bluejai") + ".";
+  const ics = [
+    "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Bluejai//Firesite//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH",
+    "BEGIN:VEVENT","UID:"+uid,"DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+d,"DTEND;VALUE=DATE:"+d,
+    "SUMMARY:"+title,"DESCRIPTION:"+desc,
+    "BEGIN:VALARM","TRIGGER:-P30D","ACTION:DISPLAY","DESCRIPTION:FRA review due in 30 days","END:VALARM",
+    "BEGIN:VALARM","TRIGGER:-P7D","ACTION:DISPLAY","DESCRIPTION:FRA review due in 7 days","END:VALARM",
+    "END:VEVENT","END:VCALENDAR"
+  ].join("\r\n");
+  const blob = new Blob([ics], {type:"text/calendar"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url; link.download = (a.ref||"fra-review")+".ics";
+  document.body.appendChild(link); link.click();
+  setTimeout(()=>{ document.body.removeChild(link); URL.revokeObjectURL(url); }, 100);
+}
+function makeShareToken(a){
+  const seed = String(a.id) + "|" + (a.ref||"") + "|" + (a.completedAt||"");
+  let h = 0;
+  for (let i=0;i<seed.length;i++) { h = ((h<<5)-h) + seed.charCodeAt(i); h |= 0; }
+  return Math.abs(h).toString(36) + "-" + String(a.id).slice(-4);
+}
+function aiSuggestPriority(question, answer){
+  if (!answer) return null;
+  const q = (question||"").toLowerCase();
+  const a = (answer||"").toLowerCase();
+  if (/fire door|escape|emergency lighting|alarm|extinguisher.*missing|blocked|locked/.test(q) && /no|fail|missing|inadequate|blocked|locked/.test(a)) return "P1";
+  if (/electrical|gas|combustible|ignition/.test(q) && /no|fail|inadequate|excessive/.test(a)) return "P1";
+  if (/training|drill|record|policy|sign/.test(q) && /no|missing|out.of.date/.test(a)) return "P2";
+  return "P3";
+}
+function getActionsFor(a){
+  if (!a || !a.answers) return [];
+  const SA = window._SMART_ACT || {};
+  const out = [];
+  Object.keys(a.answers).forEach(k => {
+    const v = a.answers[k];
+    const rule = SA[k];
+    if (!rule) return;
+    if (v && v.flagged && v.action) {
+      const pri = (v.priority||"P3").substring(0,2);
+      const due = pri==="P1"?14:pri==="P2"?60:90;
+      out.push({ qKey: k, priority: pri, action: v.action, due: due });
+      return;
+    }
+    const answerKey = v && (v.v || v.value || v.answer);
+    if (rule.on && answerKey === rule.on) {
+      const pri = (rule.priority||"P3").substring(0,2);
+      const due = pri==="P1"?14:pri==="P2"?60:90;
+      out.push({ qKey: k, priority: pri, action: rule.action, due: due });
+    }
+  });
+  return out;
+}
+function exportActionsCSV(assessments){
+  const rows = [["Ref","Premises","Priority","Action","Due (days)","Assessment Date"]];
+  assessments.forEach(a => {
+    if (a.status !== "completed") return;
+    getActionsFor(a).forEach(act => {
+      rows.push([a.ref||"", a.premisesName||"", act.priority, act.action, act.due, a.assessmentDate||""]);
+    });
+  });
+  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a"); link.href=url; link.download="bluejai-actions-"+new Date().toISOString().split("T")[0]+".csv";
+  document.body.appendChild(link); link.click();
+  setTimeout(()=>{document.body.removeChild(link); URL.revokeObjectURL(url);},100);
+}
+function exportBackup(state){
+  const data = JSON.stringify({ exported: new Date().toISOString(), version: "2.0", org: state.org, assessments: state.assessments }, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a"); link.href=url; link.download="bluejai-backup-"+new Date().toISOString().split("T")[0]+".json";
+  document.body.appendChild(link); link.click();
+  setTimeout(()=>{document.body.removeChild(link); URL.revokeObjectURL(url);},100);
+}
+function restoreBackup(file, cb){
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if (d.assessments && d.org) cb(null, d);
+      else cb(new Error("Invalid backup file"));
+    } catch(err){ cb(err); }
+  };
+  r.readAsText(file);
+}
+function riskColor(rating){
+  if (rating === "High" || rating === "Substantial" || rating === "Intolerable") return "#C0392B";
+  if (rating === "Medium" || rating === "Moderate") return "#F39C12";
+  if (rating === "Low" || rating === "Tolerable" || rating === "Trivial") return "#27AE60";
+  return "#7F8C8D";
+}
+function portfolioStats(assessments){
+  const byClient = {};
+  const byType = {};
+  let overdue = 0, dueSoon = 0;
+  const today = new Date();
+  assessments.forEach(a => {
+    if (a.status !== "completed") return;
+    const ck = a.clientName || "Unassigned";
+    const tk = a.premisesType || "Unknown";
+    byClient[ck] = (byClient[ck]||0) + 1;
+    byType[tk] = (byType[tk]||0) + 1;
+    if (a.nextReview) {
+      const nr = new Date(a.nextReview);
+      const days = Math.floor((nr - today)/86400000);
+      if (days < 0) overdue++;
+      else if (days < 30) dueSoon++;
+    }
+  });
+  return { byClient, byType, overdue, dueSoon, total: assessments.filter(a=>a.status==="completed").length };
+}
+window._BJ = { calcNextReview, downloadICS, makeShareToken, aiSuggestPriority, getActionsFor, exportActionsCSV, exportBackup, restoreBackup, riskColor, portfolioStats };
+// ────────────────────────────────────────────────────────────────────────
+
 // ─── SOUND SYSTEM ─────────────────────────────────────────────────
 const _ac = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
 function playSound(type) {
@@ -2217,6 +2348,7 @@ function QuestionCard({q, qIdx, totalVisible, state={}, onChange, onNext, onPrev
               <div key={p.id} className="photo-thumb">
                 <img src={p.src} alt={p.caption}/>
                 {p.ref&&<span style={{position:"absolute",top:2,left:2,background:"rgba(0,0,0,.65)",color:"#fff",fontSize:9,padding:"1px 4px",borderRadius:3}}>{p.ref}</span>}
+                <button className="photo-del" style={{right:24,background:"rgba(13,17,23,0.85)"}} title="Annotate" onClick={()=>window._openPhotoAnnotator(p, photosArr, updPhotos)}>✎</button>
                 <button className="photo-del" onClick={()=>updPhotos(photosArr.filter(x=>x.id!==p.id))}>✕</button>
               </div>
             ))}
@@ -2546,7 +2678,8 @@ function OrgSettingsModal({state,dispatch,user,onClose}){
     email:o.email||'',phone:o.phone||'',address:o.address||'',website:o.website||'',
     assessType:o.assessType||'Type 1 — Non-Intrusive',
     accentColor:o.accentColor||'#C0392B',refPrefix:o.refPrefix||'FRA',
-    disclaimer:o.disclaimer||'',reportFooter:o.reportFooter||''
+    disclaimer:o.disclaimer||'',reportFooter:o.reportFooter||'',
+    bafeNumber:o.bafeNumber||'',ifeNumber:o.ifeNumber||'',ifsmNumber:o.ifsmNumber||'',ifeGrade:o.ifeGrade||'',piInsurer:o.piInsurer||'',piCover:o.piCover||'',piExpiry:o.piExpiry||'',signatureDataUrl:o.signatureDataUrl||''
   });
   const[saved,setSaved]=React.useState(false);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
@@ -2614,6 +2747,56 @@ function OrgSettingsModal({state,dispatch,user,onClose}){
           <label style={{display:'block',fontSize:11,fontWeight:700,color:'#8B949E',textTransform:'uppercase',letterSpacing:.5,marginBottom:5}}>Disclaimer (optional)</label>
           <textarea value={form.disclaimer} onChange={e=>set('disclaimer',e.target.value)} rows={3} placeholder="This report is prepared solely for the use of..." 
             style={{width:'100%',padding:'10px 12px',background:'#21262D',border:'1.5px solid rgba(255,255,255,.1)',borderRadius:8,color:'#F0F6FC',fontSize:13,fontFamily:"'Montserrat',sans-serif",outline:'none',resize:'vertical'}}/>
+        </div>
+
+        <div style={{marginTop:18,padding:'14px',background:'rgba(13,17,23,0.5)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:10}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+            <div style={{fontSize:11,color:'#8B949E',letterSpacing:1,textTransform:'uppercase',fontWeight:700}}>Assessor Signature</div>
+            <button onClick={()=>set('signatureDataUrl','')} style={{padding:'4px 10px',fontSize:11,background:'transparent',border:'1px solid #30363D',borderRadius:5,color:'#8B949E',cursor:'pointer'}}>Clear</button>
+          </div>
+          {form.signatureDataUrl ? (
+            <div style={{background:'white',padding:8,borderRadius:6,textAlign:'center'}}>
+              <img src={form.signatureDataUrl} alt="signature" style={{maxHeight:80,maxWidth:'100%'}}/>
+            </div>
+          ) : (
+            <SignaturePad onSave={v=>set('signatureDataUrl',v)} accent={ac}/>
+          )}
+          <div style={{marginTop:8,fontSize:11,color:'#6E7681'}}>Your signature appears on every report cover. Draw above and save.</div>
+        </div>
+
+        <div style={{marginTop:18,padding:'14px',background:'rgba(192,57,43,0.05)',border:'1px solid rgba(192,57,43,0.2)',borderRadius:10}}>
+          <div style={{fontSize:11,color:'#FF6B6B',letterSpacing:1,textTransform:'uppercase',fontWeight:700,marginBottom:10}}>Competent Person Credentials (PAS 79)</div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>BAFE Number</label>
+              <input value={form.bafeNumber} onChange={e=>set('bafeNumber',e.target.value)} placeholder="e.g. SP205-123" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>IFE Membership</label>
+              <input value={form.ifeNumber} onChange={e=>set('ifeNumber',e.target.value)} placeholder="e.g. MIFireE" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>IFSM Number</label>
+              <input value={form.ifsmNumber} onChange={e=>set('ifsmNumber',e.target.value)} placeholder="e.g. 12345" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>IFE Grade</label>
+              <input value={form.ifeGrade} onChange={e=>set('ifeGrade',e.target.value)} placeholder="e.g. AIFireE, GIFireE, MIFireE" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>PI Insurer</label>
+              <input value={form.piInsurer} onChange={e=>set('piInsurer',e.target.value)} placeholder="e.g. Hiscox" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>PI Cover Level</label>
+              <input value={form.piCover} onChange={e=>set('piCover',e.target.value)} placeholder="e.g. £2,000,000" style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+            <div style={{gridColumn:'1 / -1'}}>
+              <label style={{display:'block',fontSize:11,color:'#8B949E',marginBottom:4,fontWeight:600}}>PI Insurance Expiry</label>
+              <input type="date" value={form.piExpiry} onChange={e=>set('piExpiry',e.target.value)} style={{width:'100%',padding:'8px 10px',background:'#0D1117',border:'1px solid rgba(255,255,255,.1)',borderRadius:6,color:'#F0F6FC',fontSize:13,outline:'none'}}/>
+            </div>
+          </div>
+          <div style={{marginTop:10,fontSize:11,color:'#6E7681',lineHeight:1.5}}>These credentials appear on the report cover page and are required to demonstrate competence under Article 9 of the Regulatory Reform (Fire Safety) Order 2005.</div>
         </div>
 
         <button onClick={save}
@@ -3402,6 +3585,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   const drafts    = assessments.filter(a=>a.status==="draft");
   const [tab, setTab]       = React.useState("all");
   const [search, setSearch] = React.useState("");
+  const [showPortfolio, setShowPortfolio] = React.useState(false);
 
   const activeDraft = drafts[drafts.length-1];
   const draftAns    = activeDraft?.answers||{};
@@ -3543,6 +3727,103 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                 </div>
               </div>
 
+
+              {/* Bluejai Tools Panel */}
+              <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:14,alignItems:"center"}}>
+                <button className="btn btn-ghost btn-sm" title="Export all actions to CSV" onClick={()=>window._BJ.exportActionsCSV(assessments)}>
+                  📋 Export Actions CSV
+                </button>
+                <button className="btn btn-ghost btn-sm" title="Download full backup of all data" onClick={()=>window._BJ.exportBackup(state)}>
+                  💾 Backup
+                </button>
+                <label className="btn btn-ghost btn-sm" style={{cursor:"pointer",margin:0}} title="Restore data from backup file">
+                  ⬆ Restore
+                  <input type="file" accept=".json,application/json" style={{display:"none"}} onChange={e=>{
+                    const f=e.target.files[0]; if(!f) return;
+                    if(!confirm("Restoring will REPLACE all current data. Continue?")) return;
+                    window._BJ.restoreBackup(f,(err,d)=>{
+                      if(err){ alert("Restore failed: "+err.message); return; }
+                      dispatch({type:"HYDRATE",state:{...state,org:d.org,assessments:d.assessments}});
+                      alert("Restored "+d.assessments.length+" assessment(s).");
+                    });
+                    e.target.value="";
+                  }}/>
+                </label>
+                <button className="btn btn-ghost btn-sm" title="Toggle portfolio summary view" onClick={()=>setShowPortfolio(!showPortfolio)}>
+                  {showPortfolio?"✕ Hide Portfolio":"📊 Portfolio View"}
+                </button>
+                {(()=>{ const ps = window._BJ.portfolioStats(assessments); return (ps.overdue+ps.dueSoon) > 0 ? (
+                  <div style={{marginLeft:"auto",fontSize:12,padding:"6px 12px",background:"rgba(192,57,43,0.15)",border:"1px solid rgba(192,57,43,0.4)",borderRadius:6,color:"#FF6B6B",fontWeight:600}}>
+                    ⚠ {ps.overdue} overdue, {ps.dueSoon} due in 30 days
+                  </div>
+                ) : null; })()}
+              </div>
+
+              {showPortfolio && (() => {
+                const ps = window._BJ.portfolioStats(assessments);
+                const clientEntries = Object.entries(ps.byClient).sort((a,b)=>b[1]-a[1]);
+                const typeEntries = Object.entries(ps.byType).sort((a,b)=>b[1]-a[1]);
+                return (
+                  <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16,marginBottom:14}}>
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16}}>
+                      <div>
+                        <div style={{fontSize:11,color:"#8B949E",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,fontWeight:600}}>By Client</div>
+                        {clientEntries.length===0 ? <div style={{fontSize:13,color:"#6E7681"}}>No completed assessments</div> :
+                          clientEntries.map(([k,v]) => (
+                            <div key={k} style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#C9D1D9",padding:"4px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                              <span>{k}</span><span style={{fontWeight:600,color:"#F0F6FC"}}>{v}</span>
+                            </div>
+                          ))}
+                      </div>
+                      <div>
+                        <div style={{fontSize:11,color:"#8B949E",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,fontWeight:600}}>By Premises Type</div>
+                        {typeEntries.length===0 ? <div style={{fontSize:13,color:"#6E7681"}}>No completed assessments</div> :
+                          typeEntries.map(([k,v]) => (
+                            <div key={k} style={{display:"flex",justifyContent:"space-between",fontSize:13,color:"#C9D1D9",padding:"4px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                              <span>{k}</span><span style={{fontWeight:600,color:"#F0F6FC"}}>{v}</span>
+                            </div>
+                          ))}
+                      </div>
+                      <div>
+                        <div style={{fontSize:11,color:"#8B949E",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,fontWeight:600}}>Review Status</div>
+                        <div style={{fontSize:13,color:"#C9D1D9",padding:"4px 0"}}>Total completed: <b style={{color:"#F0F6FC"}}>{ps.total}</b></div>
+                        <div style={{fontSize:13,color:"#FF6B6B",padding:"4px 0"}}>Overdue: <b>{ps.overdue}</b></div>
+                        <div style={{fontSize:13,color:"#F39C12",padding:"4px 0"}}>Due in 30 days: <b>{ps.dueSoon}</b></div>
+                        <div style={{fontSize:13,color:"#27AE60",padding:"4px 0"}}>On track: <b>{Math.max(0, ps.total - ps.overdue - ps.dueSoon)}</b></div>
+                      </div>
+                    </div>
+                    {(()=>{
+                      const today = new Date();
+                      const upcoming = assessments
+                        .filter(a => a.status==="completed" && a.nextReview)
+                        .map(a => ({...a, _days: Math.floor((new Date(a.nextReview)-today)/86400000)}))
+                        .sort((x,y)=>x._days-y._days)
+                        .slice(0,8);
+                      if (!upcoming.length) return null;
+                      return (
+                        <div style={{marginTop:14,paddingTop:14,borderTop:"1px solid #21262D"}}>
+                          <div style={{fontSize:11,color:"#8B949E",textTransform:"uppercase",letterSpacing:0.5,marginBottom:8,fontWeight:600}}>Upcoming Reviews (next 8)</div>
+                          {upcoming.map(a=>{
+                            const col = a._days < 0 ? "#FF6B6B" : a._days < 30 ? "#F39C12" : "#8B949E";
+                            const label = a._days < 0 ? Math.abs(a._days)+" days overdue" : a._days===0 ? "Due today" : "in "+a._days+" days";
+                            return (
+                              <div key={a.id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:13,padding:"6px 0",borderBottom:"1px solid rgba(255,255,255,0.04)"}}>
+                                <div style={{flex:1,minWidth:0}}>
+                                  <div style={{color:"#F0F6FC",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{a.premisesName||a.ref}</div>
+                                  <div style={{fontSize:11,color:"#6E7681"}}>{a.ref} · {a.nextReview}</div>
+                                </div>
+                                <div style={{color:col,fontSize:12,fontWeight:600,marginLeft:8,flexShrink:0}}>{label}</div>
+                                <button onClick={()=>window._BJ.downloadICS(a, state.org)} title="Export to calendar" style={{marginLeft:8,background:"transparent",border:"1px solid #30363D",borderRadius:4,color:"#8B949E",padding:"3px 8px",fontSize:11,cursor:"pointer"}}>📅</button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                );
+              })()}
+
               {/* Cards */}
               {visible.length===0?(
                 <div style={{textAlign:"center",padding:"28px 16px",background:"#161B22",borderRadius:10,border:"1px solid #30363D"}}>
@@ -3612,6 +3893,23 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                             const cloned={...a,id:newId,ref:(a.ref||'FRA')+'-COPY',status:'draft',completedAt:null,savedAt:new Date().toISOString().slice(0,10),nextReview:null,riskRating:null};
                             dispatch({type:'CLONE_ASSESSMENT',assessment:cloned});
                           }}>Clone</button>
+                        {!isDraft && a.nextReview && (
+                          <button className="at2-btn-ghost" title="Export next-review date to calendar (.ics)" onClick={()=>window._BJ.downloadICS(a, state.org)}>
+                            📅 Calendar
+                          </button>
+                        )}
+                        {!isDraft && (() => {
+                          const tok = window._BJ.makeShareToken(a);
+                          return (
+                            <button className="at2-btn-ghost" title="Copy client action portal link" onClick={()=>{
+                              const url = window.location.origin + window.location.pathname + "#portal=" + tok + "&id=" + a.id;
+                              if (navigator.clipboard) navigator.clipboard.writeText(url).then(()=>alert("Action portal link copied:\n\n"+url)).catch(()=>prompt("Copy this link:", url));
+                              else prompt("Copy this link:", url);
+                            }}>
+                              🔗 Share
+                            </button>
+                          );
+                        })()}
                         </div>
                       </div>
                     );
@@ -4341,6 +4639,15 @@ function generatePDF(a, org) {
     <div class="cover-mc"><div class="cover-ml">Next Review Date</div><div class="cover-mv">${a.nextReview||"—"}</div></div>
     <div class="cover-mc"><div class="cover-ml">Responsible Person</div><div class="cover-mv">${(a.rpName||"—")+(a.rpTitle?", "+a.rpTitle:"")}</div></div>
     <div class="cover-mc"><div class="cover-ml">Client</div><div class="cover-mv">${a.clientName||"—"}</div></div>
+  </div>
+  <!-- Competent Person Declaration -->
+  <div style="margin:18px 22px 0;padding:14px 16px;background:#F8FAFC;border:1px solid #E5E7EB;border-left:4px solid ${pr};border-radius:6px;font-size:9.5pt;line-height:1.55;color:#1F2937">
+    <div style="font-size:8.5pt;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;color:${pr};margin-bottom:8px">Competent Person Declaration</div>
+    <div style="margin-bottom:4px"><b>${org.assessor||"Assessor"}</b>${org.jobTitle?", "+org.jobTitle:""}${org.quals?" — "+org.quals:""}</div>
+    ${(org.bafeNumber||org.ifeNumber||org.ifsmNumber||org.ifeGrade) ? '<div style="margin:4px 0;font-size:8.5pt;color:#4B5563">'+[org.ifeGrade,org.bafeNumber?"BAFE "+org.bafeNumber:"",org.ifeNumber?"IFE "+org.ifeNumber:"",org.ifsmNumber?"IFSM "+org.ifsmNumber:""].filter(Boolean).join(" · ")+'</div>' : ''}
+    ${(org.piInsurer||org.piCover) ? '<div style="margin:4px 0;font-size:8.5pt;color:#4B5563">Professional Indemnity Insurance: '+[org.piInsurer,org.piCover,org.piExpiry?"valid to "+org.piExpiry:""].filter(Boolean).join(" · ")+'</div>' : ''}
+    <div style="margin-top:8px;font-size:8pt;color:#6B7280;font-style:italic">I declare that this fire risk assessment has been conducted in accordance with PAS 79-1:2020 and the Regulatory Reform (Fire Safety) Order 2005, Article 9. I am competent within the meaning of Article 18(5).</div>
+    ${org.signatureDataUrl ? '<div style="margin-top:10px;display:flex;align-items:end;gap:14px"><img src="'+org.signatureDataUrl+'" alt="signature" style="max-height:50px;background:white;padding:4px;border-radius:3px"/><div style="font-size:8pt;color:#6B7280;border-top:1px solid #9CA3AF;padding-top:3px;flex:1">Signed: '+(org.assessor||"Assessor")+' · '+new Date(a.completedAt||a.assessmentDate||Date.now()).toLocaleDateString("en-GB")+'</div></div>' : ''}
   </div>
   <div class="cover-foot">
     <span class="cover-fl">Prepared by: ${org.assessor||"Assessor"}${org.quals?" · "+org.quals:""}</span>
@@ -5214,6 +5521,284 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
 // ─── ROOT ─────────────────────────────────────────────────────────
 
 // ─── ROOT ─────────────────────────────────────────────────────────
+
+
+// ─── PHOTO ANNOTATOR ────────────────────────────────────────────────────
+function PhotoAnnotator(){
+  const [active, setActive] = React.useState(null);
+  const canvasRef = React.useRef(null);
+  const imgRef = React.useRef(null);
+  const [tool, setTool] = React.useState('pen');
+  const [color, setColor] = React.useState('#FF3B30');
+  const drawingRef = React.useRef(false);
+  const lastRef = React.useRef(null);
+  const startRef = React.useRef(null);
+
+  React.useEffect(()=>{
+    window._openPhotoAnnotator = (p, arr, updFn) => {
+      setActive({ photo: p, arr: arr, upd: updFn });
+    };
+    return () => { delete window._openPhotoAnnotator; };
+  }, []);
+
+  React.useEffect(()=>{
+    if (!active) return;
+    const c = canvasRef.current;
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const maxW = Math.min(900, window.innerWidth - 40);
+      const ratio = img.height / img.width;
+      c.width = maxW;
+      c.height = maxW * ratio;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0, c.width, c.height);
+      imgRef.current = img;
+    };
+    img.src = active.photo.src;
+  }, [active]);
+
+  if (!active) return null;
+
+  const getPos = (e) => {
+    const c = canvasRef.current;
+    const r = c.getBoundingClientRect();
+    const sx = c.width / r.width;
+    const sy = c.height / r.height;
+    const t = e.touches ? e.touches[0] : e;
+    return { x: (t.clientX - r.left) * sx, y: (t.clientY - r.top) * sy };
+  };
+
+  const onDown = (e) => {
+    e.preventDefault();
+    drawingRef.current = true;
+    const p = getPos(e);
+    startRef.current = p;
+    lastRef.current = p;
+    if (tool === 'text') {
+      const txt = prompt('Label text:');
+      if (txt) {
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.font = 'bold 20px Inter, sans-serif';
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 4;
+        ctx.strokeText(txt, p.x, p.y);
+        ctx.fillText(txt, p.x, p.y);
+      }
+      drawingRef.current = false;
+    }
+  };
+  const onMove = (e) => {
+    if (!drawingRef.current) return;
+    e.preventDefault();
+    const p = getPos(e);
+    const ctx = canvasRef.current.getContext('2d');
+    if (tool === 'pen') {
+      ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(lastRef.current.x, lastRef.current.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      lastRef.current = p;
+    }
+  };
+  const onUp = (e) => {
+    if (!drawingRef.current) return;
+    drawingRef.current = false;
+    const p = getPos(e);
+    const ctx = canvasRef.current.getContext('2d');
+    const s = startRef.current;
+    if (tool === 'arrow') {
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 4; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      const a = Math.atan2(p.y - s.y, p.x - s.x);
+      const h = 16;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - h*Math.cos(a - Math.PI/6), p.y - h*Math.sin(a - Math.PI/6));
+      ctx.lineTo(p.x - h*Math.cos(a + Math.PI/6), p.y - h*Math.sin(a + Math.PI/6));
+      ctx.closePath(); ctx.fill();
+    } else if (tool === 'circle') {
+      const dx = p.x - s.x, dy = p.y - s.y;
+      const r = Math.sqrt(dx*dx + dy*dy);
+      ctx.strokeStyle = color; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI*2); ctx.stroke();
+    } else if (tool === 'rect') {
+      ctx.strokeStyle = color; ctx.lineWidth = 4;
+      ctx.strokeRect(Math.min(s.x,p.x), Math.min(s.y,p.y), Math.abs(p.x-s.x), Math.abs(p.y-s.y));
+    }
+  };
+
+  const save = () => {
+    const dataUrl = canvasRef.current.toDataURL('image/jpeg', 0.85);
+    const newArr = active.arr.map(x => x.id === active.photo.id ? {...x, src: dataUrl, annotated: true} : x);
+    active.upd(newArr);
+    setActive(null);
+  };
+  const reset = () => {
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.drawImage(imgRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
+  };
+
+  const tools = [
+    {k:'pen', l:'✏️ Pen'},
+    {k:'arrow', l:'→ Arrow'},
+    {k:'circle', l:'○ Circle'},
+    {k:'rect', l:'▭ Rect'},
+    {k:'text', l:'A Label'}
+  ];
+  const colors = ['#FF3B30','#FF9500','#FFCC00','#34C759','#0A84FF','#FFFFFF','#000000'];
+
+  return React.createElement('div', {style:{position:'fixed',inset:0,background:'rgba(0,0,0,0.92)',zIndex:9999,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:20}},
+    React.createElement('div', {style:{display:'flex',gap:6,flexWrap:'wrap',marginBottom:10,justifyContent:'center'}},
+      tools.map(t => React.createElement('button', {key:t.k, onClick:()=>setTool(t.k), style:{padding:'8px 14px',borderRadius:6,border:'none',background:tool===t.k?'#C0392B':'#21262D',color:'white',cursor:'pointer',fontSize:13,fontWeight:600}}, t.l))
+    ),
+    React.createElement('div', {style:{display:'flex',gap:6,marginBottom:10}},
+      colors.map(co => React.createElement('button', {key:co, onClick:()=>setColor(co), style:{width:28,height:28,borderRadius:'50%',border:color===co?'3px solid white':'2px solid #555',background:co,cursor:'pointer'}}))
+    ),
+    React.createElement('canvas', {ref:canvasRef, style:{maxWidth:'100%',maxHeight:'70vh',background:'white',cursor:'crosshair',borderRadius:8,touchAction:'none'},
+      onMouseDown:onDown, onMouseMove:onMove, onMouseUp:onUp, onMouseLeave:onUp,
+      onTouchStart:onDown, onTouchMove:onMove, onTouchEnd:onUp
+    }),
+    React.createElement('div', {style:{display:'flex',gap:8,marginTop:14}},
+      React.createElement('button', {onClick:reset, style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, 'Reset'),
+      React.createElement('button', {onClick:()=>setActive(null), style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, 'Cancel'),
+      React.createElement('button', {onClick:save, style:{padding:'10px 18px',borderRadius:6,border:'none',background:'#27AE60',color:'white',cursor:'pointer',fontWeight:600}}, '✓ Save')
+    )
+  );
+}
+
+// ─── SIGNATURE PAD ───────────────────────────────────────────────────
+function SignaturePad({onSave, accent}){
+  const ref = React.useRef(null);
+  const drawing = React.useRef(false);
+  const last = React.useRef(null);
+  const [empty, setEmpty] = React.useState(true);
+
+  React.useEffect(()=>{
+    const c = ref.current;
+    c.width = c.offsetWidth * 2;
+    c.height = 140;
+    const ctx = c.getContext('2d');
+    ctx.scale(2, 2);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.strokeStyle = '#0D1117';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }, []);
+
+  const pos = e => {
+    const c = ref.current;
+    const r = c.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: t.clientX - r.left, y: t.clientY - r.top };
+  };
+  const down = e => { e.preventDefault(); drawing.current = true; last.current = pos(e); };
+  const move = e => {
+    if (!drawing.current) return;
+    e.preventDefault();
+    const p = pos(e);
+    const ctx = ref.current.getContext('2d');
+    ctx.beginPath(); ctx.moveTo(last.current.x, last.current.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    last.current = p; setEmpty(false);
+  };
+  const up = () => { drawing.current = false; };
+  const clear = () => {
+    const c = ref.current;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = 'white'; ctx.fillRect(0, 0, c.width, c.height);
+    setEmpty(true);
+  };
+  const save = () => {
+    if (empty) return;
+    const dataUrl = ref.current.toDataURL('image/png');
+    onSave(dataUrl);
+  };
+
+  return React.createElement('div', null,
+    React.createElement('canvas', {
+      ref: ref,
+      style: {width:'100%',height:140,background:'white',borderRadius:6,cursor:'crosshair',touchAction:'none',display:'block'},
+      onMouseDown: down, onMouseMove: move, onMouseUp: up, onMouseLeave: up,
+      onTouchStart: down, onTouchMove: move, onTouchEnd: up
+    }),
+    React.createElement('div', {style:{display:'flex',gap:6,marginTop:6}},
+      React.createElement('button', {type:'button', onClick:clear, style:{flex:1,padding:'8px',fontSize:12,background:'transparent',border:'1px solid #30363D',borderRadius:5,color:'#8B949E',cursor:'pointer'}}, 'Clear'),
+      React.createElement('button', {type:'button', onClick:save, disabled:empty, style:{flex:2,padding:'8px',fontSize:12,background:empty?'#21262D':accent,border:'none',borderRadius:5,color:'white',cursor:empty?'not-allowed':'pointer',fontWeight:600,opacity:empty?0.5:1}}, '✓ Save Signature')
+    )
+  );
+}
+
+// ─── CLIENT ACTION PORTAL ────────────────────────────────────────────
+function ActionPortal({state}){
+  const params = window.location.hash.replace(/^#/, '');
+  const parts = Object.fromEntries(params.split('&').map(p=>p.split('=')));
+  const id = parts.id;
+  const tok = parts.portal;
+  const [completed, setCompleted] = React.useState(()=>{
+    try { return JSON.parse(localStorage.getItem("portal_done_"+id)||"{}"); } catch(e) { return {}; }
+  });
+  React.useEffect(()=>{
+    try { localStorage.setItem("portal_done_"+id, JSON.stringify(completed)); } catch(e){}
+  }, [completed, id]);
+  const a = state.assessments.find(x => String(x.id) === String(id));
+  if (!a) {
+    return React.createElement('div', {style:{padding:40,textAlign:'center',color:'#C9D1D9',fontFamily:'Inter,sans-serif'}},
+      React.createElement('h2',{style:{color:'#F0F6FC'}},'Assessment Not Found'),
+      React.createElement('p',null,'This action portal link is invalid or has expired.')
+    );
+  }
+  const expectedTok = window._BJ.makeShareToken(a);
+  if (tok !== expectedTok) {
+    return React.createElement('div', {style:{padding:40,textAlign:'center',color:'#C9D1D9',fontFamily:'Inter,sans-serif'}},
+      React.createElement('h2',{style:{color:'#F0F6FC'}},'Access Denied'),
+      React.createElement('p',null,'Invalid security token.')
+    );
+  }
+  const actions = window._BJ.getActionsFor(a);
+  const byP = { P1: actions.filter(x=>x.priority==='P1'), P2: actions.filter(x=>x.priority==='P2'), P3: actions.filter(x=>x.priority==='P3') };
+  const doneCount = Object.values(completed).filter(Boolean).length;
+  const pct = actions.length ? Math.round(100*doneCount/actions.length) : 0;
+  return React.createElement('div',{style:{minHeight:'100vh',background:'#0D1117',color:'#C9D1D9',fontFamily:'Inter,sans-serif',padding:20}},
+    React.createElement('div',{style:{maxWidth:760,margin:'0 auto'}},
+      React.createElement('div',{style:{padding:'20px 24px',borderRadius:12,background:'linear-gradient(135deg,#161B22 0%,#0D1117 100%)',border:'1px solid #21262D',marginBottom:20}},
+        React.createElement('div',{style:{fontSize:11,color:'#8B949E',letterSpacing:1,textTransform:'uppercase',marginBottom:6}}, 'Fire Risk Assessment — Action Portal'),
+        React.createElement('h1',{style:{margin:'0 0 6px',color:'#F0F6FC',fontSize:24,fontFamily:'Montserrat,sans-serif'}}, a.premisesName||'Property'),
+        React.createElement('div',{style:{fontSize:13,color:'#8B949E'}}, a.premisesAddress||''),
+        React.createElement('div',{style:{display:'flex',gap:12,marginTop:14,flexWrap:'wrap',fontSize:12}},
+          React.createElement('div',{style:{padding:'4px 10px',background:'#21262D',borderRadius:4}}, 'Ref: ',React.createElement('b',{style:{color:'#F0F6FC'}},a.ref)),
+          React.createElement('div',{style:{padding:'4px 10px',background:'#21262D',borderRadius:4}}, 'Assessed: ',React.createElement('b',{style:{color:'#F0F6FC'}},a.assessmentDate||'')),
+          a.nextReview && React.createElement('div',{style:{padding:'4px 10px',background:'#21262D',borderRadius:4}}, 'Next Review: ',React.createElement('b',{style:{color:'#F39C12'}},a.nextReview)),
+          a.riskRating && React.createElement('div',{style:{padding:'4px 10px',borderRadius:4,background:window._BJ.riskColor(a.riskRating)+'22',color:window._BJ.riskColor(a.riskRating),fontWeight:600}}, 'Risk: ',a.riskRating)
+        )
+      ),
+      React.createElement('div',{style:{marginBottom:16,padding:14,background:'#161B22',borderRadius:10,border:'1px solid #21262D'}},
+        React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:8}},
+          React.createElement('span',{style:{fontSize:13,color:'#8B949E'}}, 'Progress'),
+          React.createElement('b',{style:{color:'#F0F6FC'}}, doneCount,' of ',actions.length,' (',pct,'%)')
+        ),
+        React.createElement('div',{style:{height:8,background:'#21262D',borderRadius:4,overflow:'hidden'}},
+          React.createElement('div',{style:{height:'100%',width:pct+'%',background:'linear-gradient(90deg,#27AE60,#2ECC71)',transition:'width 0.3s'}})
+        )
+      ),
+      ['P1','P2','P3'].map(p => byP[p].length ? React.createElement('div',{key:p,style:{marginBottom:18}},
+        React.createElement('h3',{style:{color: p==='P1'?'#FF6B6B':p==='P2'?'#F39C12':'#27AE60',fontSize:14,letterSpacing:1,textTransform:'uppercase',marginBottom:10}}, p==='P1'?'Priority 1 — Urgent':p==='P2'?'Priority 2 — Important':'Priority 3 — Routine'),
+        byP[p].map((act,i) => React.createElement('label',{key:i,style:{display:'flex',alignItems:'flex-start',gap:12,padding:14,background:completed[p+i]?'rgba(39,174,96,0.08)':'#161B22',borderRadius:8,border:'1px solid '+(completed[p+i]?'rgba(39,174,96,0.3)':'#21262D'),marginBottom:8,cursor:'pointer'}},
+          React.createElement('input',{type:'checkbox',checked:!!completed[p+i],onChange:e=>setCompleted({...completed,[p+i]:e.target.checked}),style:{marginTop:3,accentColor:'#27AE60',width:18,height:18,flexShrink:0}}),
+          React.createElement('div',{style:{flex:1}},
+            React.createElement('div',{style:{color:completed[p+i]?'#8B949E':'#F0F6FC',textDecoration:completed[p+i]?'line-through':'none',fontSize:14,lineHeight:1.5}}, act.action),
+            React.createElement('div',{style:{fontSize:11,color:'#6E7681',marginTop:4}}, 'Due within ',act.due,' days')
+          )
+        ))
+      ) : null),
+      actions.length===0 && React.createElement('div',{style:{textAlign:'center',padding:40,color:'#8B949E'}},'🎉 No actions required — this assessment has no outstanding items.'),
+      React.createElement('div',{style:{marginTop:30,padding:16,background:'rgba(192,57,43,0.06)',border:'1px solid rgba(192,57,43,0.2)',borderRadius:8,fontSize:12,color:'#8B949E'}},
+        'This portal is provided by ',React.createElement('b',{style:{color:'#F0F6FC'}},(state.org&&state.org.name)||'Bluejai'),'. Progress is saved to this device only. Contact your assessor for evidence submission.'
+      )
+    )
+  );
+}
+
 function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
@@ -5227,9 +5812,17 @@ function App(){
   const{screen}=state;
   const signOut=()=>FS_AUTH.logout();
   const openSettings=()=>setShowOrgSettings(true);
+  const _isPortal = typeof window !== "undefined" && window.location.hash.indexOf("portal=") >= 0;
+  if (_isPortal && state.assessments && state.assessments.length) {
+    return React.createElement(React.Fragment, null,
+      React.createElement('style', {dangerouslySetInnerHTML:{__html:CSS}}),
+      React.createElement(ActionPortal, {state: state})
+    );
+  }
   return(
     <>
       <style dangerouslySetInnerHTML={{__html:CSS}}/>
+      <PhotoAnnotator/>
       {showPricing&&<PricingModal user={user} onClose={()=>setShowPricing(false)}/>}
       {showOrgSettings&&<OrgSettingsModal state={state} dispatch={dispatch} user={user} onClose={()=>setShowOrgSettings(false)}/>}
       {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={signOut} onUpgrade={()=>setShowPricing(true)} onSettings={openSettings}/>}
