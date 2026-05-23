@@ -354,6 +354,8 @@ const SECTION_INTROS = {
   11: {icon:"clipboard", colour:"#374151", text:"Ask to see the fire safety log book and training evidence. Good management significantly reduces risk.", mins:4},
   12: {icon:"risk", colour:"#C0392B", text:"Based on all findings, determine the overall risk rating. This must be defensible if challenged.", mins:2},
   13: {icon:"clipboard", colour:"#6366F1", text:"Write your professional conclusions. Describe the overall hazard profile, key findings and the basis for your risk rating. This narrative section makes your report legally defensible under the RRO 2005 and PAS 79-1:2020. Take your time — a strong summary protects you professionally.", mins:8},
+
+  14: {icon:"search", colour:"#7C3AED", text:"Conduct intrusive examination of concealed voids. Every element opened must be reinstated to its original fire-resistance rating after inspection. Record all findings photographically.", mins:15},
 };
 const BUILDING_PRESETS = {
  standard:{label:"Standard Commercial / Office",mandatoryRefs:[],extraQuestions:[],note:""},
@@ -444,6 +446,22 @@ const VALIDATOR_SECTION = {id:13.5,title:"Independent Validation",short:"Validat
   {ref:"VL.6",q:"State the date on which independent validation was completed or is due.",t:"date",required:false},
   {ref:"VL.7",q:"Note any limitations, qualifications or disagreements identified by the independent validator.",t:"textarea",required:false,ph:"e.g. The validator noted that two fire doors on the first floor had not been assessed by a competent fire door inspector and recommended this be addressed before sign-off. No substantive disagreements with the assessment findings. / Or: No limitations or disagreements identified.",g:"Any limitations or disagreements identified during validation must be documented and communicated to the Responsible Person."},
  ]};
+// ─── TYPE 2/3/4 INTRUSIVE SECTION ─────────────────────────────────────────
+const TYPE23_SECTION = {
+  id:14, title:"Intrusive Inspection", short:"Intrusive",
+  questions:[
+    {ref:"T2.1",q:"Confirm the level of intrusive inspection agreed with the Responsible Person prior to commencement.",t:"select",opts:["Type 2 — Sampling (limited intrusive examination)","Type 3 — Intrusive (non-destructive examination of concealed spaces)","Type 4 — Enhanced Intrusive (destructive investigation)"],required:true,g:"The scope of intrusive inspection must be agreed in writing with the Responsible Person before commencement."},
+    {ref:"T2.2",q:"Which construction elements were sampled or opened for inspection?",t:"multi",opts:["Ceiling voids / raised ceilings","Floor voids / raised floors","Cavity walls","Roof void / attic space","Duct and service risers","Compartment walls above ceiling level","Fire-stopping around penetrations","Structural elements","None — access was not granted"],required:true,ph:"Select all that apply"},
+    {ref:"T2.3",q:"Were any breaches of fire compartmentation identified within concealed voids or behind linings?",t:"yn",required:true,g:"Common defects: penetrations through compartment walls not fire-stopped; missing cavity barriers; fire-stopping degraded or absent.",sub:{on:"y",fields:[{ref:"T2.3a",q:"Describe all compartmentation breaches identified in concealed spaces",t:"textarea",ph:"e.g. Service penetration through compartment wall — no intumescent collar installed."}]}},
+    {ref:"T2.4",q:"Were cavity barriers present and in satisfactory condition in all inspected voids?",t:"ynna",required:false,g:"Cavity barriers required at every floor level, ceiling level, junction with fire compartment wall, and around all openings."},
+    {ref:"T2.5",q:"Were fire-stopping measures around service penetrations satisfactory throughout all inspected voids?",t:"ynna",required:true,g:"Every service penetration through a rated compartment element must be fire-stopped."},
+    {ref:"T2.6",q:"Was combustible material identified within any concealed void or roof space?",t:"yn",required:true,sub:{on:"y",fields:[{ref:"T2.6a",q:"Describe the nature and location of combustible material found in voids",t:"textarea",ph:"e.g. Exposed polystyrene insulation in roof void — no fire protection applied."}]}},
+    {ref:"T2.7",q:"Was the fire resistance of any structural element compromised by corrosion, damage, or loss of fire protection?",t:"ynna",required:false,g:"Check intumescent coating on steel, condition of concrete encasement, integrity of fire-resistant boards."},
+    {ref:"T2.8",q:"Were there any fire-stopping defects at expansion joints, movement joints, or building interfaces?",t:"ynna",required:false},
+    {ref:"T2.9",q:"Were electrical installations within voids satisfactory (cable routing, insulation, junction boxes closed)?",t:"ynna",required:false},
+    {ref:"T2.10",q:"Describe the overall condition of compartmentation as found during the intrusive inspection.",t:"textarea",required:true,ph:"e.g. The intrusive inspection revealed satisfactory compartmentation in all sampled areas. No significant breaches were identified. / Or: Multiple compartmentation defects found — see findings above.",g:"Provide an overall professional conclusion on passive fire protection as found during this intrusive inspection."},
+  ]
+};
 
 const SCOPE_SECTION = {id:0.5,title:"Assessment Scope & Limitations",short:"Scope",
  intro:"Define the scope and limitations before proceeding. Satisfies PAS 79-1:2020 Section 6. Recording what could not be assessed protects the assessor and the Responsible Person.",
@@ -742,6 +760,7 @@ const makeAssessment = (n) => ({
   buildingPreset:"standard",
   previousAssessmentDate:"", previousAssessmentRef:"", previousAssessor:"",
   reviewType:"new",
+  assessType:"",
   previousActionsStatus:[],
   overallRating:"",
   ratingMethodology:"",
@@ -2330,7 +2349,7 @@ function goStripe(plan,email){
   if(!plan||!plan.price||plan.price==='Free')return;
   if(plan.contact){window.location.href='mailto:hello@bluejai.co.uk?subject=Enterprise';return;}
   const url=STRIPE_LINKS[plan.id==='pro'?'pro_monthly':'pro_annual']||'';
-  if(!url||url.includes('REPLACE')){alert('Payment links coming soon — email hello@bluejai.co.uk for early access.');return;}
+  if(!url||url.includes('REPLACE')){alert('Upgrade via the web portal at bluejai.co.uk — or email hello@bluejai.co.uk for direct access.');return;}
   window.location.href=url+(email?'?prefilled_email='+encodeURIComponent(email):'');
 }
 
@@ -3188,7 +3207,10 @@ function Setup({state, dispatch}) {
       <div className="fg"><label className="fl">Assessment type</label>
         <select className="fs" value={org.assessType||"Type 1 — Non-Intrusive"} onChange={e=>upd({assessType:e.target.value})}>
           {["Type 1 — Non-Intrusive","Type 2 — Intrusive (non-destructive)","Type 3 — Intrusive (destructive)","Type 4 — Enhanced"].map(t=><option key={t}>{t}</option>)}
-        </select></div>
+        </select>
+        {(org.assessType||'')
+.match(/Type [234]/)&&<div className="fhint" style={{color:"#6366F1"}}>&#10022; An intrusive inspection section (Section 14) will be added automatically to all Type 2/3/4 assessments.</div>}
+        </div>
       <div className="fg"><label className="fl">Report footer</label>
         <textarea className="ft" placeholder="This report is confidential…" value={org.reportFooter||""} onChange={e=>upd({reportFooter:e.target.value})}/></div>
       <div className="fg"><label className="fl">Disclaimer</label>
@@ -3315,6 +3337,17 @@ function ClientSetup({state, dispatch}) {
                     <option value="enforcement">Reassessment — enforcement notice</option>
                     <option value="incident">Reassessment following fire/incident</option>
                   </select></div>
+                <div className="fg span2"><label className="fl">Intrusive Level (overrides default)</label>
+                  <select className="fs" value={a.assessType||""} onChange={e=>upd({assessType:e.target.value})}>
+                    <option value="">Use org default ({org.assessType||"Type 1 — Non-Intrusive"})</option>
+                    <option value="Type 1 — Non-Intrusive">Type 1 — Non-Intrusive</option>
+                    <option value="Type 2 — Intrusive (non-destructive)">Type 2 — Intrusive (non-destructive)</option>
+                    <option value="Type 3 — Intrusive (destructive)">Type 3 — Intrusive (destructive)</option>
+                    <option value="Type 4 — Enhanced">Type 4 — Enhanced</option>
+                  </select>
+                  {(a.assessType||org.assessType||'')
+.match(/Type [234]/)&&<div className="fhint" style={{color:"#6366F1"}}>&#10022; Section 14 intrusive questions will be included in this assessment</div>}
+                </div>
                 {(a.reviewType||"new")!=="new" &&
                 <div className="fg"><label className="fl">Previous assessment date</label>
                   <input className="fi" type="date" value={a.previousAssessmentDate||""} onChange={e=>upd({previousAssessmentDate:e.target.value})}/></div>}
@@ -3366,6 +3399,8 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   const activeDraft = drafts[drafts.length-1];
   const draftAns    = activeDraft?.answers||{};
 
+  const today=new Date().toISOString().split('T')[0];
+  const overdue=completed.filter(a=>a.nextReview&&a.nextReview<today);
   const sectionStatus = FRA_SECTIONS.map(s=>{
     const vqs    = visibleQs(s,draftAns);
     const reqDone= vqs.filter(q=>q.required).every(q=>isAnswered(q,draftAns[q.ref]||{}));
@@ -3475,6 +3510,11 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                 <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:15,fontWeight:700,color:ac}}>{assessments.reduce((n,a)=>n+Object.values(a.answers||{}).filter(v=>v?.flagged).length,0)}</span>
                 <span style={{fontSize:10,color:"#6E7681"}}>Flagged</span>
               </div>
+              {overdue.length>0&&<div className="stat-pill" style={{borderColor:"#B91C1C44",background:"#1A0A0A"}}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B91C1C" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:15,fontWeight:700,color:"#B91C1C"}}>{overdue.length}</span>
+                <span style={{fontSize:10,color:"#6E7681"}}>Overdue</span>
+              </div>}
             </div>
           )}
 
@@ -3530,6 +3570,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                             {a.clientName&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.clientName}</span>}
                             {flagCount>0&&<span className="abadge" style={{background:"#2D1500",color:ac,border:`1px solid ${ac}44`}}>⚑ {flagCount} flagged</span>}
                             {a.savedAt&&<span style={{fontSize:9,color:"#6E7681",marginLeft:"auto"}}>Saved {a.savedAt}</span>}
+                            {!isDraft&&a.nextReview&&<span className="abadge" style={{background:a.nextReview<today?"#1A0A0A":"#0D1F0D",color:a.nextReview<today?"#EF4444":"#6EE7B7",border:`1px solid ${a.nextReview<today?"#B91C1C55":"#6EE7B733"}`}}>{a.nextReview<today?"\u26A0 Overdue":"Review due"}: {a.nextReview}</span>}
                           </div>
                           {isDraft&&answered>0&&(
                             <div className="at2-prog-row">
@@ -3586,7 +3627,9 @@ function Assessment({state, dispatch}) {
 
   var preset = BUILDING_PRESETS[a.buildingPreset||"standard"]||BUILDING_PRESETS.standard;
   var presetSec = (preset.extraQuestions&&preset.extraQuestions.length>0) ? [{id:1.5,title:preset.label+" Requirements",short:"Preset",questions:preset.extraQuestions}] : [];
-  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat([VALIDATOR_SECTION,FINDINGS_SECTION]);
+  var _asmtType = a.assessType||(org.assessType||'')
+  var _type23Secs = _asmtType.match(/Type [234]/) ? [TYPE23_SECTION] : [];
+  var ALL_SECTIONS = [ASSESSOR_SECTION,SCOPE_SECTION].concat(FRA_SECTIONS).concat(presetSec).concat(_type23Secs).concat([VALIDATOR_SECTION,FINDINGS_SECTION]);
 
   const curSec  = ALL_SECTIONS[secIdx];
   const intro   = SECTION_INTROS[curSec.id];
@@ -4001,6 +4044,46 @@ function Assessment({state, dispatch}) {
 // Uses browser print API with dedicated print window
 // Works on all mobile browsers — no external dependencies
 
+function generateWord(a, org) {
+  const answers = a.answers||{};
+  const pr = org.primaryColor||'#0D1117';
+  const ac = org.accentColor||'#C0392B';
+  const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}) : '—';
+  const risk = a.riskRating||a.overallRating||'';
+  const rCol = r => r?.startsWith('Critical')?'#B91C1C':r?.startsWith('High')?'#D97706':r?.startsWith('Medium')?'#D97706':'#059669';
+  const ALL_PDF_SECTIONS_BASE = [ASSESSOR_SECTION,SCOPE_SECTION,...FRA_SECTIONS,VALIDATOR_SECTION,FINDINGS_SECTION];
+  const allQs = ALL_PDF_SECTIONS_BASE.flatMap(s=>s.questions);
+  const actionItems = Object.entries(answers).filter(([,v])=>v?.flagged).map(([ref,v])=>{const q=allQs.find(q=>q.ref===ref);return{ref,text:q?.q||'',action:v.action||'',priority:v.priority||'P3 — Within 3 months',responsible:v.responsible||'',targetDate:v.targetDate||'',note:v.note||''};});
+  const pColor = p => p?.includes('P1')?'#B91C1C':p?.includes('P2')?'#D97706':p?.includes('P3')?'#0D7A7A':'#059669';
+  const secsDone = FRA_SECTIONS.filter(s=>s.questions.filter(q=>q.required).every(q=>isAnswered(q,(answers)[q.ref]||{}))).length;
+  const execSummary = 'This fire risk assessment was carried out at '+(a.premisesName||'the premises')+' on '+fmtDate(a.assessmentDate)+' by '+(org.assessor||'the assessor')+(org.quals?' ('+org.quals+')':'')+'. The assessment covered '+secsDone+' of '+FRA_SECTIONS.length+' sections. The overall fire risk rating is '+(risk||'not yet set')+'. A total of '+actionItems.length+' significant finding'+(actionItems.length!==1?'s were':' was')+' identified.';
+  const wordHtml = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="UTF-8"/><meta name=ProgId content=Word.Document/><style>body{font-family:Calibri,Arial,sans-serif;font-size:11pt;color:#0D1117;margin:2cm;}h1{font-family:'Trebuchet MS',Arial;font-size:22pt;color:#fff;background:'+pr+';padding:14pt;margin:0 0 10pt;}h2{font-family:'Trebuchet MS',Arial;font-size:13pt;color:'+pr+';border-bottom:2pt solid '+ac+';padding-bottom:3pt;margin-top:16pt;}h3{font-size:11pt;color:'+ac+';margin-top:10pt;}table{border-collapse:collapse;width:100%;margin:6pt 0;font-size:9.5pt;}th{background:'+pr+';color:white;padding:5pt 7pt;text-align:left;font-size:8pt;text-transform:uppercase;}td{padding:4pt 7pt;border:1pt solid #D1D5DB;vertical-align:top;}tr:nth-child(even) td{background:#F9FAFB;}.footer{font-size:8pt;color:#9CA3AF;border-top:1pt solid #D1D5DB;margin-top:20pt;padding-top:6pt;}</style></head><body>'
+    +'<h1>Fire Risk Assessment: '+escHtml(a.premisesName||'Premises Name')+'</h1>'
+    +'<table><tr><td style="width:110pt;background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Reference</td><td>'+escHtml(a.ref)+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Address</td><td>'+escHtml(a.premisesAddress||'—')+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Date</td><td>'+escHtml(fmtDate(a.assessmentDate))+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Lead Assessor</td><td>'+escHtml((org.assessor||'—')+(org.quals?' '+org.quals:''))+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Assessment Type</td><td>'+escHtml(a.assessType||org.assessType||'Type 1 — Non-Intrusive')+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Risk Rating</td><td style="color:'+rCol(risk)+';font-weight:bold">'+escHtml(risk||'Pending')+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Responsible Person</td><td>'+escHtml((a.rpName||'—')+(a.rpTitle?', '+a.rpTitle:''))+'</td></tr>'
+    +'<tr><td style="background:#F3F4F6;font-weight:bold;font-size:8pt;text-transform:uppercase;color:#6B7280">Legislation</td><td>Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021 · Fire Safety (England) Regulations 2022</td></tr>'
+    +'</table>'
+    +'<h2>Executive Summary</h2><p>'+escHtml(execSummary)+'</p>'
+    +'<h2>Scope</h2><p>'+escHtml(answers['SC.1']?.value||'No scope statement recorded.')+'</p>'
+    +(answers['SC.2']?.value==='y'?'<p><strong>Areas not inspected:</strong> '+escHtml(answers['SC.2a']?.value||'Not specified')+'</p>':'')+
+    '<h2>Action Plan</h2>'+(actionItems.length===0?'<p>No significant findings recorded.</p>':'<table><thead><tr><th>Ref</th><th>Finding</th><th>Action</th><th>Priority</th><th>Responsible</th><th>Target</th></tr></thead><tbody>'+actionItems.map(it=>'<tr style="'+(it.priority?.includes('P1')?'background:#FEF2F2':'')+'"><td style="font-family:monospace;font-size:8pt">'+escHtml(it.ref)+'</td><td style="font-size:8.5pt">'+escHtml(it.text)+'</td><td style="font-size:8.5pt">'+escHtml(it.action||it.note||'—')+'</td><td style="font-size:8.5pt;font-weight:bold;color:'+pColor(it.priority)+'">'+escHtml(it.priority)+'</td><td style="font-size:8.5pt">'+escHtml(it.responsible||'RP')+'</td><td style="font-size:8.5pt">'+escHtml(it.targetDate||'See priority')+'</td></tr>').join('')+'</tbody></table>')
+    +'<h2>Professional Summary</h2>'+(answers['SF.1']?.value?'<p>'+escHtml(answers['SF.1'].value)+'</p>':'')+(answers['SF.2']?.value?'<p>'+escHtml(answers['SF.2'].value)+'</p>':'')+(answers['SF.3']?.value?'<p>'+escHtml(answers['SF.3'].value)+'</p>':'')+(answers['SF.4']?.value?'<p><strong>Overall judgement:</strong> '+escHtml(answers['SF.4'].value)+'</p>':'')+(answers['SF.6']?.value?'<p><strong>Review basis:</strong> '+escHtml(answers['SF.6'].value)+'</p>':'')
+    +'<h2>Assessment Detail</h2>'+FRA_SECTIONS.map(sec=>'<h3>Section '+sec.id+': '+escHtml(sec.title)+'</h3><table><thead><tr><th style="width:45pt">Ref</th><th>Question</th><th style="width:75pt">Answer</th><th>Notes</th></tr></thead><tbody>'+sec.questions.map(q=>{const ans=answers[q.ref];if(!ans&&!q.required)return'';const val=ans?.value||'—';const note=ans?.note||'';;return'<tr'+(ans?.flagged?' style="background:#FEF2F2"':'')+'><td style="font-family:monospace;font-size:8pt">'+escHtml(q.ref)+'</td><td style="font-size:8.5pt">'+escHtml(q.q)+'</td><td style="font-size:8.5pt;text-transform:capitalize">'+escHtml(val)+'</td><td style="font-size:8.5pt;color:#4B5563">'+escHtml(note)+'</td></tr>';}).filter(Boolean).join('')+'</tbody></table>').join('')
+    +'<div class="footer"><p>Generated by Firesite — '+escHtml(org.name||'Assessor')+' · '+new Date().toLocaleDateString('en-GB')+' · '+escHtml(a.ref)+'</p>'+(org.disclaimer?'<p>'+escHtml(org.disclaimer)+'</p>':'')+'</div>'
+    +'</body></html>';
+  const blob = new Blob([wordHtml],{type:'application/msword'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href=url;link.download=(a.ref||'FRA')+'_'+(a.premisesName||'Report').replace(/[^a-zA-Z0-9]/g,'_')+'.doc';
+  document.body.appendChild(link);link.click();document.body.removeChild(link);
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function generatePDF(a, org) {
   const answers    = a.answers || {};
   const ac         = org.accentColor  || "#0D7A7A";
@@ -4286,7 +4369,7 @@ function generatePDF(a, org) {
       <tr><td class="lbl">Premises Type</td><td>${a.premisesType||"—"}</td></tr>
       <tr><td class="lbl">Responsible Person</td><td>${(a.rpName||"—")+(a.rpTitle?", "+a.rpTitle:"")}</td></tr>
       <tr><td class="lbl">Lead Assessor</td><td>${(org.assessor||"—")+(org.quals?" "+org.quals:"")}</td></tr>
-      <tr><td class="lbl">Assessment Type</td><td>${org.assessType||"Type 1 — Non-Intrusive"}</td></tr>
+      <tr><td class="lbl">Assessment Type</td><td>${a.assessType||org.assessType||"Type 1 — Non-Intrusive"}</td></tr>
       <tr><td class="lbl">Date of Assessment</td><td>${fmtDate(a.assessmentDate)}</td></tr>
       <tr><td class="lbl">Legislation</td><td>Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021 · Fire Safety (England) Regulations 2022</td></tr>
     </tbody></table>
@@ -4295,7 +4378,7 @@ function generatePDF(a, org) {
     <p class="body">${execSummary}</p>
 
     <div class="sec-h"><div class="sec-n">C</div><div><div class="sec-l">Section C</div><div class="sec-t">Introduction & Scope</div></div></div>
-    <p class="body">This fire risk assessment has been carried out by a competent assessor to assist the Responsible Person in meeting their duties under Article 9 of the Regulatory Reform (Fire Safety) Order 2005. The assessment is a ${org.assessType||"Type 1 — Non-Intrusive"} examination of the premises and fire safety management arrangements in place at the time of inspection.</p>
+    <p class="body">This fire risk assessment has been carried out by a competent assessor to assist the Responsible Person in meeting their duties under Article 9 of the Regulatory Reform (Fire Safety) Order 2005. The assessment is a ${a.assessType||org.assessType||"Type 1 — Non-Intrusive"} examination of the premises and fire safety management arrangements in place at the time of inspection.</p>
     <p class="body">This report identifies potential fire hazards to life safety, evaluates the adequacy of existing fire precautions and makes recommendations where deficiencies are identified. Findings are based on conditions observed at the time of the assessment on ${fmtDate(a.assessmentDate)}.</p>
     ${org.disclaimer ? `<p class="body" style="font-style:italic;color:#6B7280;">${org.disclaimer}</p>` : ""}
   </div>
@@ -4783,6 +4866,10 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
               onClick={()=>generatePDF(a, org)}>
               ⬇ PDF
             </button>
+            <button className="btn btn-ghost btn-sm" style={{flexShrink:0,color:"#6366F1",borderColor:"#6366F155"}}
+              onClick={()=>generateWord(a, org)} title="Download editable Word document">
+              ⬇ Word
+            </button>
             <button className="btn btn-ghost btn-sm" style={{flexShrink:0}}
               onClick={()=>shareReport(a,org)} title="Share assessment">
               ↑ Share
@@ -4843,7 +4930,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
                     {[["Client",a.clientName||"—"],["Contact",a.clientContact||"—"],["Address",a.premisesAddress||"—"],
                       ["Type",a.premisesType||"—"],["Responsible Person",(a.rpName||"—")+(a.rpTitle?", "+a.rpTitle:"")],
                       ["Lead Assessor",(org.assessor||"—")+(org.quals?" "+org.quals:"")],
-                      ["Assessment Type",org.assessType||"Type 1 — Non-Intrusive"],
+                      ["Assessment Type",a.assessType||org.assessType||"Type 1 — Non-Intrusive"],
                       ["Date",fmtDate(a.assessmentDate)],
                       ["Legislation","Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021"]
                     ].map(([l,v])=>(
@@ -4855,7 +4942,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
                   </tbody>
                 </table>
                 <RSecHead n="B" label="Section B" title="Introduction & Scope"/>
-                <p className="rpt-p">This fire risk assessment has been carried out by a competent assessor to assist the Responsible Person in meeting their duties under Article 9 of the Regulatory Reform (Fire Safety) Order 2005. The assessment is a {org.assessType||"Type 1 — Non-Intrusive"} examination of the premises and fire safety management arrangements in place at the time of inspection.</p>
+                <p className="rpt-p">This fire risk assessment has been carried out by a competent assessor to assist the Responsible Person in meeting their duties under Article 9 of the Regulatory Reform (Fire Safety) Order 2005. The assessment is a {a.assessType||org.assessType||"Type 1 — Non-Intrusive"} examination of the premises and fire safety management arrangements in place at the time of inspection.</p>
                 <p className="rpt-p">This report identifies potential fire hazards to life safety, evaluates the adequacy of existing fire precautions and makes recommendations where deficiencies are identified.</p>
                 {org.disclaimer&&<p className="rpt-p" style={{fontStyle:"italic",color:"#6B7280"}}>{org.disclaimer}</p>}
                 <RSecHead n="C" label="Executive Summary" title="Executive Summary"/>
@@ -5076,6 +5163,10 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
             <button className="btn btn-dark btn-full" style={{background:pr,padding:13,fontSize:13,fontWeight:700,borderRadius:9}}
               onClick={()=>generatePDF(a, org)}>
               ⬇ Download PDF Report
+            </button>
+            <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:13,fontWeight:600,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:"#6366F1",borderColor:"#6366F155"}}
+              onClick={()=>generateWord(a, org)}>
+              ⬇ Download Word Document (.doc)
             </button>
             <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:13,fontWeight:600,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
               onClick={()=>shareReport(a,org)}>
