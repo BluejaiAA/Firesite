@@ -257,12 +257,14 @@ const SMART_ACTIONS = {
   "7.15a": {action:"Designate a formal assembly point in a safe location away from the building and vehicle access routes. Mark clearly with assembly point signage (ISO 7010:2012 E007). Communicate the location to all occupants.",priority:"P3 — Within 3 months",on:"n"},
   "7.16":  {action:"Implement a formal roll-call or accountability procedure at the assembly point. Designate a responsible person to take headcount and liaise with the fire service. Ensure visitor sign-in register is taken to the assembly point on evacuation.",priority:"P3 — Within 3 months",on:"n"},
 };
+window._SMART_ACT = SMART_ACTIONS;
 
 // ─── SECTION INTROS ───────────────────────────────────────────────
 
 // ─── SOUND SYSTEM ─────────────────────────────────────────────────
 const _ac = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
 function playSound(type) {
+  if (window._soundMuted) return;
   if (!_ac) return;
   try {
     if (_ac.state === 'suspended') _ac.resume();
@@ -825,6 +827,11 @@ function reducer(state, action) {
     case "SHOW_MISSED":   return {...state, showMissed:true};
     case "HIDE_MISSED":   return {...state, showMissed:false};
     case "SHOW_VALIDATION":return {...state, showValidation:true};
+    case "CLONE_ASSESSMENT": return {
+      ...state,
+      assessments:[...state.assessments, action.assessment],
+      screen:"dashboard",activeId:null
+    };
     case "COMPLETE":      return {
       ...state, screen:"complete",
       assessments:state.assessments.map(a=>a.id===state.activeId
@@ -3567,10 +3574,26 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                           </div>
                           <div className="at-meta" style={{marginBottom:isDraft&&answered>0?7:0}}>
                             {a.premisesType&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.premisesType}</span>}
+                            {(a.assessType&&a.assessType!=="Type 1 — Non-Intrusive")&&<span className="abadge" style={{background:"#1A1000",color:"#F59E0B",border:"1px solid #D9770655"}}>{(a.assessType||'').replace('Type ','T').split('—')[0].trim()}</span>}
                             {a.clientName&&<span className="abadge" style={{background:"#21262D",color:"#8B949E",border:"1px solid #30363D"}}>{a.clientName}</span>}
                             {flagCount>0&&<span className="abadge" style={{background:"#2D1500",color:ac,border:`1px solid ${ac}44`}}>⚑ {flagCount} flagged</span>}
                             {a.savedAt&&<span style={{fontSize:9,color:"#6E7681",marginLeft:"auto"}}>Saved {a.savedAt}</span>}
                             {!isDraft&&a.nextReview&&<span className="abadge" style={{background:a.nextReview<today?"#1A0A0A":"#0D1F0D",color:a.nextReview<today?"#EF4444":"#6EE7B7",border:`1px solid ${a.nextReview<today?"#B91C1C55":"#6EE7B733"}`}}>{a.nextReview<today?"\u26A0 Overdue":"Review due"}: {a.nextReview}</span>}
+                          {!isDraft&&a.answers&&(()=>{
+                            const smActs=window._SMART_ACT||{};
+                            const flaggedRefs=Object.entries(a.answers||{}).filter(([,v])=>v&&v.flagged).map(([r])=>r);
+                            const p1=flaggedRefs.filter(r=>(smActs[r]||{}).priority&&(smActs[r].priority||'').indexOf('P1')===0).length;
+                            const p2=flaggedRefs.filter(r=>(smActs[r]||{}).priority&&(smActs[r].priority||'').indexOf('P2')===0).length;
+                            const p3=flaggedRefs.filter(r=>!((smActs[r]||{}).priority||'').match(/^P1|^P2/)).length;
+                            const total=flaggedRefs.length;
+                            if(total===0) return null;
+                            return React.createElement('div',{style:{display:'flex',gap:6,marginTop:5,flexWrap:'wrap',alignItems:'center'}},
+                              React.createElement('span',{style:{fontSize:9,fontWeight:700,color:'#6E7681',textTransform:'uppercase',letterSpacing:.5}},'Actions:'),
+                              p1>0&&React.createElement('span',{style:{fontSize:10,fontWeight:700,background:'#2D0B0B',color:'#EF4444',border:'1px solid #B91C1C55',borderRadius:4,padding:'1px 6px'}},p1+' P1'),
+                              p2>0&&React.createElement('span',{style:{fontSize:10,fontWeight:700,background:'#1A1000',color:'#F59E0B',border:'1px solid #D9770655',borderRadius:4,padding:'1px 6px'}},p2+' P2'),
+                              p3>0&&React.createElement('span',{style:{fontSize:10,fontWeight:700,background:'#0D1A2D',color:'#60A5FA',border:'1px solid #2563EB55',borderRadius:4,padding:'1px 6px'}},p3+' other')
+                            );
+                          })()}
                           </div>
                           {isDraft&&answered>0&&(
                             <div className="at2-prog-row">
@@ -3584,6 +3607,11 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                             {isDraft?"Continue":"Report"}
                           </button>
                           {!isDraft&&<button className="at2-btn-ghost" onClick={()=>dispatch({type:"SET_ACTIVE",id:a.id,screen:"assessment"})}>Edit</button>}
+                          <button className="at2-btn-ghost" title="Duplicate this assessment" onClick={()=>{
+                            const newId='a'+Date.now();
+                            const cloned={...a,id:newId,ref:(a.ref||'FRA')+'-COPY',status:'draft',completedAt:null,savedAt:new Date().toISOString().slice(0,10),nextReview:null,riskRating:null};
+                            dispatch({type:'CLONE_ASSESSMENT',assessment:cloned});
+                          }}>Clone</button>
                         </div>
                       </div>
                     );
@@ -3774,7 +3802,7 @@ function Assessment({state, dispatch}) {
           <button className="tn-back" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>← Back</button>
           <div className="tn-mid">
             <div className="tn-title dk" style={{fontSize:12}}>{a.premisesName||"Assessment"}</div>
-            <div className="tn-sub">{a.ref}</div>
+            <div className="tn-sub">{a.ref}{_asmtType&&_asmtType!=="Type 1 — Non-Intrusive"&&<span style={{marginLeft:6,fontSize:9,fontWeight:700,color:"#F59E0B",background:"#1A1000",border:"1px solid #D9770655",borderRadius:3,padding:"1px 4px"}}>PROFESSIONAL</span>}</div>
           </div>
           <span onClick={()=>{if(advMode){dispatch({type:"SET_ADVANCED",v:false});}else{setShowAdvModal(true);}}} title={advMode?"Click to switch to Standard mode":"Click to switch to Advanced mode"} style={{cursor:"pointer",fontSize:"10px",fontWeight:700,padding:"3px 9px",borderRadius:"20px",border:"1px solid "+(advMode?"#C0392B":"#30363D"),color:advMode?"#C0392B":"#6E7681",background:advMode?"rgba(192,57,43,.1)":"transparent",flexShrink:0,whiteSpace:"nowrap",userSelect:"none"}}>
             {advMode?"🔥 Advanced":"Standard"}
@@ -3785,6 +3813,9 @@ function Assessment({state, dispatch}) {
               : a.savedAt ? <span style={{color:"rgba(255,255,255,.2)",fontSize:9}}>{a.savedAt}</span>
               : null}
           </div>
+          <button title={window._soundMuted?"Unmute sounds":"Mute sounds"} onClick={()=>{window._soundMuted=!window._soundMuted;}} style={{background:'none',border:'none',cursor:'pointer',color:'rgba(255,255,255,.45)',fontSize:15,padding:'0 4px',marginLeft:2,lineHeight:1}} aria-label="Toggle sound">
+            {window._soundMuted?'🔇':'🔔'}
+          </button>
           {!state.isOnline && <span className="tn-offline">Offline</span>}
           {flagged>0&&mode==="card"&&(
             <span style={{fontSize:9,fontWeight:700,background:"#C0392B",color:"#fff",padding:"3px 8px",borderRadius:10}}>⚑{flagged}</span>
