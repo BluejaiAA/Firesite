@@ -3753,6 +3753,9 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                 <button className="btn btn-ghost btn-sm" title="Toggle portfolio summary view" onClick={()=>setShowPortfolio(!showPortfolio)}>
                   {showPortfolio?"✕ Hide Portfolio":"📊 Portfolio View"}
                 </button>
+                <button className="btn btn-ghost btn-sm" title="View analytics dashboard" onClick={()=>dispatch({type:"GO",screen:"analytics"})}>
+                  📊 Analytics
+                </button>
                 {(()=>{ const ps = window._BJ.portfolioStats(assessments); return (ps.overdue+ps.dueSoon) > 0 ? (
                   <div style={{marginLeft:"auto",fontSize:12,padding:"6px 12px",background:"rgba(192,57,43,0.15)",border:"1px solid rgba(192,57,43,0.4)",borderRadius:6,color:"#FF6B6B",fontWeight:600}}>
                     ⚠ {ps.overdue} overdue, {ps.dueSoon} due in 30 days
@@ -5942,6 +5945,161 @@ function ActionPortal({state}){
   );
 }
 
+function AnalyticsDashboard(props){
+  const state = props.state;
+  const dispatch = props.dispatch;
+  const asArr = (state.assessments||[]);
+  const total = asArr.length;
+  // Compute KPIs
+  let allFlags = [];
+  asArr.forEach(a=>{
+    const fl = (a.flags||[]);
+    fl.forEach(f=>{ allFlags.push({...f, _aid:a.id, _aRef:a.ref||""}); });
+  });
+  const openFlags = allFlags.filter(f=>!f.resolved);
+  const p1Critical = openFlags.filter(f=>f.priority==="P1");
+  const now = Date.now();
+  const overdueA = asArr.filter(a=>{ if(!a.nextReview) return false; return new Date(a.nextReview).getTime() < now; });
+  // Risk rating breakdown
+  const riskCounts = {Low:0, Medium:0, High:0, Critical:0, Unrated:0};
+  asArr.forEach(a=>{ const r = a.riskRating||"Unrated"; if(riskCounts[r]!==undefined) riskCounts[r]++; else riskCounts.Unrated++; });
+  // Flags by section (top 8)
+  const flagsBySection = {};
+  allFlags.forEach(f=>{ const s = f.section||"Other"; flagsBySection[s] = (flagsBySection[s]||0)+1; });
+  const flagSections = Object.entries(flagsBySection).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxFlagCount = flagSections.length>0 ? flagSections[0][1] : 1;
+  // Monthly volume last 6 months
+  const months = [];
+  const monthLabels = [];
+  const monthCounts = [];
+  const today = new Date();
+  for(let i=5;i>=0;i--){
+    const d = new Date(today.getFullYear(), today.getMonth()-i, 1);
+    const key = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+    months.push(key);
+    monthLabels.push(d.toLocaleString("default",{month:"short"}));
+    monthCounts.push(0);
+  }
+  asArr.forEach(a=>{ const dt = a.createdAt||a.date; if(!dt) return; const d = new Date(dt); const key = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); const idx = months.indexOf(key); if(idx>=0) monthCounts[idx]++; });
+  const maxMonth = Math.max(1, ...monthCounts);
+  // Review schedule next 90 days + overdue
+  const schedItems = [];
+  asArr.forEach(a=>{
+    if(!a.nextReview) return;
+    const t = new Date(a.nextReview).getTime();
+    const days = Math.round((t-now)/(86400000));
+    if(days <= 90) schedItems.push({a, days, t});
+  });
+  schedItems.sort((x,y)=>x.t-y.t);
+  // Risk donut params
+  const riskOrder = [{k:"Critical",c:"#C0392B"},{k:"High",c:"#E67E22"},{k:"Medium",c:"#F1C40F"},{k:"Low",c:"#27AE60"},{k:"Unrated",c:"#7F8C8D"}];
+  const riskTotal = riskOrder.reduce((s,o)=>s+(riskCounts[o.k]||0),0) || 1;
+  let cumA = 0;
+  const donutR = 70, donutCx=110, donutCy=110;
+  const donutSegs = riskOrder.filter(o=>(riskCounts[o.k]||0)>0).map(o=>{
+    const val = riskCounts[o.k]||0;
+    const frac = val/riskTotal;
+    const a0 = cumA * 2 * Math.PI - Math.PI/2;
+    const a1 = (cumA + frac) * 2 * Math.PI - Math.PI/2;
+    cumA += frac;
+    const x0 = donutCx + donutR * Math.cos(a0);
+    const y0 = donutCy + donutR * Math.sin(a0);
+    const x1 = donutCx + donutR * Math.cos(a1);
+    const y1 = donutCy + donutR * Math.sin(a1);
+    const large = frac > 0.5 ? 1 : 0;
+    const path = `M ${donutCx} ${donutCy} L ${x0} ${y0} A ${donutR} ${donutR} 0 ${large} 1 ${x1} ${y1} Z`;
+    return {path, color:o.c, label:o.k, val};
+  });
+  // KPI tile component inline
+  const Tile = function(p){ return (
+    <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16}}>
+      <div style={{fontSize:12,color:"#8B949E",textTransform:"uppercase",letterSpacing:0.5,marginBottom:6}}>{p.label}</div>
+      <div style={{fontSize:32,fontWeight:700,color:p.color||"#fff"}}>{p.value}</div>
+      {p.sub && <div style={{fontSize:11,color:"#8B949E",marginTop:4}}>{p.sub}</div>}
+    </div>
+  ); };
+  return (
+    <div style={{padding:20,maxWidth:1200,margin:"0 auto"}}>
+      <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
+        <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>← Back to Dashboard</button>
+        <h1 style={{margin:0,fontSize:24,color:"#fff"}}>📊 Analytics Dashboard</h1>
+        <div style={{marginLeft:"auto",fontSize:12,color:"#8B949E"}}>Portfolio-wide insights · {total} assessment{total===1?"":"s"}</div>
+      </div>
+      {/* KPI Tiles */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12,marginBottom:20}}>
+        <Tile label="Total Assessments" value={total} color="#4DA3FF"/>
+        <Tile label="Open Flags" value={openFlags.length} color="#E67E22" sub={`${allFlags.length} total`}/>
+        <Tile label="P1 Critical" value={p1Critical.length} color="#C0392B" sub="Open priority 1 actions"/>
+        <Tile label="Overdue Reviews" value={overdueA.length} color={overdueA.length>0?"#C0392B":"#27AE60"} sub="Past next-review date"/>
+      </div>
+      {/* Review Schedule */}
+      <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16,marginBottom:20}}>
+        <h2 style={{margin:"0 0 12px 0",fontSize:16,color:"#fff"}}>📅 Review Schedule — Next 90 Days</h2>
+        {schedItems.length===0 ? <div style={{color:"#8B949E",fontSize:13}}>No reviews scheduled in the next 90 days.</div> :
+          <div style={{display:"grid",gap:6}}>
+            {schedItems.map((it,idx)=>{
+              const isOverdue = it.days < 0;
+              const label = isOverdue ? (`OVERDUE by ${Math.abs(it.days)}d`) : (`in ${it.days}d`);
+              return (<div key={idx} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"8px 12px",background:isOverdue?"rgba(192,57,43,0.15)":"#161B22",border:"1px solid "+(isOverdue?"#C0392B":"#21262D"),borderRadius:6}}>
+                <div style={{fontSize:13,color:"#fff"}}>{it.a.ref||"(no ref)"} <span style={{color:"#8B949E"}}>· {(it.a.premises&&it.a.premises.name)||"(no premises)"}</span></div>
+                <div style={{fontSize:12,color:isOverdue?"#FF6B6B":"#8B949E",fontWeight:isOverdue?600:400}}>{new Date(it.t).toLocaleDateString()} · {label}</div>
+              </div>);
+            })}
+          </div>
+        }
+      </div>
+      {/* Risk Donut + Flags Heatmap (side by side) */}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:20}}>
+        <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16}}>
+          <h2 style={{margin:"0 0 12px 0",fontSize:16,color:"#fff"}}>🎯 Risk Rating Breakdown</h2>
+          <div style={{display:"flex",alignItems:"center",gap:16}}>
+            <svg width="220" height="220" viewBox="0 0 220 220">
+              {donutSegs.map((s,i)=><path key={i} d={s.path} fill={s.color} stroke="#0D1117" strokeWidth="2"/>)}
+              <circle cx="110" cy="110" r="40" fill="#0D1117"/>
+              <text x="110" y="108" textAnchor="middle" fontSize="22" fontWeight="700" fill="#fff">{riskTotal}</text>
+              <text x="110" y="126" textAnchor="middle" fontSize="10" fill="#8B949E">total</text>
+            </svg>
+            <div style={{flex:1,display:"grid",gap:4}}>
+              {riskOrder.map(o=>(
+                <div key={o.k} style={{display:"flex",alignItems:"center",gap:8,fontSize:12}}>
+                  <div style={{width:12,height:12,background:o.c,borderRadius:2}}/>
+                  <div style={{flex:1,color:"#fff"}}>{o.k}</div>
+                  <div style={{color:"#8B949E",fontWeight:600}}>{riskCounts[o.k]||0}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16}}>
+          <h2 style={{margin:"0 0 12px 0",fontSize:16,color:"#fff"}}>🚩 Flags by Section</h2>
+          {flagSections.length===0 ? <div style={{color:"#8B949E",fontSize:13}}>No flags raised yet.</div> :
+            <div style={{display:"grid",gap:6}}>
+              {flagSections.map(([sec,cnt])=>(
+                <div key={sec}>
+                  <div style={{display:"flex",justifyContent:"space-between",fontSize:11,marginBottom:2}}>
+                    <span style={{color:"#fff"}}>{sec}</span>
+                    <span style={{color:"#8B949E",fontWeight:600}}>{cnt}</span>
+                  </div>
+                  <div style={{height:8,background:"#161B22",borderRadius:4,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:(100*cnt/maxFlagCount)+"%",background:"#E67E22"}}/>
+                  </div>
+                </div>
+              ))}
+            </div>
+          }
+        </div>
+      </div>
+      {/* Monthly volume */}
+      <div style={{background:"#0D1117",border:"1px solid #21262D",borderRadius:8,padding:16}}>
+        <h2 style={{margin:"0 0 12px 0",fontSize:16,color:"#fff"}}>📈 Monthly Volume — Last 6 Months</h2>
+        <svg width="100%" height="180" viewBox="0 0 600 180" preserveAspectRatio="none">
+          {monthCounts.map((v,i)=>{ const bw=80, gap=16, x=20+i*(bw+gap); const h = v>0 ? (130*v/maxMonth) : 2; const y = 150 - h; return (<g key={i}><rect x={x} y={y} width={bw} height={h} fill="#4DA3FF" rx="4"/><text x={x+bw/2} y={y-4} textAnchor="middle" fontSize="12" fill="#fff">{v}</text><text x={x+bw/2} y={170} textAnchor="middle" fontSize="11" fill="#8B949E">{monthLabels[i]}</text></g>); })}
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
@@ -5974,6 +6132,7 @@ function App(){
       {screen==="client-setup"&&<ClientSetup state={state} dispatch={dispatch}/>}
       {screen==="assessment"&&<Assessment state={state} dispatch={dispatch}/>}
       {screen==="complete"&&<CompleteScreen state={state} dispatch={dispatch} ALL_SECTIONS={ALL_PDF_SECTIONS_BASE}/>}
+              {screen==="analytics"&&<AnalyticsDashboard state={state} dispatch={dispatch}/>}
     </>
   );
 }
