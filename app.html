@@ -5705,6 +5705,8 @@ function PhotoAnnotator(){
   const [active, setActive] = React.useState(null);
   const canvasRef = React.useRef(null);
   const imgRef = React.useRef(null);
+  const historyRef = React.useRef([]);
+  const originalRef = React.useRef(null);
   const [tool, setTool] = React.useState('pen');
   const [color, setColor] = React.useState('#FF3B30');
   const drawingRef = React.useRef(false);
@@ -5748,6 +5750,7 @@ function PhotoAnnotator(){
 
   const onDown = (e) => {
     e.preventDefault();
+    pushHistory();
     drawingRef.current = true;
     const p = getPos(e);
     startRef.current = p;
@@ -5771,9 +5774,18 @@ function PhotoAnnotator(){
     e.preventDefault();
     const p = getPos(e);
     const ctx = canvasRef.current.getContext('2d');
-    if (tool === 'pen') {
-      ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.lineCap = 'round';
+    if (tool === 'pen' || tool === 'eraser') {
+      if(tool === 'eraser'){
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.strokeStyle = 'rgba(0,0,0,1)';
+        ctx.lineWidth = 18;
+      } else {
+        ctx.strokeStyle = color; ctx.lineWidth = 3;
+      }
+      ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(lastRef.current.x, lastRef.current.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      if(tool === 'eraser') ctx.restore();
       lastRef.current = p;
     }
   };
@@ -5810,6 +5822,38 @@ function PhotoAnnotator(){
     active.upd(newArr);
     setActive(null);
   };
+  const pushHistory = () => {
+    try {
+      const c = canvasRef.current;
+      if(!c) return;
+      const data = c.toDataURL();
+      const hist = historyRef.current;
+      hist.push(data);
+      if(hist.length > 30) hist.shift();
+    } catch(e){}
+  };
+  const undo = () => {
+    const hist = historyRef.current;
+    if(hist.length === 0) return;
+    const last = hist.pop();
+    const img = new Image();
+    img.onload = () => {
+      const c = canvasRef.current;
+      if(!c) return;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0,0,c.width,c.height);
+      ctx.drawImage(img, 0, 0);
+    };
+    img.src = last;
+  };
+  const clearAll = () => {
+    const c = canvasRef.current;
+    if(!c) return;
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.drawImage(imgRef.current, 0, 0, c.width, c.height);
+    historyRef.current = [];
+  };
   const reset = () => {
     const ctx = canvasRef.current.getContext('2d');
     ctx.drawImage(imgRef.current, 0, 0, canvasRef.current.width, canvasRef.current.height);
@@ -5820,7 +5864,8 @@ function PhotoAnnotator(){
     {k:'arrow', l:'→ Arrow'},
     {k:'circle', l:'○ Circle'},
     {k:'rect', l:'▭ Rect'},
-    {k:'text', l:'A Label'}
+    {k:'text', l:'A Label'},
+    {k:'eraser', l:'⍓ Eraser'}
   ];
   const colors = ['#FF3B30','#FF9500','#FFCC00','#34C759','#0A84FF','#FFFFFF','#000000'];
 
@@ -5836,6 +5881,8 @@ function PhotoAnnotator(){
       onTouchStart:onDown, onTouchMove:onMove, onTouchEnd:onUp
     }),
     React.createElement('div', {style:{display:'flex',gap:8,marginTop:14}},
+      React.createElement('button', {onClick:undo, style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, '↶ Undo'),
+      React.createElement('button', {onClick:clearAll, style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, '✕ Clear'),
       React.createElement('button', {onClick:reset, style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, 'Reset'),
       React.createElement('button', {onClick:()=>setActive(null), style:{padding:'10px 18px',borderRadius:6,border:'1px solid #555',background:'transparent',color:'white',cursor:'pointer'}}, 'Cancel'),
       React.createElement('button', {onClick:save, style:{padding:'10px 18px',borderRadius:6,border:'none',background:'#27AE60',color:'white',cursor:'pointer',fontWeight:600}}, '✓ Save')
