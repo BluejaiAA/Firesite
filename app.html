@@ -102,6 +102,7 @@ body{overflow-x:hidden;-webkit-font-smoothing:antialiased;font-family:'Montserra
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
 <div id="root"></div>
@@ -4373,6 +4374,140 @@ function Assessment({state, dispatch}) {
 // Uses browser print API with dedicated print window
 // Works on all mobile browsers — no external dependencies
 
+function generateDocx(a, org) {
+  if (typeof JSZip === "undefined") { alert("DOCX export requires JSZip. Please wait a moment and try again."); return; }
+  const answers = a.answers || {};
+  const fmtDate = d => d ? new Date(d+"T00:00:00").toLocaleDateString("en-GB",{day:"2-digit",month:"long",year:"numeric"}) : "—";
+  const risk = a.riskRating || a.overallRating || "";
+  const actionItems = Object.entries(answers).filter(([,v])=>v&&v.flag===true).map(([ref,v])=>({ref,priority:v.priority||"P3",description:v.flagNote||v.note||"",responsible:v.responsible||"",targetDate:v.targetDate||""}));
+  const secsDone = FRA_SECTIONS.filter(s=>s.questions.filter(q=>q.required).every(q=>isAnswered(q,(answers)[q.ref]||{}))).length;
+  const execSummary = "This fire risk assessment was carried out at "+(a.premisesName||"the premises")+" on "+fmtDate(a.assessmentDate)+" by "+(org.assessor||"the assessor")+(org.quals?" ("+org.quals+")":"")+". The assessment covered "+secsDone+" of "+FRA_SECTIONS.length+" sections. The overall fire risk rating is "+(risk||"not yet set")+". A total of "+actionItems.length+" significant finding"+(actionItems.length!==1?"s were":" was")+" identified.";
+  const escXml = s => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;");
+  const para = (text, opts) => {
+    opts = opts || {};
+    const runs = (Array.isArray(text)?text:[{t:text}]).map(r=>{
+      const props=[];
+      if(r.b)props.push("<w:b/>");
+      if(r.i)props.push("<w:i/>");
+      if(r.color)props.push(`<w:color w:val="${r.color.replace(/^#/,"")}"/>`);
+      if(r.size)props.push(`<w:sz w:val="${r.size*2}"/>`);
+      const rpr = props.length?"<w:rPr>"+props.join("")+"</w:rPr>":"";
+      return `<w:r>${rpr}<w:t xml:space="preserve">${escXml(r.t||"")}</w:t></w:r>`;
+    }).join("");
+    const pPropsParts=[];
+    if(opts.style)pPropsParts.push(`<w:pStyle w:val="${opts.style}"/>`);
+    if(opts.align)pPropsParts.push(`<w:jc w:val="${opts.align}"/>`);
+    if(opts.shading)pPropsParts.push(`<w:shd w:val="clear" w:color="auto" w:fill="${opts.shading.replace(/^#/,"")}"/>`);
+    const pPr = pPropsParts.length?"<w:pPr>"+pPropsParts.join("")+"</w:pPr>":"";
+    return "<w:p>"+pPr+runs+"</w:p>";
+  };
+  const cell = (content, opts) => {
+    opts = opts || {};
+    const w = opts.w || 2500;
+    const shd = opts.fill?`<w:shd w:val="clear" w:color="auto" w:fill="${opts.fill.replace(/^#/,"")}"/>`:"";
+    const inner = Array.isArray(content)?content.join(""):content;
+    return `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${shd}</w:tcPr>${inner}</w:tc>`;
+  };
+  const row = cells => "<w:tr>"+cells.join("")+"</w:tr>";
+  const tableXml = rows => `<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D1D5DB"/><w:left w:val="single" w:sz="4" w:color="D1D5DB"/><w:bottom w:val="single" w:sz="4" w:color="D1D5DB"/><w:right w:val="single" w:sz="4" w:color="D1D5DB"/><w:insideH w:val="single" w:sz="4" w:color="D1D5DB"/><w:insideV w:val="single" w:sz="4" w:color="D1D5DB"/></w:tblBorders></w:tblPr>${rows.join("")}</w:tbl>`;
+  const heading1 = t => para([{t,b:true,color:"FFFFFF",size:22}],{shading:"C0392B",style:"Heading1"});
+  const heading2 = t => para([{t,b:true,color:"C0392B",size:14}],{style:"Heading2"});
+  const heading3 = t => para([{t,b:true,color:"0D1117",size:12}],{style:"Heading3"});
+  const body = [];
+  body.push(heading1("Fire Risk Assessment: "+(a.premisesName||"Premises Name")));
+  body.push(para([{t:"Reference: ",b:true},{t:a.ref||"—"}]));
+  body.push(para([{t:"Address: ",b:true},{t:a.premisesAddress||"—"}]));
+  body.push(para([{t:"Date: ",b:true},{t:fmtDate(a.assessmentDate)}]));
+  body.push(para([{t:"Assessor: ",b:true},{t:(org.assessor||"—")+(org.quals?" ("+org.quals+")":"")}]));
+  body.push(para([{t:"Premises type: ",b:true},{t:a.premisesType||org.assessType||"Type 1"}]));
+  body.push(para([{t:"Risk rating: ",b:true},{t:risk||"Pending",b:true}]));
+  body.push(para([{t:"Responsible person: ",b:true},{t:(a.rpName||"—")+(a.rpTitle?", "+a.rpTitle:"")}]));
+  body.push(para([{t:"Legislation: ",b:true},{t:"Regulatory Reform (Fire Safety) Order 2005 · Fire Safety Act 2021 · Fire Safety (England) Regulations 2022"}]));
+  body.push(heading2("Executive Summary"));
+  body.push(para(execSummary));
+  body.push(heading2("Scope"));
+  body.push(para((answers["SC.1"]||{}).value||"No scope statement recorded."));
+  if((answers["SC.2"]||{}).value==="y"){
+    body.push(para([{t:"Areas not inspected: ",b:true},{t:(answers["SC.2a"]||{}).value||"Not specified"}]));
+  }
+  body.push(heading2("Action Plan"));
+  if(actionItems.length===0){
+    body.push(para("No significant findings identified at this assessment."));
+  } else {
+    const hdr = row([
+      cell(para([{t:"Ref",b:true,color:"FFFFFF"}]),{w:1000,fill:"C0392B"}),
+      cell(para([{t:"Priority",b:true,color:"FFFFFF"}]),{w:1200,fill:"C0392B"}),
+      cell(para([{t:"Significant Finding",b:true,color:"FFFFFF"}]),{w:4500,fill:"C0392B"}),
+      cell(para([{t:"Responsible",b:true,color:"FFFFFF"}]),{w:2000,fill:"C0392B"}),
+      cell(para([{t:"Target",b:true,color:"FFFFFF"}]),{w:1800,fill:"C0392B"})
+    ]);
+    const dataRows = actionItems.map(it=>{
+      const pf = (it.priority||"").includes("P1")?"FEF2F2":(it.priority||"").includes("P2")?"FEF3C7":"FFFFFF";
+      return row([
+        cell(para(it.ref),{w:1000,fill:pf}),
+        cell(para([{t:it.priority,b:true}]),{w:1200,fill:pf}),
+        cell(para(it.description||"See priority"),{w:4500,fill:pf}),
+        cell(para(it.responsible||a.rpName||"RP"),{w:2000,fill:pf}),
+        cell(para(it.targetDate?fmtDate(it.targetDate):"See priority"),{w:1800,fill:pf})
+      ]);
+    });
+    body.push(tableXml([hdr].concat(dataRows)));
+  }
+  body.push(heading2("Assessment Detail"));
+  FRA_SECTIONS.forEach(sec=>{
+    body.push(heading3(sec.title));
+    const qRows = sec.questions.map(q=>{
+      const ans = (answers)[q.ref]||{};
+      const val = isAnswered(q,ans)?(ans.value!==undefined?String(ans.value):"(answered)"):"Not answered";
+      const flagged = ans.flag===true;
+      const fill = flagged?"FEF2F2":"FFFFFF";
+      return row([
+        cell(para([{t:q.ref,b:true}]),{w:1200,fill}),
+        cell(para(q.text||q.label||""),{w:5500,fill}),
+        cell(para(val),{w:3800,fill})
+      ]);
+    });
+    if(qRows.length){
+      const qHdr = row([
+        cell(para([{t:"Ref",b:true,color:"FFFFFF"}]),{w:1200,fill:"374151"}),
+        cell(para([{t:"Question",b:true,color:"FFFFFF"}]),{w:5500,fill:"374151"}),
+        cell(para([{t:"Response",b:true,color:"FFFFFF"}]),{w:3800,fill:"374151"})
+      ]);
+      body.push(tableXml([qHdr].concat(qRows)));
+    }
+  });
+  body.push(heading2("Sign-off"));
+  body.push(para([{t:"Assessor: ",b:true},{t:org.assessor||"—"}]));
+  body.push(para([{t:"Qualifications: ",b:true},{t:org.quals||"—"}]));
+  body.push(para([{t:"Date: ",b:true},{t:fmtDate(a.assessmentDate)}]));
+  body.push(para([{t:"Signature: ",b:true},{t:"_________________________"}]));
+  body.push(para([{t:"Next review: ",b:true},{t:a.nextReviewDate?fmtDate(a.nextReviewDate):"12 months from issue"}]));
+  if(org.disclaimer){
+    body.push(para([{t:"Disclaimer: ",b:true,i:true},{t:org.disclaimer,i:true}]));
+  }
+  const documentXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body.join("")}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const contentTypes = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`;
+  const rootRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const docRels = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:pPr><w:spacing w:before="240" w:after="120"/></w:pPr><w:rPr><w:b/><w:sz w:val="44"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:pPr><w:spacing w:before="200" w:after="80"/></w:pPr><w:rPr><w:b/><w:sz w:val="28"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading3"><w:name w:val="heading 3"/><w:pPr><w:spacing w:before="160" w:after="60"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style></w:styles>`;
+  const zip = new JSZip();
+  zip.file("[Content_Types].xml",contentTypes);
+  zip.folder("_rels").file(".rels",rootRels);
+  const wordFolder = zip.folder("word");
+  wordFolder.file("document.xml",documentXml);
+  wordFolder.file("styles.xml",stylesXml);
+  wordFolder.folder("_rels").file("document.xml.rels",docRels);
+  zip.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"}).then(blob=>{
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = (a.ref||"FRA")+"_"+(a.premisesName||"Report").replace(/[^a-zA-Z0-9]/g,"_")+".docx";
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
+  });
+}
+
+
 function generateWord(a, org) {
   const answers = a.answers||{};
   const pr = org.primaryColor||'#0D1117';
@@ -5208,6 +5343,10 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
               onClick={()=>generateWord(a, org)} title="Download editable Word document">
               ⬇ Word
             </button>
+            <button className="btn btn-ghost btn-sm" style={{flexShrink:0,color:pr,borderColor:pr}}
+              onClick={()=>generateDocx(a, org)} title="Download editable DOCX (Word with full formatting)">
+              ⬇ DOCX
+            </button>
             <button className="btn btn-ghost btn-sm" style={{flexShrink:0}}
               onClick={()=>shareReport(a,org)} title="Share assessment">
               ↑ Share
@@ -5505,6 +5644,10 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
             <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:13,fontWeight:600,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",gap:8,color:"#6366F1",borderColor:"#6366F155"}}
               onClick={()=>generateWord(a, org)}>
               ⬇ Download Word Document (.doc)
+            </button>
+            <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:14,color:"#14B8A6",borderColor:"#14B8A6"}}
+              onClick={()=>generateDocx(a, org)}>
+              ⬇ Download DOCX (Editable Word)
             </button>
             <button className="btn btn-ghost btn-full" style={{padding:13,fontSize:13,fontWeight:600,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}
               onClick={()=>shareReport(a,org)}>
