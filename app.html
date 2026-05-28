@@ -3618,7 +3618,7 @@ function ClientSetup({state, dispatch}) {
 
 // ─── DASHBOARD ────────────────────────────────────────────────────
 function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
-  const {org, assessments} = state;
+  const {org = {}, assessments = []} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
   const firstName = org.assessor?.split(" ")[0]||null;
@@ -5140,7 +5140,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
   if (!a) return null;
 
-  const {org} = state;
+  const {org = {}} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
   const [tab, setTab] = useState("overview");
