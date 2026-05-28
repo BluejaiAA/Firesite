@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "_comment": "Security headers. CSP starts in Report-Only mode so violations are logged but not blocked. Once the console is clean on the live app for ~48h, rename Content-Security-Policy-Report-Only to Content-Security-Policy to enforce. The 'unsafe-eval' allowance is required because Babel-standalone transpiles JSX at runtime; remove it after moving to a Vite production build.",
   "headers": [
     {
       "source": "/(.*)",
