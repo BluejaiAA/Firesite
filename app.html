@@ -3670,7 +3670,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
           <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:15,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em></span>
           {org.name&&<span style={{fontSize:9,color:"rgba(255,255,255,.28)",marginLeft:4}}>· {org.name}</span>}
         </div>
-        {!state.isOnline && <span className="tn-offline">Offline</span>}
+        {!navigator.onLine && <span className="tn-offline">Offline</span>}
         <button className="btn btn-ghost btn-sm" style={{borderColor:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.3)"}} onClick={()=>dispatch({type:"EDIT_ORG"})}>⚙</button>
       </div>
 
@@ -4158,7 +4158,7 @@ function Assessment({state, dispatch}) {
           <button title={window._soundMuted?"Unmute sounds":"Mute sounds"} onClick={()=>{window._soundMuted=!window._soundMuted;}} style={{background:'none',border:'none',cursor:'pointer',color:'rgba(255,255,255,.45)',fontSize:15,padding:'0 4px',marginLeft:2,lineHeight:1}} aria-label="Toggle sound">
             {window._soundMuted?'🔇':'🔔'}
           </button>
-          {!state.isOnline && <span className="tn-offline">Offline</span>}
+          {!navigator.onLine && <span className="tn-offline">Offline</span>}
           {flagged>0&&mode==="card"&&(
             <span style={{fontSize:9,fontWeight:700,background:"#C0392B",color:"#fff",padding:"3px 8px",borderRadius:10}}>⚑{flagged}</span>
           )}
