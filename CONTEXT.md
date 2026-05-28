@@ -154,3 +154,76 @@ RRO 2005 | PAS 79-1:2020 | BS 9999 | ADB | BS 5839-1 | BS 5266-1 | BS EN 1125 | 
 ### Known repo cleanup needed
 - There are BOTH `SRC/` and `src/` folders in the repo (case-sensitivity mismatch from a Windows commit). One of them should be deleted to avoid confusion. Verify which is current before deleting either.
 - Legacy files `firesite-app_12.html` and `firesite-complete_2.jsx` should be deleted or moved to an `archive/` folder.
+
+
+---
+
+## OVERNIGHT WORK SESSION — 28 May 2026
+
+Branch: `overnight-work` (NOT merged to `main` — review and merge via PR)
+
+### Commits in chronological order
+
+1. **`7619514` — Fix: Offline indicator always shown**
+   The "Offline" pill in the header was permanently displayed because it read `state.isOnline`, which is not in the reducer's INIT state and therefore always `undefined`. Replaced with `navigator.onLine` so the indicator now reflects actual browser connectivity at render time. Affects two locations: Dashboard header (line ~3673) and Assessment header (line ~4161). Cosmetic bug, not data-affecting.
+
+2. **`84bcc93` — Harden Dashboard and CompleteScreen state destructures**
+   Same family of bug as the `Cannot read 'rpName' of undefined` Assessment crash we fixed earlier in the day. Two other components were destructuring `org` (and one of them `assessments`) directly from `state` with no default. If `state.org` is briefly undefined during a redux mount, these would crash. Added `= {}` and `= []` defaults defensively. Lines 3621 and 5143. Preventative — fixes no current bug, prevents the same family from reappearing.
+
+3. **`d00f783` — Add top-level React ErrorBoundary**
+   Wrapped `<App/>` in a new `ErrorBoundary` class component. If any render error occurs in any descendant component, instead of a white screen the user sees a friendly "Something went wrong — Reload Firesite" UI with a technical details disclosure. Errors are auto-reported to Sentry if connected (`window.Sentry.captureException`) and always console.error'd. localStorage is unaffected by render crashes so user data is preserved. This is the single highest-value defensive change in this session — it converts every future "white screen of death" into a graceful recoverable error.
+
+4. **`5b0e7b1` — Add PAS 79-1:2020 Methodology section to PDF page 2**
+   Inserted a new "Section D — Methodology — PAS 79-1:2020" block on PDF page 2 (Premises & Introduction), positioned after the Scope/Objectives paragraphs and before the page footer. Contains the recognised nine-step PAS 79-1 process as a table, plus a statement of the assessment type adopted (Type 1 / 2 / 3 / 4). This is a credibility-critical addition for UK fire industry buyers, audit reviewers and insurers — many tenders require explicit methodology disclosure on the report itself. Does NOT change the assessment flow, the data structure, or any other report page.
+
+5. **`<this commit>` — Document overnight work in CONTEXT.md** (this commit)
+
+### What was deliberately NOT done
+
+- **No edits to `main`** — all work is on `overnight-work` branch. Vercel still serves the `main` branch unchanged.
+- **No security-header / CSP / Firestore rules / legal doc edits** — these all require user approval.
+- **No Vite build switch** — still deferred until explicitly approved.
+- **No new dependencies** — pure source edits to `app.html` only.
+- **No data-persistence changes** — nothing touches localStorage shape, Firestore writes, or assessment data flow. The reducer, action types and INIT state are unchanged.
+- **No delete-assessment feature added** — discovered during bug hunt that the app currently has no UI to delete assessments and no `DELETE_ASSESSMENT` reducer case. Adding one needs UX decision (soft-delete vs hard, confirmation flow, undo). Flagged for review.
+- **No "Issue Report" immutability workflow** — touches data persistence; deferred to a session with user awake to test.
+- **No photo SHA-256 hashing** — same reason.
+- **No BSA s.156 "Assisting Persons" capture** — needs UX decision on where it lives (Before-You-Begin form vs Responsible Person section vs both) and how it surfaces on cover page vs page 2.
+
+### Flagged findings for user review
+
+These were discovered during the bug-hunt sweep but NOT fixed because they're either feature-decision territory or too invasive for unattended work.
+
+- **Dead reducer action `SHOW_VALIDATION`** (line 1001 case, line 4378 consumer). The validation modal at line 4378 reads `state.showValidation` which nothing dispatches to. The whole validation-warnings-modal feature is half-built. Decide: complete it, or remove the dead code.
+- **Dead reducer action `SET_ONLINE`** (line 965 case, no consumer). Was the original mechanism for tracking online state — now superseded by `navigator.onLine`. Safe to remove the case to reduce dead code.
+- **18 silent `catch {}` blocks** swallow errors with no reporting. Many around Firebase calls (lines 2568, 2588, 2610, 2625, 2733). Once Sentry is connected, these should be upgraded to `catch(e){Sentry.captureException(e)}` so production failures surface. Doing this blind is risky because some catches are intentional (e.g. localStorage quota). Plan: do this as a focused session.
+- **localStorage key `firesite_v5f`** is the single source of truth for assessments, clients and actions. Firestore currently only stores user profile (`users/{uid}`). A future Phase 2 priority is migrating assessment data to Firestore with offline fallback to localStorage — once that lands, the Firestore rules I deployed in Phase 1 actually start protecting real assessment data rather than just profile data.
+- **No assessment delete UI exists.** Currently users have no way to delete an assessment. They probably want one. Designing this carefully matters because legally-issued assessments should NOT be deletable once "Issued" status is implemented; only draft assessments should be deletable.
+
+### What to test when reviewing this branch
+
+To open a Pull Request:
+1. Go to `https://github.com/BluejaiAA/Firesite/compare/main...overnight-work`
+2. Click "Create pull request"
+3. Title: "Overnight: bug fixes + ErrorBoundary + PAS 79-1 methodology"
+4. Read each commit individually using the "Commits" tab — each is small enough to review in 1–2 minutes.
+5. To preview the changes on a live URL, push the branch to a Vercel preview deployment (Vercel auto-creates preview URLs for non-main branches if the project is configured for it; otherwise temporarily merge to main and roll back if needed).
+
+To test locally without merging:
+- Pull the branch (`git fetch && git checkout overnight-work`)
+- Open `app.html` in a browser
+- Sanity checks:
+  - Dashboard loads, "+ New" works, "Start Assessment" works (the crash we fixed earlier in the day stays fixed).
+  - Offline pill is HIDDEN by default (only shows when actually offline; test by toggling DevTools → Network → Offline).
+  - Generate a PDF on any completed assessment and confirm Page 2 now includes "Section D — Methodology — PAS 79-1:2020" with the 9-step table.
+  - To test the ErrorBoundary: temporarily throw an error in any component (e.g. `throw new Error('test')` in Assessment) — you should see the friendly red-button reload UI instead of a white screen.
+
+### Recommended next sessions
+
+1. **Vite production build switch** (frees up tightening CSP, drops ~3MB of CDN load, enables bundle SRI). Defers `'unsafe-eval'`. Breaks the "edit app.html in GitHub" workflow.
+2. **Assessment data → Firestore migration with offline fallback** (genuine multi-device sync, makes Firestore rules actually protect assessment data, enables the immutable-issued-reports workflow cleanly).
+3. **Immutable "Issued" status + frozen snapshots** (legal-grade audit trail).
+4. **Photo SHA-256 hashing at capture + hash printed on PDF action register** (court-admissible evidence).
+5. **BSA s.156 capture (Assisting Persons)** with cover-page rendering.
+6. **Delete-draft-assessment UI with confirmation modal** (and a hard guard against deleting issued reports).
+
