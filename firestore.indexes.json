@@ -1,0 +1,5 @@
+{
+  "_comment": "Composite indexes for Firesite Firestore. Empty for now — single-field indexes are auto-created. Add composite indexes here as collections evolve (e.g. orgs/{orgId}/assessments by status+updatedAt).",
+  "indexes": [],
+  "fieldOverrides": []
+}
