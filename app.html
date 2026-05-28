@@ -6218,6 +6218,34 @@ function AnalyticsDashboard(props){
   );
 }
 
+class ErrorBoundary extends React.Component {
+  constructor(props){ super(props); this.state = {hasError:false, err:null}; }
+  static getDerivedStateFromError(err){ return {hasError:true, err}; }
+  componentDidCatch(err, info){
+    try { if (window.Sentry && Sentry.captureException) Sentry.captureException(err, {extra:info}); } catch(e){}
+    try { console.error('[Firesite] App error caught by ErrorBoundary:', err, info); } catch(e){}
+  }
+  render(){
+    if (this.state.hasError) {
+      return React.createElement('div', {style:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0D1117',color:'#E6EDF3',fontFamily:'system-ui,sans-serif',padding:24}},
+        React.createElement('div', {style:{maxWidth:520,textAlign:'center'}},
+          React.createElement('div', {style:{fontSize:48,marginBottom:16}}, '⚠️'),
+          React.createElement('h1', {style:{fontSize:24,marginBottom:12,fontWeight:700}}, 'Something went wrong'),
+          React.createElement('p', {style:{color:'#8B949E',marginBottom:24,lineHeight:1.5}}, 'The page hit an unexpected error. Your data is safe — nothing has been lost. Click below to reload Firesite.'),
+          React.createElement('button', {
+            onClick: () => { try { window.location.reload(); } catch(e){} },
+            style:{padding:'12px 24px',background:'#C0392B',color:'#fff',border:'none',borderRadius:8,fontSize:14,fontWeight:600,cursor:'pointer'}
+          }, 'Reload Firesite'),
+          React.createElement('details', {style:{marginTop:24,textAlign:'left',color:'#6E7681',fontSize:12}},
+            React.createElement('summary', {style:{cursor:'pointer'}}, 'Technical details'),
+            React.createElement('pre', {style:{whiteSpace:'pre-wrap',marginTop:8,padding:12,background:'#161B22',borderRadius:6,overflow:'auto'}}, String(this.state.err && (this.state.err.stack || this.state.err.message || this.state.err)))
+          )
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
 function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
@@ -6255,7 +6283,7 @@ function App(){
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<ErrorBoundary><App/></ErrorBoundary>);
 </script>
 </body>
 </html>
