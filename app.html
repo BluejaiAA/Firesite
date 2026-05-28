@@ -3570,13 +3570,13 @@ function ClientSetup({state, dispatch}) {
                   </select></div>
                 <div className="fg span2"><label className="fl">Intrusive Level (overrides default)</label>
                   <select className="fs" value={a.assessType||""} onChange={e=>upd({assessType:e.target.value})}>
-                    <option value="">Use org default ({org.assessType||"Type 1 — Non-Intrusive"})</option>
+                    <option value="">Use org default ({state.org.assessType||"Type 1 — Non-Intrusive"})</option>
                     <option value="Type 1 — Non-Intrusive">Type 1 — Non-Intrusive</option>
                     <option value="Type 2 — Intrusive (non-destructive)">Type 2 — Intrusive (non-destructive)</option>
                     <option value="Type 3 — Intrusive (destructive)">Type 3 — Intrusive (destructive)</option>
                     <option value="Type 4 — Enhanced">Type 4 — Enhanced</option>
                   </select>
-                  {(a.assessType||org.assessType||'')
+                  {(a.assessType||state.org.assessType||'')
 .match(/Type [234]/)&&<div className="fhint" style={{color:"#6366F1"}}>&#10022; Section 14 intrusive questions will be included in this assessment</div>}
                 </div>
                 {(a.reviewType||"new")!=="new" &&
