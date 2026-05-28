@@ -16,7 +16,6 @@
 <script>
 (function(){
 var mf={name:"Firesite",short_name:"Firesite",description:"Fire risk assessment app.",start_url:"/app.html",display:"standalone",background_color:"#0D1117",theme_color:"#0D1117",orientation:"portrait-primary",icons:[{src:"icon192.png",sizes:"192x192",type:"image/png",purpose:"any maskable"},{src:"icon192.png",sizes:"512x512",type:"image/png",purpose:"any maskable"}]};
-@media(max-width:480px){.page{width:100%!important;padding:16px 12px!important;}.cover-meta{grid-template-columns:1fr!important;}.abadge{font-size:10px!important;padding:2px 7px!important;}.findings-table{font-size:12px!important;}.findings-table td,.findings-table th{padding:6px 8px!important;}}
 var mb=new Blob([JSON.stringify(mf)],{type:"application/manifest+json"});
 document.getElementById("pwa-manifest").href=URL.createObjectURL(mb);
 if("serviceWorker"in navigator){
