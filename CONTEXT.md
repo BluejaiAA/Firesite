@@ -115,3 +115,42 @@
 ## STANDARDS REFERENCES
 Every question guidance and action plan MUST reference applicable standards:
 RRO 2005 | PAS 79-1:2020 | BS 9999 | ADB | BS 5839-1 | BS 5266-1 | BS EN 1125 | BS 8674:2025 | BSA 2022 | FSA 2021
+
+
+---
+
+## PHASE 1 SECURITY/COMPLIANCE WORK (committed — manual follow-ups required)
+
+### What was done in code
+- **firestore.rules** — multi-tenant, default-deny, with forward-compatible schema for orgs/members/assessments/clients/sites/actions/reports/audit/public_share.
+- **firestore.indexes.json** — empty composite-index scaffold.
+- **tests/firestore.rules.test.js** — Jest + @firebase/rules-unit-testing scaffold covering users, orgs, audit, default-deny.
+- **README-security.md** — deployment, threat model, rules testing instructions.
+- **vercel.json** — security headers including CSP **(currently Content-Security-Policy-Report-Only)**, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COOP. /sw.js no-cache.
+- **app.html** — SRI hashes added to all 5 CDN scripts (React, ReactDOM, Babel, html2pdf, JSZip). Sentry SDK 7.119.0 added with SRI, ?nosentry opt-out, browser-extension noise filter.
+- **legal/{TERMS,PRIVACY,DPA,AUP}.md** — DRAFT documents marked clearly for solicitor review.
+- **Bug fix** — removed stray CSS @media rule from JS IIFE (was line 19, caused SyntaxError that broke New Assessment).
+
+### MANUAL STEPS YOU MUST DO (not done by code)
+1. **Deploy the Firestore rules to Firebase**:
+   - Option A: `firebase deploy --only firestore:rules` from your machine
+   - Option B: paste `firestore.rules` into Firebase Console → Firestore → Rules → Publish
+2. **Create a Sentry project** at https://sentry.io (Browser/JavaScript SDK), grab the DSN, paste it into the `window.SENTRY_DSN` line near the top of app.html, commit.
+3. **Watch CSP-Report-Only violations** in browser DevTools console on the live site for ~48h. When clean, edit `vercel.json` and rename `Content-Security-Policy-Report-Only` → `Content-Security-Policy` to enforce.
+4. **Apply for Cyber Essentials** at https://iasme.co.uk/cyber-essentials/ (~£400, 2 weeks). Use README-security.md as a starting reference.
+5. **Take legal/*.md to a UK SaaS solicitor** for finalisation. Budget £800–£1,500 for the first pass. Fill in the [BRACKETED] placeholders (company number, registered office, email addresses, Firebase region, etc.).
+6. **Register with the ICO** at https://ico.org.uk/registration/ (£40–£60/year depending on size).
+7. **Confirm Firebase data residency** is set to europe-west2 (London) and update PRIVACY.md/DPA.md accordingly.
+8. **Set up a security@ email** address for vulnerability reports (referenced in README-security.md).
+
+### What's still pending from Phase 1 (NOT yet done)
+- **Vite production build switch** — explicitly deferred per user's go-ahead "stop before step 8". This will:
+  - Remove the need for `'unsafe-eval'` in CSP (Babel-standalone runtime goes away)
+  - Cut first-load size by ~3MB
+  - Enable proper SRI on the React/ReactDOM bundles (currently pinned but un-versioned-build)
+  - Break the "edit app.html directly in GitHub" workflow — file will become a build artefact
+  - Require Vercel project settings: Build Command `vite build`, Output Directory `dist`
+
+### Known repo cleanup needed
+- There are BOTH `SRC/` and `src/` folders in the repo (case-sensitivity mismatch from a Windows commit). One of them should be deleted to avoid confusion. Verify which is current before deleting either.
+- Legacy files `firesite-app_12.html` and `firesite-complete_2.jsx` should be deleted or moved to an `archive/` folder.
