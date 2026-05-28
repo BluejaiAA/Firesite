@@ -24,6 +24,47 @@ navigator.serviceWorker.register("/sw.js",{scope:"/"})
 .catch(function(e){console.warn("[Firesite] SW:",e);});}
 })();
 </script>
+<!-- Sentry error reporting. Edit SENTRY_DSN below or set window.SENTRY_DSN before this script. -->
+<script>window.SENTRY_DSN = window.SENTRY_DSN || ""; // <-- PASTE YOUR SENTRY DSN HERE (e.g. https://abc@o123.ingest.sentry.io/456)</script>
+<script src="https://browser.sentry-cdn.com/7.119.0/bundle.tracing.min.js" integrity="sha384-rZu69pPOmCbAWY6noj9hSNHZJHE4KW80YWowiNKTJWLsUT8dhyTjlqKGruotLZGH" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+(function(){
+  try {
+    var p = new URLSearchParams(location.search);
+    if (p.has("nosentry")) { console.log("[Firesite] Sentry disabled via ?nosentry"); return; }
+    if (!window.Sentry || !window.SENTRY_DSN) {
+      console.log("[Firesite] Sentry not configured (no DSN). Set window.SENTRY_DSN to enable.");
+      return;
+    }
+    window.Sentry.init({
+      dsn: window.SENTRY_DSN,
+      environment: location.hostname === "firesite-weld.vercel.app" ? "production" : (location.hostname === "localhost" ? "development" : "staging"),
+      release: "firesite@1.0.0",
+      tracesSampleRate: 0.1,
+      replaysSessionSampleRate: 0.0,
+      replaysOnErrorSampleRate: 0.0,
+      ignoreErrors: [
+        "ResizeObserver loop limit exceeded",
+        "ResizeObserver loop completed with undelivered notifications",
+        "Non-Error promise rejection captured",
+        "Failed to fetch",
+        "NetworkError when attempting to fetch resource",
+        "Load failed"
+      ],
+      beforeSend: function(event, hint) {
+        // Drop events from third-party scripts we don't own.
+        try {
+          var frames = event.exception && event.exception.values && event.exception.values[0] && event.exception.values[0].stacktrace && event.exception.values[0].stacktrace.frames || [];
+          var top = frames[frames.length - 1];
+          if (top && top.filename && /chrome-extension:|moz-extension:|safari-extension:/.test(top.filename)) return null;
+        } catch(e) {}
+        return event;
+      }
+    });
+    console.log("[Firesite] Sentry initialised");
+  } catch(e) { console.warn("[Firesite] Sentry init failed:", e); }
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" integrity="sha384-tMH8h3BGESGckSAVGZ82T9n90ztNXxvdwvdM6UoR56cYcf+0iGXBliJ29D+wZ/x8" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" integrity="sha384-bm7MnzvK++ykSwVJ2tynSE5TRdN+xL418osEVF2DE/L/gfWHj91J2Sphe582B1Bh" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js" integrity="sha384-aGlMNK3U/x0wl4lEH5jD1PGhJlX9hApuPmIiA5gtiYCOQ1J8ejIdC0btaU/TMoBD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
