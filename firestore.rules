@@ -1,0 +1,221 @@
+rules_version = '2';
+
+// =============================================================================
+// Firesite Firestore Security Rules
+// =============================================================================
+//
+// Threat model: any authenticated user could read or write any document
+// in the database unless we explicitly stop them. The default posture is
+// DENY-ALL; every collection must be opted-in below.
+//
+// Current data model (as of this rules version):
+//   users/{uid}                 -- per-user profile, plan, org settings
+//
+// Reserved / forward-compatible collections (locked down even though unused):
+//   orgs/{orgId}
+//   orgs/{orgId}/members/{uid}
+//   orgs/{orgId}/assessments/{assessmentId}
+//   orgs/{orgId}/clients/{clientId}
+//   orgs/{orgId}/sites/{siteId}
+//   orgs/{orgId}/actions/{actionId}
+//   orgs/{orgId}/reports/{reportId}
+//   audit/{eventId}             -- append-only audit log (writes via Cloud Functions only)
+//   public_share/{token}        -- read-only share links (writes via Cloud Functions only)
+//
+// All other paths are denied by the catch-all rule at the bottom.
+//
+// Deployment: `firebase deploy --only firestore:rules`
+// =============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------------------------
+    // Helper functions
+    // -------------------------------------------------------------------------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Email-verified accounts only for writes that affect billing/plan state.
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    // True if the incoming document is a valid user-profile shape.
+    // We allow a permissive but not silly schema: known top-level keys only.
+    function isValidUserDoc(d) {
+      return d.keys().hasOnly([
+        'email','name','plan','orgName','orgAddress','orgPhone',
+        'orgLogo','orgPrimary','orgSecondary','assessorName','assessorReg',
+        'assessorQual','assessorPI','assessorPIExpiry','createdAt','updatedAt',
+        'role','marketingOptIn','timezone','locale'
+      ]);
+    }
+
+    // A user cannot self-elevate their plan or role on write.
+    // Plan changes must come from a Cloud Function reacting to Stripe webhooks.
+    function planUnchanged(existing, incoming) {
+      return !('plan' in incoming) ||
+             (existing != null && existing.data.plan == incoming.plan);
+    }
+    function roleUnchanged(existing, incoming) {
+      return !('role' in incoming) ||
+             (existing != null && existing.data.role == incoming.role);
+    }
+
+    // Org membership lookup (forward-compatible; collection may not exist yet).
+    function isOrgMember(orgId) {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/orgs/$(orgId)/members/$(request.auth.uid));
+    }
+    function orgRole(orgId) {
+      return get(/databases/$(database)/documents/orgs/$(orgId)/members/$(request.auth.uid)).data.role;
+    }
+    function isOrgAdmin(orgId) {
+      return isOrgMember(orgId) && orgRole(orgId) in ['owner','admin'];
+    }
+
+    // -------------------------------------------------------------------------
+    // users/{uid}
+    //
+    // Each user owns exactly one document at users/{uid}. Nobody else may read
+    // or write it. Plan + role are server-managed (Cloud Functions only) and
+    // are immutable from the client.
+    // -------------------------------------------------------------------------
+    match /users/{uid} {
+      allow read:   if isUser(uid);
+      allow create: if isUser(uid)
+                    && isValidUserDoc(request.resource.data)
+                    // New users may NOT set their own plan to anything other
+                    // than 'free' (or omit it entirely).
+                    && (!('plan' in request.resource.data) ||
+                         request.resource.data.plan == 'free')
+                    // New users may NOT self-assign elevated roles.
+                    && (!('role' in request.resource.data) ||
+                         request.resource.data.role in ['user', null]);
+      allow update: if isUser(uid)
+                    && isValidUserDoc(request.resource.data)
+                    && planUnchanged(resource, request.resource.data)
+                    && roleUnchanged(resource, request.resource.data);
+      // Account deletion is destructive; require a Cloud Function flow
+      // that also clears child data, exports a portability bundle, etc.
+      allow delete: if false;
+    }
+
+    // -------------------------------------------------------------------------
+    // orgs/{orgId} (forward-compatible)
+    //
+    // Orgs are created by Cloud Functions when a user upgrades to a team plan.
+    // Members can read their org; only owners/admins can update it.
+    // -------------------------------------------------------------------------
+    match /orgs/{orgId} {
+      allow read:   if isOrgMember(orgId);
+      allow create: if false;  // server-only
+      allow update: if isOrgAdmin(orgId);
+      allow delete: if false;  // server-only
+
+      // -----------------------------------------------------------------------
+      // orgs/{orgId}/members/{uid}
+      //
+      // Members may read their own membership doc. Org admins may read all
+      // members and add/remove non-owner members. Owners are managed server-side.
+      // -----------------------------------------------------------------------
+      match /members/{uid} {
+        allow read:   if isUser(uid) || isOrgAdmin(orgId);
+        allow create: if isOrgAdmin(orgId)
+                      && request.resource.data.role in ['admin','assessor','reviewer','viewer'];
+        allow update: if isOrgAdmin(orgId)
+                      && request.resource.data.role in ['admin','assessor','reviewer','viewer']
+                      // Cannot demote an owner via client.
+                      && resource.data.role != 'owner';
+        allow delete: if isOrgAdmin(orgId) && resource.data.role != 'owner';
+      }
+
+      // -----------------------------------------------------------------------
+      // orgs/{orgId}/assessments/{assessmentId}
+      // orgs/{orgId}/clients/{clientId}
+      // orgs/{orgId}/sites/{siteId}
+      // orgs/{orgId}/actions/{actionId}
+      // -----------------------------------------------------------------------
+      match /assessments/{assessmentId} {
+        allow read:   if isOrgMember(orgId);
+        allow create: if isOrgMember(orgId)
+                      && request.resource.data.createdBy == request.auth.uid;
+        allow update: if isOrgMember(orgId)
+                      // Issued (frozen) reports cannot be edited. Only a new
+                      // version may be created.
+                      && resource.data.status != 'issued';
+        allow delete: if isOrgAdmin(orgId)
+                      && resource.data.status != 'issued';
+      }
+
+      match /clients/{clientId} {
+        allow read:   if isOrgMember(orgId);
+        allow write:  if isOrgMember(orgId);
+      }
+
+      match /sites/{siteId} {
+        allow read:   if isOrgMember(orgId);
+        allow write:  if isOrgMember(orgId);
+      }
+
+      match /actions/{actionId} {
+        allow read:   if isOrgMember(orgId);
+        allow create: if isOrgMember(orgId);
+        allow update: if isOrgMember(orgId);
+        // Actions are never hard-deleted; closure is a status change.
+        allow delete: if false;
+      }
+
+      // -----------------------------------------------------------------------
+      // orgs/{orgId}/reports/{reportId}
+      //
+      // Issued (frozen) reports. Immutable after creation. Created by
+      // Cloud Functions when a user clicks "Issue report".
+      // -----------------------------------------------------------------------
+      match /reports/{reportId} {
+        allow read:   if isOrgMember(orgId);
+        allow create: if false;  // server-only
+        allow update: if false;  // immutable
+        allow delete: if false;  // server-only retention policy
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // audit/{eventId}
+    //
+    // Append-only audit log. The client is never allowed to write directly;
+    // events are recorded by Cloud Functions / Firestore triggers.
+    // Members of an org may read events scoped to their org.
+    // -------------------------------------------------------------------------
+    match /audit/{eventId} {
+      allow read:   if isSignedIn() && resource.data.orgId is string &&
+                       isOrgMember(resource.data.orgId);
+      allow write:  if false;  // server-only
+    }
+
+    // -------------------------------------------------------------------------
+    // public_share/{token}
+    //
+    // Public read-only share links. Document holds: orgId, reportId, expiresAt.
+    // Anyone with the link can read the document (which then tells the app
+    // which report to fetch via a separate server-side endpoint).
+    // -------------------------------------------------------------------------
+    match /public_share/{token} {
+      allow read:   if resource.data.expiresAt > request.time;
+      allow write:  if false;  // server-only
+    }
+
+    // -------------------------------------------------------------------------
+    // Default deny — IMPORTANT, keep last.
+    // -------------------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
