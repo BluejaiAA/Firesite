@@ -3987,7 +3987,7 @@ function Assessment({state, dispatch}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
   if (!a) return <div style={{padding:40,textAlign:"center",color:"#6E7681"}}>Assessment not found. <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"GO",screen:"dashboard"})}>Back</button></div>;
 
-  const {org, showMissed} = state;
+  const {org = {}, showMissed} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
   const answers = a.answers||{};
