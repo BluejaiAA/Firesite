@@ -227,3 +227,54 @@ To test locally without merging:
 5. **BSA s.156 capture (Assisting Persons)** with cover-page rendering.
 6. **Delete-draft-assessment UI with confirmation modal** (and a hard guard against deleting issued reports).
 
+
+
+---
+
+## Morning Session — 29 May 2026
+
+### Done with user awake
+
+1. **Firebase Firestore Rules — DEPLOYED**
+   - User pasted firestore.rules into Firebase Console (europe-west2 / Firesiteapp project)
+   - Replaced wide-open default with proper deny-by-default + helper functions
+   - Live as of 08:55, 29 May 2026
+   - Verified live app still loads (Amie's dashboard, 14 assessments visible)
+
+2. **Smoke Test of overnight PR #1 (merged)** — All green
+   - Dashboard loads, no ErrorBoundary triggered
+   - Console clean: only "[Firesite] Firebase initialised"
+   - +New assessment opens "Before You Begin" form correctly
+   - Continue draft opens to AD.1 question card with PROFESSIONAL badge
+   - Offline pill correctly hidden when online (navigator.onLine fix working)
+   - No CSP violations in console while navigating
+
+### Branch: quick-wins (PR #2)
+
+3. **Commit 48d5f84 — Enforce CSP**
+   - vercel.json: `Content-Security-Policy-Report-Only` -> `Content-Security-Policy`
+   - Site has been in Report-Only for 7+ days with zero violations seen
+   - Safe to flip to enforce mode
+
+4. **Commit 0604e18 — Remove dead SET_ONLINE handling**
+   - Removed reducer case (line ~965)
+   - Removed useEffect that wired online/offline event listeners
+   - Removed isOnline:true from INIT state shape
+   - All replaced by navigator.onLine in last night's commit 7619514
+
+### Scoped but deferred (need focused session with user)
+
+- **Delete-assessment UI** — does not currently exist; building from scratch requires UX decisions and touches user data via Firestore
+- **Save indicator** — requires understanding Firestore save flow more completely; user agreed to help via screenshots
+
+### Audit corrections
+
+- **SHOW_VALIDATION is NOT dead** — overnight audit was wrong. It is dispatched at line 4081 and rendered at 4378. Keep as-is.
+
+### Manual follow-ups still outstanding for user
+
+- ICO registration (paid - GBP 40/year) - required before paid customers
+- Solicitor review of T&Cs and Privacy Policy (paid - approx GBP 800) - recommended before launch
+- security@bluejai.co.uk email alias (deferred to "costs money" list — could be free as alias if email host supports it)
+- Cyber Essentials certification (deferred)
+- Sentry DSN (when ready to sign up for free tier)
