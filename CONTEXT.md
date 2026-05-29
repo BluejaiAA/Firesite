@@ -227,3 +227,101 @@ To test locally without merging:
 5. **BSA s.156 capture (Assisting Persons)** with cover-page rendering.
 6. **Delete-draft-assessment UI with confirmation modal** (and a hard guard against deleting issued reports).
 
+
+
+---
+
+## Morning Session — 29 May 2026
+
+### Done with user awake
+
+1. **Firebase Firestore Rules — DEPLOYED**
+   - User pasted firestore.rules into Firebase Console (europe-west2 / Firesiteapp project)
+   - Replaced wide-open default with proper deny-by-default + helper functions
+   - Live as of 08:55, 29 May 2026
+   - Verified live app still loads (Amie's dashboard, 14 assessments visible)
+
+2. **Smoke Test of overnight PR #1 (merged)** — All green
+   - Dashboard loads, no ErrorBoundary triggered
+   - Console clean: only "[Firesite] Firebase initialised"
+   - +New assessment opens "Before You Begin" form correctly
+   - Continue draft opens to AD.1 question card with PROFESSIONAL badge
+   - Offline pill correctly hidden when online (navigator.onLine fix working)
+   - No CSP violations in console while navigating
+
+### Branch: quick-wins (PR #2)
+
+3. **Commit 48d5f84 — Enforce CSP**
+   - vercel.json: `Content-Security-Policy-Report-Only` -> `Content-Security-Policy`
+   - Site has been in Report-Only for 7+ days with zero violations seen
+   - Safe to flip to enforce mode
+
+4. **Commit 0604e18 — Remove dead SET_ONLINE handling**
+   - Removed reducer case (line ~965)
+   - Removed useEffect that wired online/offline event listeners
+   - Removed isOnline:true from INIT state shape
+   - All replaced by navigator.onLine in last night's commit 7619514
+
+### Scoped but deferred (need focused session with user)
+
+- **Delete-assessment UI** — does not currently exist; building from scratch requires UX decisions and touches user data via Firestore
+- **Save indicator** — requires understanding Firestore save flow more completely; user agreed to help via screenshots
+
+### Audit corrections
+
+- **SHOW_VALIDATION is NOT dead** — overnight audit was wrong. It is dispatched at line 4081 and rendered at 4378. Keep as-is.
+
+### Manual follow-ups still outstanding for user
+
+- ICO registration (paid - GBP 40/year) - required before paid customers
+- Solicitor review of T&Cs and Privacy Policy (paid - approx GBP 800) - recommended before launch
+- security@bluejai.co.uk email alias (deferred to "costs money" list — could be free as alias if email host supports it)
+- Cyber Essentials certification (deferred)
+- Sentry DSN (when ready to sign up for free tier)
+
+---
+
+## Session: 2026-05-29 morning (focused-session branch)
+
+### Work completed on `focused-session` branch (off `quick-wins`)
+
+**Commit `52b03ad`** — Add SaveIndicator component
+- New small green pill ("Saved ✓") top-right, 1.5s fade after each save
+- App-level `savedAt` state (not reducer state — keeps reducer pure)
+- Persistence useEffect now also calls `setSavedAt(Date.now())`
+
+**Commit `d3cd92a`** — Add Manage Assessments: soft-delete with 30-day recovery
+- New `deletedAssessments:[]` field in INIT state
+- Three new reducer cases:
+  - `DELETE_ASSESSMENT` — moves assessment from `assessments` to `deletedAssessments` with `deletedAt` timestamp
+  - `RESTORE_ASSESSMENT` — moves it back, stripping the `deletedAt` field
+  - `PURGE_DELETED` — drops anything in `deletedAssessments` older than 30 days
+- `PURGE_DELETED` is dispatched once on hydrate so old items are removed silently on app load
+- New `ManageAssessments` modal component (overlay panel, two tabs: Active / Recently Deleted)
+- New toolbar button "Manage" on Dashboard between Analytics and Portfolio stats
+- Active tab: per-row Delete button with inline two-step confirmation
+- Recently Deleted tab: per-row Restore button + countdown showing days until auto-purge
+- All persistence via existing localStorage `firesite_v5f` flow (no new storage)
+
+### Storage architecture notes (discovered this session)
+
+- Assessments are persisted entirely in `localStorage` at key `firesite_v5f`
+- Firestore is currently only used for user profile + org settings (not assessments)
+- Implication: assessments live per-browser. No cross-device sync today.
+
+### Further Considerations (longer-term)
+
+Items intentionally NOT done in this session but flagged for a future scoped piece of work:
+
+- **Cloud sync of assessments** — move (or mirror) assessments from `localStorage` to Firestore so a user can pick up their work on another device. Requires schema design, conflict resolution, offline-first strategy, migration of existing localStorage data, and updated Firestore rules. Non-trivial — its own focused session.
+- **Vite migration** — still deferred to a separate session, see prior context.
+- **Per-card trash icon** — alternative UI that was considered for delete; "Manage" panel chosen instead as the lighter-touch option.
+
+### Outstanding manual follow-ups for user (unchanged from previous session)
+
+- ICO registration (GBP 40/year)
+- Solicitor review of T&Cs / Privacy Policy (approx GBP 800)
+- security@bluejai.co.uk email alias (may be free if host supports aliases)
+- Cyber Essentials certification (deferred)
+- Sentry DSN (when ready)
+- Review and merge open PRs: PR #2 (quick-wins), and a future PR #3 (focused-session)
