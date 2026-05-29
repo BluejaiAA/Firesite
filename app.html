@@ -951,7 +951,6 @@ const INIT = {
   showMissed:false,
   justDone:null,
   showValidation:false,
-  isOnline:true,
 };
 
 function reducer(state, action) {
@@ -962,7 +961,6 @@ function reducer(state, action) {
     case "SET_USER_TYPE": return {...state, org:{...state.org, userType:action.v, showDisclaimer:action.v!=="assessor"}};
     case "FINISH_SETUP":  return {...state, screen:"dashboard", setupDone:true, setupStep:0};
     case "EDIT_ORG":      return {...state, screen:"setup", setupStep:0};
-    case "SET_ONLINE":    return {...state, isOnline:action.v};
 
     case "NEW_ASSESSMENT": {
       const id = Date.now();
@@ -6267,7 +6265,6 @@ function App(){
   const[user,setUser]=React.useState(FS_AUTH._u);
   const[showPricing,setShowPricing]=React.useState(false);
   const[showOrgSettings,setShowOrgSettings]=React.useState(false);
-  useEffect(()=>{const a=()=>dispatch({type:"SET_ONLINE",v:true}),b=()=>dispatch({type:"SET_ONLINE",v:false});window.addEventListener("online",a);window.addEventListener("offline",b);return()=>{window.removeEventListener("online",a);window.removeEventListener("offline",b);};},[]);
   useEffect(()=>FS_AUTH.onStateChange(u=>setUser(u)),[]);
   useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s),screen:'dashboard',activeId:null}});}catch(e){};},[]);
   useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));}catch(e){};},[state]);
