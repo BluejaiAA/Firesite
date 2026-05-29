@@ -3618,7 +3618,7 @@ function ClientSetup({state, dispatch}) {
 
 // ─── DASHBOARD ────────────────────────────────────────────────────
 function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
-  const {org, assessments} = state;
+  const {org = {}, assessments = []} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
   const firstName = org.assessor?.split(" ")[0]||null;
@@ -3670,7 +3670,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
           <span style={{fontFamily:"'Montserrat',sans-serif",fontSize:15,fontWeight:700,color:"#fff"}}>Fire<em style={{color:ac,fontStyle:"normal"}}>site</em></span>
           {org.name&&<span style={{fontSize:9,color:"rgba(255,255,255,.28)",marginLeft:4}}>· {org.name}</span>}
         </div>
-        {!state.isOnline && <span className="tn-offline">Offline</span>}
+        {!navigator.onLine && <span className="tn-offline">Offline</span>}
         <button className="btn btn-ghost btn-sm" style={{borderColor:"rgba(255,255,255,.1)",color:"rgba(255,255,255,.3)"}} onClick={()=>dispatch({type:"EDIT_ORG"})}>⚙</button>
       </div>
 
@@ -4158,7 +4158,7 @@ function Assessment({state, dispatch}) {
           <button title={window._soundMuted?"Unmute sounds":"Mute sounds"} onClick={()=>{window._soundMuted=!window._soundMuted;}} style={{background:'none',border:'none',cursor:'pointer',color:'rgba(255,255,255,.45)',fontSize:15,padding:'0 4px',marginLeft:2,lineHeight:1}} aria-label="Toggle sound">
             {window._soundMuted?'🔇':'🔔'}
           </button>
-          {!state.isOnline && <span className="tn-offline">Offline</span>}
+          {!navigator.onLine && <span className="tn-offline">Offline</span>}
           {flagged>0&&mode==="card"&&(
             <span style={{fontSize:9,fontWeight:700,background:"#C0392B",color:"#fff",padding:"3px 8px",borderRadius:10}}>⚑{flagged}</span>
           )}
@@ -4897,6 +4897,22 @@ function generatePDF(a, org) {
     <p class="body">This fire risk assessment has been carried out by a competent assessor to assist the Responsible Person in meeting their duties under Article 9 of the Regulatory Reform (Fire Safety) Order 2005. The assessment is a ${a.assessType||org.assessType||"Type 1 — Non-Intrusive"} examination of the premises and fire safety management arrangements in place at the time of inspection.</p>
     <p class="body">This report identifies potential fire hazards to life safety, evaluates the adequacy of existing fire precautions and makes recommendations where deficiencies are identified. Findings are based on conditions observed at the time of the assessment on ${fmtDate(a.assessmentDate)}.</p>
     ${org.disclaimer ? `<p class="body" style="font-style:italic;color:#6B7280;">${org.disclaimer}</p>` : ""}
+
+    <div class="sec-h"><div class="sec-n">D</div><div><div class="sec-l">Section D</div><div class="sec-t">Methodology — PAS 79-1:2020</div></div></div>
+    <p class="body">This fire risk assessment has been carried out in accordance with the methodology set out in PAS 79-1:2020 — <em>Fire risk assessment. Premises other than housing. Code of practice</em>. The assessor followed the recognised nine-step process to ensure a suitable and sufficient assessment that meets the requirements of Article 9 of the Regulatory Reform (Fire Safety) Order 2005.</p>
+    <table class="info" style="margin-top:8px;"><tbody>
+      <tr><td class="lbl" style="width:30px;">1</td><td><strong>Obtain information</strong> about the premises — its construction, use, occupancy and management arrangements.</td></tr>
+      <tr><td class="lbl">2</td><td><strong>Identify fire hazards</strong> — sources of ignition, fuel and oxygen, and the work activities that could cause harm.</td></tr>
+      <tr><td class="lbl">3</td><td><strong>Identify people at risk</strong> — relevant persons, including any with mobility, sensory or cognitive impairments.</td></tr>
+      <tr><td class="lbl">4</td><td><strong>Evaluate the risk</strong> from each hazard occurring — likelihood and consequence — and the adequacy of existing fire safety arrangements.</td></tr>
+      <tr><td class="lbl">5</td><td><strong>Record significant findings</strong> in this report, including the hazards, the persons at risk and the action taken or proposed.</td></tr>
+      <tr><td class="lbl">6</td><td><strong>Prepare an action plan</strong> setting out remedial actions, owners and timescales, prioritised by risk.</td></tr>
+      <tr><td class="lbl">7</td><td><strong>Communicate findings</strong> to the Responsible Person and to relevant persons as required.</td></tr>
+      <tr><td class="lbl">8</td><td><strong>Keep the assessment under review</strong> and revise it whenever there is reason to suspect it is no longer valid or following significant change.</td></tr>
+      <tr><td class="lbl">9</td><td><strong>Maintain records</strong> of the assessment, the action plan and any subsequent reviews.</td></tr>
+    </tbody></table>
+    <p class="body" style="font-size:8.5pt;color:#6B7280;margin-top:8px;">Assessment type adopted: <strong>${a.assessType||org.assessType||"Type 1 — Non-Intrusive"}</strong>. The level of inspection and the use of destructive opening-up have been limited to that which is consistent with the assessment type stated above; refer to Section E (Limitations) for further detail.</p>
+
   </div>
   <div class="pg-ftr"><span class="pg-fl">© ${new Date().getFullYear()} ${org.name||"Assessor"} · Confidential</span><span style="font-size:7pt;font-weight:700;color:${pr};">Firesite™</span><span class="pg-fl">Page 2 of 7</span></div>
 </div>
@@ -5140,7 +5156,7 @@ function CompleteScreen({state, dispatch, ALL_SECTIONS}) {
   const a = state.assessments.find(x=>x.id===state.activeId);
   if (!a) return null;
 
-  const {org} = state;
+  const {org = {}} = state;
   const ac = org.accentColor||"#C0392B";
   const pr = org.primaryColor||"#0D1117";
   const [tab, setTab] = useState("overview");
@@ -6218,6 +6234,34 @@ function AnalyticsDashboard(props){
   );
 }
 
+class ErrorBoundary extends React.Component {
+  constructor(props){ super(props); this.state = {hasError:false, err:null}; }
+  static getDerivedStateFromError(err){ return {hasError:true, err}; }
+  componentDidCatch(err, info){
+    try { if (window.Sentry && Sentry.captureException) Sentry.captureException(err, {extra:info}); } catch(e){}
+    try { console.error('[Firesite] App error caught by ErrorBoundary:', err, info); } catch(e){}
+  }
+  render(){
+    if (this.state.hasError) {
+      return React.createElement('div', {style:{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'#0D1117',color:'#E6EDF3',fontFamily:'system-ui,sans-serif',padding:24}},
+        React.createElement('div', {style:{maxWidth:520,textAlign:'center'}},
+          React.createElement('div', {style:{fontSize:48,marginBottom:16}}, '⚠️'),
+          React.createElement('h1', {style:{fontSize:24,marginBottom:12,fontWeight:700}}, 'Something went wrong'),
+          React.createElement('p', {style:{color:'#8B949E',marginBottom:24,lineHeight:1.5}}, 'The page hit an unexpected error. Your data is safe — nothing has been lost. Click below to reload Firesite.'),
+          React.createElement('button', {
+            onClick: () => { try { window.location.reload(); } catch(e){} },
+            style:{padding:'12px 24px',background:'#C0392B',color:'#fff',border:'none',borderRadius:8,fontSize:14,fontWeight:600,cursor:'pointer'}
+          }, 'Reload Firesite'),
+          React.createElement('details', {style:{marginTop:24,textAlign:'left',color:'#6E7681',fontSize:12}},
+            React.createElement('summary', {style:{cursor:'pointer'}}, 'Technical details'),
+            React.createElement('pre', {style:{whiteSpace:'pre-wrap',marginTop:8,padding:12,background:'#161B22',borderRadius:6,overflow:'auto'}}, String(this.state.err && (this.state.err.stack || this.state.err.message || this.state.err)))
+          )
+        )
+      );
+    }
+    return this.props.children;
+  }
+}
 function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
@@ -6255,7 +6299,7 @@ function App(){
   );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<ErrorBoundary><App/></ErrorBoundary>);
 </script>
 </body>
 </html>
