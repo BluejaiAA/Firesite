@@ -947,6 +947,7 @@ const INIT = {
   org:INIT_ORG,
   setupDone:false, setupStep:0,
   assessments:[],
+  deletedAssessments:[],
   activeId:null,
   showMissed:false,
   justDone:null,
@@ -1034,6 +1035,21 @@ function reducer(state, action) {
         :a)
     };
     case "GO": return {...state, screen:action.screen, showMissed:false, showValidation:false};
+    case "DELETE_ASSESSMENT": {
+      const a = state.assessments.find(x=>x.id===action.id);
+      if(!a) return state;
+      return {...state, assessments: state.assessments.filter(x=>x.id!==action.id), deletedAssessments: [{...a, deletedAt: Date.now()}, ...(state.deletedAssessments||[])]};
+    }
+    case "RESTORE_ASSESSMENT": {
+      const a = (state.deletedAssessments||[]).find(x=>x.id===action.id);
+      if(!a) return state;
+      const {deletedAt, ...rest} = a;
+      return {...state, deletedAssessments: (state.deletedAssessments||[]).filter(x=>x.id!==action.id), assessments: [rest, ...state.assessments]};
+    }
+    case "PURGE_DELETED": {
+      const cutoff = Date.now() - 30*24*60*60*1000;
+      return {...state, deletedAssessments: (state.deletedAssessments||[]).filter(x=>(x.deletedAt||0) >= cutoff)};
+    }
     default:   return state;
   }
 }
@@ -3614,6 +3630,66 @@ function ClientSetup({state, dispatch}) {
   );
 }
 
+function ManageAssessments({assessments, deletedAssessments, dispatch, onClose}) {
+  const [tab, setTab] = React.useState("active");
+  const [confirmId, setConfirmId] = React.useState(null);
+  const fmt = (ts) => new Date(ts).toLocaleDateString();
+  const daysLeft = (ts) => Math.max(0, 30 - Math.floor((Date.now()-ts)/(24*60*60*1000)));
+  const overlay = {position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,0.5)",zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:20};
+  const panel = {background:"#fff",borderRadius:8,maxWidth:720,width:"100%",maxHeight:"85vh",display:"flex",flexDirection:"column",boxShadow:"0 10px 40px rgba(0,0,0,0.3)"};
+  const head = {padding:"16px 20px",borderBottom:"1px solid #e5e7eb",display:"flex",justifyContent:"space-between",alignItems:"center"};
+  const tabsBar = {display:"flex",borderBottom:"1px solid #e5e7eb"};
+  const tabBtn = (k) => ({padding:"10px 16px",border:"none",background:tab===k?"#f3f4f6":"transparent",borderBottom:tab===k?"2px solid #C0392B":"2px solid transparent",cursor:"pointer",fontWeight:tab===k?600:400});
+  const body = {padding:20,overflowY:"auto",flex:1};
+  const row = {display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 12px",borderBottom:"1px solid #f3f4f6"};
+  return (
+    <div style={overlay} onClick={onClose}>
+      <div style={panel} onClick={e=>e.stopPropagation()}>
+        <div style={head}>
+          <h3 style={{margin:0,fontSize:18}}>Manage Assessments</h3>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>Close</button>
+        </div>
+        <div style={tabsBar}>
+          <button style={tabBtn("active")} onClick={()=>setTab("active")}>Active ({assessments.length})</button>
+          <button style={tabBtn("deleted")} onClick={()=>setTab("deleted")}>Recently Deleted ({deletedAssessments.length})</button>
+        </div>
+        <div style={body}>
+          {tab==="active" ? (
+            assessments.length===0 ? <p style={{color:"#6b7280"}}>No assessments yet.</p> :
+            assessments.map(a => (
+              <div key={a.id} style={row}>
+                <div>
+                  <div style={{fontWeight:600}}>{a.ref || "(no ref)"}</div>
+                  <div style={{fontSize:12,color:"#6b7280"}}>{(a.propertyName||"Untitled") + " - " + (a.status||"draft")}</div>
+                </div>
+                {confirmId===a.id ? (
+                  <div style={{display:"flex",gap:6}}>
+                    <button className="btn btn-sm" style={{background:"#dc2626",color:"#fff",border:"none"}} onClick={()=>{dispatch({type:"DELETE_ASSESSMENT",id:a.id});setConfirmId(null);}}>Confirm delete</button>
+                    <button className="btn btn-ghost btn-sm" onClick={()=>setConfirmId(null)}>Cancel</button>
+                  </div>
+                ) : (
+                  <button className="btn btn-ghost btn-sm" title="Move to Recently Deleted" onClick={()=>setConfirmId(a.id)}>Delete</button>
+                )}
+              </div>
+            ))
+          ) : (
+            deletedAssessments.length===0 ? <p style={{color:"#6b7280"}}>Nothing in Recently Deleted. Items are kept here for 30 days, then permanently removed.</p> :
+            deletedAssessments.map(a => (
+              <div key={a.id} style={row}>
+                <div>
+                  <div style={{fontWeight:600}}>{a.ref || "(no ref)"}</div>
+                  <div style={{fontSize:12,color:"#6b7280"}}>Deleted {fmt(a.deletedAt)} - auto-removes in {daysLeft(a.deletedAt)} days</div>
+                </div>
+                <button className="btn btn-ghost btn-sm" onClick={()=>dispatch({type:"RESTORE_ASSESSMENT",id:a.id})}>Restore</button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── DASHBOARD ────────────────────────────────────────────────────
 function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   const {org = {}, assessments = []} = state;
@@ -3625,6 +3701,7 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
   const [tab, setTab]       = React.useState("all");
   const [search, setSearch] = React.useState("");
   const [showPortfolio, setShowPortfolio] = React.useState(false);
+  const [showManage, setShowManage] = React.useState(false);
 
   const activeDraft = drafts[drafts.length-1];
   const draftAns    = activeDraft?.answers||{};
@@ -3794,7 +3871,11 @@ function Dashboard({state, dispatch, user, onSignOut, onUpgrade, onSettings}) {
                 <button className="btn btn-ghost btn-sm" title="View analytics dashboard" onClick={()=>dispatch({type:"GO",screen:"analytics"})}>
                   📊 Analytics
                 </button>
-                {(()=>{ const ps = window._BJ.portfolioStats(assessments); return (ps.overdue+ps.dueSoon) > 0 ? (
+                <button className="btn btn-ghost btn-sm" title="Manage assessments — delete or restore" onClick={()=>setShowManage(true)}>
+                  Manage
+                </button>
+                {showManage && <ManageAssessments assessments={assessments} deletedAssessments={state.deletedAssessments||[]} dispatch={dispatch} onClose={()=>setShowManage(false)}/>}
+                                {(()=>{ const ps = window._BJ.portfolioStats(assessments); return (ps.overdue+ps.dueSoon) > 0 ? (
                   <div style={{marginLeft:"auto",fontSize:12,padding:"6px 12px",background:"rgba(192,57,43,0.15)",border:"1px solid rgba(192,57,43,0.4)",borderRadius:6,color:"#FF6B6B",fontWeight:600}}>
                     ⚠ {ps.overdue} overdue, {ps.dueSoon} due in 30 days
                   </div>
@@ -6260,14 +6341,36 @@ class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+function SaveIndicator({at}){
+  const[visible,setVisible]=React.useState(false);
+  React.useEffect(()=>{
+    if(!at)return;
+    setVisible(true);
+    const t=setTimeout(()=>setVisible(false),1500);
+    return ()=>clearTimeout(t);
+  },[at]);
+  if(!visible)return null;
+  return React.createElement('div',{
+    style:{
+      position:'fixed',top:12,right:12,zIndex:9999,
+      background:'rgba(40,90,55,0.92)',color:'#d4f4dd',
+      padding:'6px 12px',borderRadius:14,fontSize:12,
+      fontFamily:'system-ui,-apple-system,sans-serif',
+      boxShadow:'0 2px 8px rgba(0,0,0,0.3)',
+      pointerEvents:'none',transition:'opacity 0.25s'
+    }
+  },'Saved ✓');
+}
+
 function App(){
   const[state,dispatch]=useReducer(reducer,INIT);
   const[user,setUser]=React.useState(FS_AUTH._u);
   const[showPricing,setShowPricing]=React.useState(false);
+  const[savedAt,setSavedAt]=React.useState(0);
   const[showOrgSettings,setShowOrgSettings]=React.useState(false);
   useEffect(()=>FS_AUTH.onStateChange(u=>setUser(u)),[]);
-  useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s),screen:'dashboard',activeId:null}});}catch(e){};},[]);
-  useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));}catch(e){};},[state]);
+  useEffect(()=>{try{const s=localStorage.getItem("firesite_v5f");if(s)dispatch({type:"HYDRATE",state:{...INIT,...JSON.parse(s),screen:'dashboard',activeId:null}});dispatch({type:"PURGE_DELETED"});}catch(e){};},[]);
+  useEffect(()=>{try{localStorage.setItem("firesite_v5f",JSON.stringify(state));setSavedAt(Date.now());}catch(e){};},[state]);
   if(!user)return <AuthScreen onAuth={u=>setUser(u)}/>;
   const{screen}=state;
   const signOut=()=>FS_AUTH.logout();
@@ -6282,7 +6385,7 @@ function App(){
   return(
     <>
       <style dangerouslySetInnerHTML={{__html:CSS}}/>
-      <PhotoAnnotator/>
+      <PhotoAnnotator/><SaveIndicator at={savedAt}/>
       {showPricing&&<PricingModal user={user} onClose={()=>setShowPricing(false)}/>}
       {showOrgSettings&&<OrgSettingsModal state={state} dispatch={dispatch} user={user} onClose={()=>setShowOrgSettings(false)}/>}
       {screen==="landing"&&<Landing dispatch={dispatch} user={user} onSignOut={signOut} onUpgrade={()=>setShowPricing(true)} onSettings={openSettings}/>}
