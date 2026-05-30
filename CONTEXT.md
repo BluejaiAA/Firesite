@@ -390,3 +390,101 @@ The riskiest, biggest piece of work is still ahead. To actually flip the project
 ### Resume cue for next session
 
 > "Read CONTEXT.md and continue the Vite-lite carve on branch `vite-lite`. Scaffold is in, now do the app.html split."
+
+---
+
+## Session — 2026-05-30 (afternoon) — Production architecture audit
+
+**Critical discovery: the live site has TWO production surfaces backed by different files in the repo. This was NOT obvious before today.**
+
+### Live URL → repo file mapping
+
+| Live URL | Repo file (main branch) | Purpose |
+|---|---|---|
+| `firesite-weld.vercel.app/` | `index.html` (62,026 chars) | **Marketing landing page.** Vanilla HTML, no React, no Vite. About / How it Works / Features / Pricing / FAQ / Sign In. All CTAs link to `/app.html`. Two inline `<script>` tags (analytics or smooth-scroll). |
+| `firesite-weld.vercel.app/app.html` | `app.html` (507,333 chars) | **The actual SaaS app.** React + Firebase + PDF, the assessment workflow. This is the thing we've been touching. |
+| `firesite-weld.vercel.app/install.html` | `install.html` (5,641 chars) | "Get the app on your phone 🔥" — install/QR page for mobile users. |
+| `firesite-weld.vercel.app/report.html` | `report.html` (40,270 chars) | PAS 79 PDF report engine. Called by app.html for report generation. |
+| `firesite-weld.vercel.app/sw.js` | `sw.js` | Service worker. Registered by app.html. Vercel headers `Cache-Control: no-cache, no-store, must-revalidate` and `Service-Worker-Allowed: /`. |
+| `firesite-weld.vercel.app/firesite_logo.png` | `firesite_logo.png` | Brand logo. Referenced from index.html and app.html. |
+| `firesite-weld.vercel.app/icon192.png` | `icon192.png` | PWA icon. |
+
+### Files that are ALSO live but appear to be ORPHANS
+
+Probed 2026-05-30 — all of these return live content at the URLs shown, but **none** are referenced by `app.html`, `index.html`, `install.html`, or `report.html`. They are reachable only by typing the URL directly. They look like leftovers from earlier iterations.
+
+| Orphan URL | Repo path | What it is |
+|---|---|---|
+| `/firesite-app_12.html` | `firesite-app_12.html` | An older copy of the assessment app — title "Firesite by Bluejai", shows the assessment dashboard, appears functional. Probably the previous version before `app.html` became canonical. |
+| `/firesite-complete_2.jsx` | `firesite-complete_2.jsx` | **Raw React source code** for "FIRESITE v4 · Professional Fire Risk Assessment Platform". Served by Vercel as `text/jsx`. **This is IP exposure** — anyone who knows the URL can read your source. |
+| `/src/App.jsx` | `src/App.jsx` | Same v4 React source (likely identical to firesite-complete_2.jsx). Raw, readable. |
+| `/src/main.jsx` | `src/main.jsx` | Vite-style createRoot bootstrap. Tiny. |
+| `/SRC/App.jsx` | `SRC/App.jsx` | Same as src/App.jsx but in uppercase folder. **Two copies** because of an earlier case-rename. |
+| `/SRC/main.jsx` | `SRC/main.jsx` | Duplicate of src/main.jsx in uppercase folder. |
+
+**Safe to delete from main** (low risk — not referenced by any live page, not used by Vercel build):
+- `firesite-app_12.html`
+- `firesite-complete_2.jsx`
+- `src/App.jsx`, `src/main.jsx`
+- `SRC/App.jsx`, `SRC/main.jsx`
+
+**Already cleaned from `vite-lite` branch** (commits a694f0f → 7c9f63e). Just needs the same cleanup on `main`.
+
+### Files that LOOK orphan but are NOT — do NOT delete
+
+- **`index.html` at repo root** — this IS the marketing site at `/`. I almost deleted it during cleanup. Look at file size (62KB) and inline scripts to verify before touching.
+- **`package.json` at repo root** — returns 404 at `/package.json` because Vercel auto-filters `.json` serving (or vercel.json blocks it — unclear which). Even though it returns 404, it MAY be triggering Vercel's auto-detect. Removing it carries unknown deployment risk. Leave alone until Vite migration is done and we explicitly control the build.
+
+### How Vercel is actually deploying this site
+
+**Best understanding as of 2026-05-30** (empirical, not from Vercel project settings which we don't view):
+
+- `vercel.json` has NO `buildCommand`, NO `outputDirectory`, NO `framework`, NO `installCommand`. It is purely headers + CSP + sw.js cache rules.
+- The repo IS being served statically. Every file in the repo root is reachable at `/{filename}` with the exception of `.json` files (which 404) and the contents of the `legal/` and `tests/` folders (no probe done, assumed not served — verify if relevant).
+- Despite `package.json` existing in the repo and declaring Vite scripts, Vercel does **not** appear to be running `vite build` — because the live marketing `index.html` is the raw 62KB vanilla HTML from the repo, not a Vite-transformed output. If a build were running, the marketing page would have to be a Vite entry point (it isn't — no `type="module"`, no `id="root"`, no React).
+- Therefore: assume **whatever you commit at the repo root, Vercel serves verbatim** (with vercel.json headers applied).
+
+### CSP currently enforced (read from vercel.json on main)
+
+`Content-Security-Policy` covers: default-src 'self'; script-src 'self' 'unsafe-eval' (CDN React/Babel + gstatic + Stripe + Sentry); style-src 'self' 'unsafe-inline' + Google Fonts; connect-src 'self' + Firebase domains + Stripe API + Sentry ingest; frame-src 'self' + Stripe; frame-ancestors 'none'; object-src 'none'. Other headers: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy` restricting cameras/mics/payments. **Stripe and Sentry are pre-authorised** in CSP — implies future integration plans, currently unused (or used somewhere I haven't probed).
+
+### Implications for our work
+
+1. The Vite carve (CONTEXT.md plan above) only needs to migrate `app.html`. The marketing `index.html` is independent vanilla HTML and should NOT be touched by the Vite migration.
+2. When the Vite migration eventually changes `vercel.json` to run a build, the marketing `index.html` must end up in `dist/` unchanged — easiest via Vite's `publicDir` setting copying it verbatim.
+3. The `firesite-complete_2.jsx` and `src/` / `SRC/` orphan source files are a minor IP-exposure concern. Clean them up.
+4. `firesite-app_12.html` being a working older copy of the app is potentially confusing if a user has it bookmarked. Clean it up.
+
+### TO-DO LATER (parked from this session)
+
+**Vite-lite carve (not done in browser — must be done locally):**
+1. Install Node 18+ and Git locally.
+2. `git clone https://github.com/BluejaiAA/Firesite.git && cd Firesite && git checkout vite-lite`
+3. `npm install` — gets React, Vite, Firebase. `node_modules/` is gitignored.
+4. `npm run dev` — should open the stub POC at `localhost:5173` showing "Vite-lite POC working" with Montserrat font and dark theme. That validates Vite end-to-end against the POC files we committed (commits 82f63d8, 8f1ef6e, a91a47f).
+5. `npm run build && npm run preview` — validates the production bundle path.
+6. Then the actual carve work: split app.html's inline `<script type="text/babel">` (chars 11850-507307, ~495KB) into `src/App.jsx`. Mechanical: copy block as-is, add `import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';` and Firebase imports at top, change final `createRoot(...).render(<ErrorBoundary><App/></ErrorBoundary>)` to `export {App, ErrorBoundary};`. Update `src/main.jsx` to import them. Move app.html (and install.html, report.html, sw.js, png assets) into a Vite `public/` folder so they ship to `dist/` unchanged.
+7. **Critical preservation checks before merging the Vite migration:**
+   - localStorage key `firesite_v5f` reads/writes the same shape
+   - Firebase auth + Firestore still work (Sarah Harries test account)
+   - PDF report output bytes match current (run a known assessment, compare PDFs)
+   - install.html mobile install flow still works
+   - sw.js still registers at scope `/`
+8. Update `vercel.json` to run `npm run build` and serve `dist/` ONLY after preview deploy proves clean for at least a day.
+9. PR for review — do not auto-merge. Live with preview URL first.
+
+**Clean up `main` orphans (small PR, low risk):**
+- Branch `cleanup-main` already created (no commits yet).
+- Delete: firesite-app_12.html, firesite-complete_2.jsx, src/App.jsx, src/main.jsx, SRC/App.jsx, SRC/main.jsx.
+- Keep: index.html (marketing), package.json (deploy risk unknown), everything else.
+- PR for review.
+
+**Add a public README.md to the repo root** explaining what Firesite is, where the live app/marketing pages are, that the repo is closed-source / proprietary, and where to email for help. No accidental promotion of orphan files.
+
+**Verify firestore.rules in repo matches live Firebase rules** — live was updated 2026-05-30 08:55 UTC. Repo file already has the richer functions (`isSignedIn`, `isUser`, `isValidUserDoc`), so they're probably in sync, but byte-level confirmation requires reading both side-by-side which I haven't done.
+
+**Eventual: remove the IP-exposed source files at `/firesite-complete_2.jsx` etc.** This happens automatically when cleanup-main lands.
+
+### Resume cue for next session
+
+> "Read CONTEXT.md and continue. Architecture is mapped, Vite POC committed, cleanup-main branch ready but empty. Pick a job from TO-DO LATER."
