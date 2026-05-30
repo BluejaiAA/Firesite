@@ -325,3 +325,68 @@ Items intentionally NOT done in this session but flagged for a future scoped pie
 - Cyber Essentials certification (deferred)
 - Sentry DSN (when ready)
 - Review and merge open PRs: PR #2 (quick-wins), and a future PR #3 (focused-session)
+
+
+---
+
+## Session — 2026-05-30 — Vite-lite scaffold (in progress, NOT live)
+
+> **Status:** Branch `vite-lite` exists with cleanup + scaffold landed. **Nothing is live yet.** Main branch is untouched and `firesite-weld.vercel.app/app.html` continues to serve from main.
+
+### What landed on `vite-lite` this session (12 commits ahead of main)
+
+**Phase 0 — Cleanup of abandoned prior Vite attempt (9 commits)**
+
+A prior, abandoned Vite migration left dead files in the repo (commit ~3 weeks old with a red ✘ check). All removed:
+
+- Deleted `package.json` (old)
+- Deleted `firesite-app_12.html`
+- Deleted `firesite-complete_2.jsx`
+- Deleted `index.html` (old landing page)
+- Deleted `vite.config.js` (old)
+- Deleted `SRC/App.jsx`, `SRC/main.jsx` (case-duplicate folder removed)
+- Deleted `src/App.jsx`, `src/main.jsx` (lowercase folder removed)
+
+**Phase 1 — Fresh Vite scaffold (3 commits)**
+
+- `package.json` — React 18.2.0, react-dom 18.2.0, Firebase 12.13.0, Vite ^5.4.10, @vitejs/plugin-react ^4.3.3. Versions match what app.html currently loads from CDN.
+- `vite.config.js` — `defineConfig` with React plugin, `build.outDir: 'dist'`, sourcemaps on, dev server port 5173. Comment notes it is inert until vercel.json points to a build step.
+- `.gitignore` — node_modules/, dist/, dist-ssr/, .vite/, log files, .vscode/* (with settings/extensions allow-list), .idea/, .DS_Store, .env*
+
+### Files kept (confirmed real, NOT deleted)
+
+- `install.html` — shareable install page with QR code (user confirmed: keep)
+- `report.html` — full PAS 79 PDF report engine (user confirmed: keep)
+- `sw.js` — service worker. Confirmed referenced by `app.html` line: `navigator.serviceWorker.register("/sw.js",{scope:"/"})`
+
+### What is NOT yet done (the actual Vite carve)
+
+The riskiest, biggest piece of work is still ahead. To actually flip the project to Vite we still need to:
+
+1. Create `index.html` — minimal HTML shell with `<div id="root"></div>` and `<script type="module" src="/src/main.jsx"></script>`. Must keep `<meta name="viewport">`, dark theme styles, CSP `<meta>` matching current vercel.json, manifest/icon references, service worker registration script.
+2. Create `src/main.jsx` — `createRoot(document.getElementById('root')).render(<App />)`
+3. Create `src/App.jsx` — extract the giant React component out of `app.html`'s inline `<script type="text/babel">` block. This is ~3000 lines and must preserve:
+   - localStorage key `firesite_v5f` byte-identical
+   - Firebase config + auth flow
+   - All assessment fields (every key in the data shape)
+   - PDF generation logic (jsPDF + html2canvas)
+   - SaveIndicator + Manage Assessments behaviour we shipped in PR #3
+4. Create `src/styles.css` — extract the inline `<style>` block from `app.html`. Tailwind utility classes stay in JSX.
+5. Optionally split out `src/firebase.js` for Firebase init (or keep inline).
+6. Update `vercel.json` to: build with `npm run build`, output dir `dist`, and have rewrites/headers (CSP) still applied. **Do not change CSP byte-for-byte without re-verification** — it took effort to get right.
+7. Push, let Vercel build the preview, smoke-test the preview URL (login, +New, Continue, save, PDF, Manage, install dialog, report.html).
+8. **Only after preview is green for a real session** open the PR. Do not merge same day — live with preview to catch regressions.
+
+### Constraints carried into the next session
+
+- All carve work happens on `vite-lite`. Main stays clean.
+- localStorage key `firesite_v5f` MUST stay identical — never rename.
+- PDF generation byte output should match current output (regression risk).
+- CSP in `vercel.json` matters — current setup uses CDN React + Babel Standalone, but Vite-built bundles are self-hosted, so the CSP `script-src` can actually become stricter. Reassess.
+- Firebase config currently lives inline in app.html. Carry it over verbatim, do not change project, do not change rules.
+- Preview deploys on Vercel are gated by team auth — fine for our smoke testing.
+- Live URL `firesite-weld.vercel.app/app.html` must keep working throughout.
+
+### Resume cue for next session
+
+> "Read CONTEXT.md and continue the Vite-lite carve on branch `vite-lite`. Scaffold is in, now do the app.html split."
