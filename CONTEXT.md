@@ -605,3 +605,38 @@ Value: both increase the chance that on-site reality ends up in the final report
 Risk / cost considerations: photo-first mode is the bigger lift (new screen, new state, new drag-or-assign UI, larger photo blobs in localStorage). Miscellaneous section is small (new section id, new question list, new render path). Either can be built without changing the localStorage key shape if added carefully (extend the assessment object with new optional fields, never rename existing ones).
 
 Decision: parked for a focused-session discussion. User wants to think about it.
+
+
+## Session — 2026-05-31 (afternoon, continued) — feature direction confirmed
+
+### User direction (verbatim intent)
+
+> "the whole point of the app is to be able to walk away from site without having to write up a report"
+
+This is the product thesis. Every feature decision should be judged against it. Anything that forces the assessor to do significant typing or structuring AFTER leaving site is working against the product. Therefore:
+
+- **Idea A (Miscellaneous / Other Observations section) — APPROVED, build it.**
+- **Idea B (Photo-first walk-around mode) — APPROVED as a core feature, not optional polish.** Photo-first mode IS the product thesis. The miscellaneous section is the safety net underneath it.
+
+### Build order
+
+1. **A first** (small, low risk, immediately useful, no storage-model change). Adds `MISC_SECTION` to the assessment object as a new `miscObservations:[]` array. Each observation: photo(s), text, optional severity, optional "raise as action plan item" link, optional "promote to section X" later.
+2. **Then B**, treating A as the catch basin for photos that genuinely do not belong to a structured section.
+
+### Things to design BEFORE coding B (open questions, not blockers)
+
+- **Capture screen UX:** single tap-to-shoot, large preview, 5-second voice-memo button per photo, optional one-line caption. No question-answering on this screen.
+- **Distribution UX:** large thumbnails, 12 section-buttons (not a dropdown), keyboard 1–9 if on tablet, swipe-to-assign on phone. Misc section as 13th destination.
+- **Storage:** localStorage cannot hold 80 photos at 2-3MB each (5-10MB cap per origin). Options (any one or combo): (a) compress hard on capture (JPEG quality 0.5, max-width 1600px), (b) IndexedDB for blobs + thumbnails + refs in localStorage, (c) Firestore Storage now (forces the Firestore migration to come forward). Recommend (a)+(b) for v1, defer (c).
+- **Replay UX:** after distributing photos into sections, the assessor still needs to answer the structured questions. Photos already attached to sections should appear inline at the relevant question card so the assessor can answer with the photo already in hand. This is the second-pass flow that finishes the report without re-entering site.
+- **Offline-first:** walk-around will frequently be in basements / stairwells with no signal. Capture screen must work offline; sync deferred.
+- **Default mode:** open question — should photo-first be the DEFAULT for new assessments, or opt-in from the "Before You Begin" form? Argument for default: it IS the product thesis. Argument for opt-in: structured assessors who prefer question-by-question still have that flow. Recommend opt-in with a prominent "Try photo-first mode" CTA, then promote to default after a few weeks of real use if assessors prefer it.
+
+### To-do later (carry forward)
+
+- **Merge PR #4 (cleanup-main)** — user walked through review steps but did not merge yet. Resume here next session.
+- **Merge PR #5 (add-readme)** and **PR #6 (tidy-firestore-rules)** after #4.
+- **Build Miscellaneous section (Idea A).**
+- **Build Photo-first walk-around mode (Idea B)** after A is live for a couple of weeks of real use.
+- **Vite-lite carve** — still parked.
+- **Triage PR #2 (quick-wins).**
