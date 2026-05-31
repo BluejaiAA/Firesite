@@ -569,3 +569,39 @@ Partial signal already captured from earlier screenshot:
 ### Resume cue for next session
 
 > "Read CONTEXT.md and continue from Job 2. cleanup-main PR #4 is open awaiting your review. Next is create `add-readme` branch and add README.md, then Job 3 firestore rules sync verification."
+
+
+## Session — 2026-05-31 (afternoon) — addendum
+
+### PRs landed this session (in addition to PR #4)
+
+- **PR #5** "Docs: add public README.md to repo root" — base main, compare add-readme, +45 lines. Open.
+- **PR #6** "Tidy: remove unused isVerified helper from firestore.rules" — base main, compare tidy-firestore-rules, -5 lines. Open.
+
+### Job 3 verdict — RECORDED
+
+Live Firebase rules (deployed via Console at 08:55 today) were compared byte-by-byte against repo `firestore.rules` on main. **Functionally identical.** Only substantive difference was the repo defining `isVerified()` which is never called and which the live rules omit. PR #6 removes it so repo == live.
+
+### Resume / next steps for the user (parked, do NOT auto-execute)
+
+1. **Review and merge PR #4 (cleanup-main)** — green Ready to merge. Recommended: Squash and merge. After merge, Vercel auto-deploys ~12s, the 6 orphan URLs go 404, marketing + app stay live unchanged.
+2. **Review and merge PR #5 (add-readme)** — green Ready to merge. Recommended: Squash and merge.
+3. **Review and merge PR #6 (tidy-firestore-rules)** — green Ready to merge. Recommended: Squash and merge. No Firebase redeploy needed (live already lacks the function).
+4. **Older still-open PRs to triage:** PR #2 (quick-wins). Confirm status.
+5. **Vite-lite carve** — still parked. Biggest piece of work, needs local Node environment.
+
+### New feature idea raised by user 2026-05-31 (for design discussion, NOT implemented)
+
+Two related ideas around capturing on-site observations that don't fit the structured 16-section workflow:
+
+**A. Miscellaneous / Other Observations section**
+A free-form section (probably new section 14, after Findings) for unusual things the assessor noticed that don't map to any existing FRA section. Examples: site-specific hazards, occupant-behaviour observations, neighbouring-property concerns, things flagged for re-inspection, things the responsible person mentioned in passing. Likely shape: a list of observations, each with optional photo(s), free text, optional severity, optional 'include in report' toggle, optional 'raise as action' link to the Action Plan.
+
+**B. Photo-first walk-around mode**
+A mode toggled on at the start of an assessment where the assessor walks the building, takes photos rapidly (camera+caption only, no question-answering), and the photos drop into an 'Unsorted' tray. Later, back at desk or end of walk-around, the assessor distributes each photo to the relevant section (e.g. drag-to-section, or per-photo 'Assign to section' picker). Could include voice-note alongside photo. Mirrors how surveyors actually work on site — capture first, structure later.
+
+Value: both increase the chance that on-site reality ends up in the final report. Miscellaneous section catches the long-tail; photo-first mode reduces friction during the actual walk-around.
+
+Risk / cost considerations: photo-first mode is the bigger lift (new screen, new state, new drag-or-assign UI, larger photo blobs in localStorage). Miscellaneous section is small (new section id, new question list, new render path). Either can be built without changing the localStorage key shape if added carefully (extend the assessment object with new optional fields, never rename existing ones).
+
+Decision: parked for a focused-session discussion. User wants to think about it.
