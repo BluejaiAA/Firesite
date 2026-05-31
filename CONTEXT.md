@@ -488,3 +488,84 @@ Probed 2026-05-30 — all of these return live content at the URLs shown, but **
 ### Resume cue for next session
 
 > "Read CONTEXT.md and continue. Architecture is mapped, Vite POC committed, cleanup-main branch ready but empty. Pick a job from TO-DO LATER."
+
+
+---
+
+## Session — 2026-05-31 — Cleanup main PR, README PR, Firestore rules verification
+
+> **Status:** Active session. Working through 3-job plan in sequence.
+
+### Plan (authorised this session)
+
+1. **Job 1 — cleanup-main orphan deletion PR** — delete 6 orphan files on `cleanup-main` branch and open PR.
+2. **Job 2 — Add public README.md** — short factual README on a new `add-readme` branch, then PR.
+3. **Job 3 — Firestore rules sync verification** — read `firestore.rules` from main, compare against live Firebase Console rules, document drift.
+
+### Job 1 — DONE
+
+**PR #4 open:** "Cleanup main: remove 6 orphan files (abandoned Vite scaffold and old app copies)"
+- Base: `main`, Compare: `cleanup-main`, 6 commits, -11,661 lines
+- Status: Open, awaiting user review and merge
+
+Commits on `cleanup-main` branch (6 ahead of main):
+1. `489f154` — delete firesite-app_12.html
+2. `0b158ee` — delete firesite-complete_2.jsx
+3. `2d765c3` — delete src-App.jsx
+4. delete src-main.jsx
+5. delete SRC-App.jsx
+6. delete SRC-main.jsx
+
+Verification done after deletions:
+- File tree on cleanup-main: 6 orphans gone, src/ and SRC/ folders removed (empty), all other files preserved.
+- Marketing site `firesite-weld.vercel.app/` still serves "Fire Risk Assessments. Done Right. On Site."
+- App `firesite-weld.vercel.app/app.html` still loads (Sarah Harries logged in, 12 assessments).
+
+### Job 2 — IN PROGRESS
+
+Started this session. Next steps when resumed:
+1. Create branch `add-readme` from `main` via /branches page.
+2. Navigate to /new/add-readme, name file `README.md`.
+3. Add short factual content: project description, live URLs (marketing + app), proprietary/closed-source note, contact `hello@bluejai.co.uk`, link to CONTEXT.md for developer docs.
+4. Commit, open PR for review.
+
+Constraints for README content:
+- MUST NOT mention orphan files or internal implementation details.
+- MUST NOT include any secrets, Firebase config, or tokens.
+- Keep under ~50 lines.
+- Tone: factual, no marketing fluff.
+
+### Job 3 — UPDATED INFO
+
+**New finding 2026-05-31:** Firebase Console shows a "Today" rules revision at 08:55 AM on top of the previous May 22 revisions. **User confirmed they made this change** ("wechanged the rules i believe").
+
+This means the live Firebase rules MAY have drifted from the repo `firestore.rules` on `main`. Job 3 changes from pure verification to:
+1. Read `firestore.rules` from `main` raw URL.
+2. Compare byte-for-byte against the live Firebase Console rules (user supplies screenshot or paste — Claude cannot read Console directly).
+3. If drift found: recommend user either (a) update the repo file to match live, or (b) re-deploy the repo file via Firebase Console / CLI.
+4. Do NOT modify live rules in Firebase Console under any circumstances.
+
+Partial signal already captured from earlier screenshot:
+- Live rules start with: `rules_version = '2'; service cloud.firestore { match /databases/{database}/documents { function isSignedIn() { return request.auth != null; } ... function isUser(uid) { return isSignedIn() && request.auth.uid == uid; } ... function isValidUserDoc(d) { return d.keys().hasOnly([ 'email','name','plan','orgName','orgAddress','orgPhone','orgLogo','orgPrimary','orgSecondary','assessorName','assessorQual','assessorPI','assessorPIExpiry','createdAt',... ]) }`
+- Live rules text appears to be the rich helper-function version, which matches what is in the repo at `firestore.rules` on `main`. Likely in sync, but full byte-level diff still needed.
+
+### Repo state at this point in the session
+
+- `main` — untouched. Last commit `a6fd912` (29 May).
+- `vite-lite` — 17 commits ahead of main. Last `07c3772` (plus this CONTEXT.md update commit). POC committed, real carve still ahead.
+- `cleanup-main` — 6 commits ahead of main. PR #4 open.
+- `add-readme` — not yet created. Next action when resuming Job 2.
+- `overnight-work` — PR #1 merged previously.
+- `quick-wins` — PR #2 open from earlier session.
+- `focused-session` — PR #3 expected from earlier session (per prior notes).
+
+### Lessons learned this session (operational, for next session)
+
+- **CodeMirror 6 on GitHub:** access via `document.querySelector('.cm-content').cmTile.view` — NOT `cmView`. Append via `view.dispatch({changes:{from:view.state.doc.length,insert:TEXT}})`. This is faster and more reliable than keyboard-based paste.
+- **GitHub `/` keyboard shortcut:** typing `/` in any focused field anywhere opens the search dialog and breaks the in-flight commit. Workaround: replace `/` with `-` in commit messages and field input. Affects file paths in commit messages especially.
+- **Find tool may return duplicate refs:** for buttons like "Commit changes" there may be a visible and a hidden duplicate. Use DOM filter `offsetWidth > 0` to pick the visible one, or scope by `[role="dialog"]:not(#search-suggestions-dialog)`.
+- **Coordinate clicks at fixed pixel positions are unreliable across page state changes.** Prefer `form_input` for text fields, ref-based clicks when ref is unique, and JS `.click()` as fallback.
+
+### Resume cue for next session
+
+> "Read CONTEXT.md and continue from Job 2. cleanup-main PR #4 is open awaiting your review. Next is create `add-readme` branch and add README.md, then Job 3 firestore rules sync verification."
