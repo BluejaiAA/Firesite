@@ -41,11 +41,6 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == uid;
     }
 
-    // Email-verified accounts only for writes that affect billing/plan state.
-    function isVerified() {
-      return isSignedIn() && request.auth.token.email_verified == true;
-    }
-
     // True if the incoming document is a valid user-profile shape.
     // We allow a permissive but not silly schema: known top-level keys only.
     function isValidUserDoc(d) {
