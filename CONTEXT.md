@@ -640,3 +640,61 @@ This is the product thesis. Every feature decision should be judged against it. 
 - **Build Photo-first walk-around mode (Idea B)** after A is live for a couple of weeks of real use.
 - **Vite-lite carve** — still parked.
 - **Triage PR #2 (quick-wins).**
+
+
+---
+
+## Session — 2026-06-09 — Multi-repo cleanup (COSHH-APP fix + estate audit)
+
+### What was done
+
+Scope shifted to GitHub estate cleanup. Inventoried all 5 repos under BluejaiAA org and produced status report:
+
+| Repo | Live URL | Status |
+|---|---|---|
+| Firesite | firesite-weld.vercel.app | Live, healthy |
+| Manual-Handling-Tool-App | manualhandlingtoolapp.vercel.app | Live, healthy |
+| COSHH-APP | coshhapp.vercel.app | 404 NOT_FOUND (now fixed via PR) |
+| Manual-Handling-Tool- (trailing dash) | none | Stub repo, user to delete |
+| DSE-APP | none | Empty (just initial README) |
+
+### COSHH-APP fix — PR #1 opened on `fix-rename-index` branch
+
+Root cause: Vercel was 404ing because the repo had `index (2).html`, `index (4).html`, and `index,html.html` (all 150,127-byte byte-identical duplicates from Windows save-as fumbles) but no `index.html`.
+
+4 commits on the branch:
+1. Add `index.html` (copy of `index (2).html` content — the working COSHH assessment app, verified by authenticated raw fetch from GitHub)
+2. Delete duplicate `index (2).html`
+3. Delete duplicate `index (4).html`
+4. Delete duplicate `index,html.html` (typo file)
+
+PR URL: https://github.com/BluejaiAA/COSHH-APP/pull/1 — awaiting user merge. After merge, Vercel auto-redeploys and coshhapp.vercel.app should go live.
+
+### Major lesson learned — chat-pasted code is NOT ground truth
+
+Two previous sessions were spent identifying ~30 "broken template literals" in COSHH-APP based on a user-pasted copy of the HTML. Turned out the template literals were intact in the actual GitHub repo — the backticks had been stripped by chat formatting on paste. **Always fetch from authenticated raw GitHub before assuming code is broken.** Cost: significant credits across two sessions.
+
+### Proven web-editor automation patterns (carried forward)
+
+- CodeMirror 6 access: `document.querySelector('.cm-content').cmTile.view` (NOT `.cmView.view` — that pattern is stale)
+- Commit dialog "Commit changes..." button sometimes doesn't open via DOM `.click()`; fall back to direct coordinate click `(855, ~200)`
+- Inside the commit dialog, submit button can be reached via: `document.querySelector('[role="dialog"]').querySelectorAll('button').find(b=>b.textContent.trim()==='Commit changes').click()`
+- Delete-via-URL pattern works reliably: navigate to `/{owner}/{repo}/delete/{branch}/{path}` then click Commit
+- GitHub web editor adds a trailing `\n` to created files (benign +1 byte)
+
+### Standing user instructions reinforced this session
+
+- "do whats best" / "you pick" = make the call and proceed, don't bounce back with more options
+- Credit-frugal: don't re-ask documented context, don't over-clarify
+- Branches + PRs only, never push to main, user merges
+
+### Outstanding manual follow-ups for user (new this session)
+
+- **Merge COSHH-APP PR #1** → https://github.com/BluejaiAA/COSHH-APP/pull/1 (unblocks coshhapp.vercel.app)
+- **Delete stub repo** `Manual-Handling-Tool-` (trailing dash) → https://github.com/BluejaiAA/Manual-Handling-Tool-/settings → Danger Zone
+- **Tell Claude what DSE-APP is meant to be** — empty repo, no direction
+- (Carrying over) Merge Firesite PR #5 (README) and PR #6 (firestore tidy) — both still open
+
+### Resume cue for next session
+
+> "Read CONTEXT.md and continue. COSHH-APP PR #1 is open and awaiting merge. Vite-lite carve still parked. Cleanup-main branch still empty."
